@@ -18,7 +18,6 @@ class Status
     {
         $list = [];
         $reflectionClass = new ReflectionClass(new self);
-//        dd($reflectionClass->getConstants());
         foreach ($reflectionClass->getConstants() as $key => $value) {
             $list[$key] = __("status.$value");
         }

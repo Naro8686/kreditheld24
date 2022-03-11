@@ -39,7 +39,7 @@
                                                  :value="__('Commission')"/>
                                         <x-input id="bonus" class="block mt-1 w-full"
                                                  type="number" name="commission" required
-                                                 x-bind:value="formData.commission" min="1"
+                                                 x-bind:value="formData.commission" step=".01" min="1"
                                                  x-model.number="formData.commission"/>
                                     </div>
                                 </template>

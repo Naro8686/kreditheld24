@@ -28,8 +28,13 @@ class ProposalController extends Controller
 
     public function index()
     {
+        $successful = auth()->user()->proposals()->where('proposals.status',Status::APPROVED);
+        $totalSum = $successful->sum('proposals.creditAmount');
+        $targetPercent = (int)($successful->count('proposals.id') /  auth()->user()->proposals()->count() * 100) ;
+        $monthSum = $successful->where('proposals.created_at','>=',now()->subMonth())->sum('proposals.creditAmount');
+
         $proposals = auth()->user()->proposals()->orderByDesc('proposals.id')->paginate();
-        return view('proposal.index', compact('proposals'));
+        return view('proposal.index', compact('proposals','totalSum','monthSum','targetPercent'));
     }
 
     public function edit($id)

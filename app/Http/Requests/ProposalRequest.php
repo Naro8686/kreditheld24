@@ -95,7 +95,7 @@ class ProposalRequest extends FormRequest
             $validates["status"] = "required|in:$statuses";
             if ($this['status'] === Status::APPROVED){
                 $validates["bonus"] = "sometimes|nullable|numeric|min:0";
-                $validates["commission"] = "required|integer|min:1|max:100";
+                $validates["commission"] = "required|numeric|min:1|max:100";
             }
 
         }

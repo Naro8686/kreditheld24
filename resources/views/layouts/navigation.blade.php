@@ -44,7 +44,12 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <!-- Authentication -->
+                        @if(Auth::user()->isAdmin())
+                            <x-dropdown-link :href="route('admin.dashboard')">
+                                {{ __('Admin Panel') }}
+                            </x-dropdown-link>
+                    @endif
+                    <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
@@ -94,7 +99,13 @@
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
-
+            @if(Auth::user()->isAdmin())
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('admin.dashboard')">
+                        {{ __('Admin Panel') }}
+                    </x-responsive-nav-link>
+                </div>
+            @endif
             <div class="mt-3 space-y-1">
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

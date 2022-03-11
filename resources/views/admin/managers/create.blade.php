@@ -8,9 +8,18 @@
                     <form action="{{route('admin.managers.store')}}" method="POST" autocomplete="off" >
                         @csrf
                         <div class="form-group">
+                            <label for="email">{{__('Name')}}</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   aria-describedby="nameHelp" autofill="off"
+                                   placeholder="Enter name" autocomplete="off">
+                            @error('email')
+                            <small id="emailHelp" class="form-text text-danger">{{$message}}</small>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="email">{{__('Email')}}</label>
                             <input type="email" class="form-control" id="email" name="email"
-                                   aria-describedby="emailHelp" autofill="off"
+                                   aria-describedby="emailHelp" autofill="off" required
                                    placeholder="Enter email" autocomplete="off">
                             @error('email')
                             <small id="emailHelp" class="form-text text-danger">{{$message}}</small>
@@ -19,7 +28,7 @@
                         <div class="form-group">
                             <label for="password">{{__('Password')}}</label>
                             <input type="password" class="form-control" name="password"
-                                   id="password" placeholder="Password"
+                                   id="password" placeholder="Password" required
                                    autocomplete="off">
                             @error('password')
                             <small class="form-text text-danger">{{$message}}</small>

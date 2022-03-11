@@ -21,6 +21,10 @@
                                             </th>
                                             <th scope="col"
                                                 class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                                {{__('Name')}}
+                                            </th>
+                                            <th scope="col"
+                                                class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                                 {{__('Email')}}
                                             </th>
                                             <th scope="col"
@@ -45,6 +49,9 @@
                                             <tr class="bg-white border-b">
                                                 <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                     {{$manager->id}}
+                                                </td>
+                                                <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                                    {{$manager->name}}
                                                 </td>
                                                 <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                                     {{$manager->email}}

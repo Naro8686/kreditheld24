@@ -11,6 +11,7 @@ use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Log;
+use Throwable;
 
 class ManagerController extends Controller
 {
@@ -40,13 +41,14 @@ class ManagerController extends Controller
         ]);
         try {
             $email = $request['email'];
+            $name = $request->get('name', explode('@', $email)[0]);
             $password = $request['password'];
-            DB::transaction(function () use ($email, $password) {
+            DB::transaction(function () use ($email, $password, $name) {
                 /** @var User $manager */
                 $managerRole = Role::whereSlug(Role::MANAGER)->first();
                 $createProposalsPermission = Permission::whereSlug(Permission::CREATE_PROPOSALS)->first();
                 $manager = new User();
-                $manager->name = explode('@', $email)[0];
+                $manager->name = $name;
                 $manager->email = $email;
                 $manager->email_verified_at = now();
                 $manager->password = bcrypt($password);
@@ -56,7 +58,7 @@ class ManagerController extends Controller
                 $manager->notify((new CreateAccount($email, $password)));
             });
             return redirect()->route('admin.managers.index')->with('success', __('Account created'));
-        } catch (Exception $exception) {
+        } catch (Throwable|Exception $exception) {
             DB::rollBack();
             Log::error("ManagerController::store {$exception->getMessage()}");
         }

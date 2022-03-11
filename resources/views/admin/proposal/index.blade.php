@@ -34,6 +34,10 @@
                                             </th>
                                             <th scope="col"
                                                 class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                                {{__('Payout amount')}}
+                                            </th>
+                                            <th scope="col"
+                                                class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                                 {{__('Files')}}
                                             </th>
                                             <th scope="col" class="relative py-3 px-6">
@@ -58,6 +62,9 @@
                                                 </td>
                                                 <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                                     {{trans("status.$proposal->status")}}
+                                                </td>
+                                                <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                                    {{$proposal->payoutAmount.' '.$proposal::CURRENCY}}
                                                 </td>
                                                 <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                                     <ul class="list-group btn-group btn-group-sm" role="group"

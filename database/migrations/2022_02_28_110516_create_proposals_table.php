@@ -47,7 +47,7 @@ class CreateProposalsTable extends Migration
             $table->json('files')->nullable();
 
             $table->decimal('bonus', 10)->nullable();
-            $table->integer('commission')->nullable();
+            $table->decimal('commission')->nullable();
             $table->timestamps();
         });
     }

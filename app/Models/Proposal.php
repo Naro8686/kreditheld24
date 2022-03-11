@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\AsCustomCollection;
+use App\Constants\Status;
 use App\Http\Requests\ProposalRequest;
 use App\Traits\File;
 use Exception;
@@ -100,6 +101,12 @@ class Proposal extends Model
         'birthday' => 'date',
         'residenceDate' => 'date',
     ];
+    protected $appends = ['payoutAmount'];
+
+    public function getPayoutAmountAttribute()
+    {
+        return (($this->creditAmount * ($this->commission ?? 0)) / 100) + ($this->bonus ?? 0);
+    }
 
     public function user()
     {

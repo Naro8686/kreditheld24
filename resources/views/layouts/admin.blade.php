@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Blank</title>
+    <title>{{ config('app.name', 'Laravel').'| Admin' }}</title>
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
