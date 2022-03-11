@@ -6,7 +6,6 @@ use App\Constants\Status;
 use App\Http\Requests\ProposalRequest;
 use App\Models\Proposal;
 use App\Models\Role;
-use DivisionByZeroError;
 
 class ProposalController extends Controller
 {
@@ -32,11 +31,13 @@ class ProposalController extends Controller
         try {
             $successful = auth()->user()->proposals()->where('proposals.status', Status::APPROVED);
             $totalSum = $successful->sum('proposals.creditAmount');
-            $targetPercent = (int)($successful->count('proposals.id') / auth()->user()->proposals()->count() * 100);
+            $targetPercent = $successful->count('proposals.id') === 0 || auth()->user()->proposals()->count() === 0 ? 0
+                : (int)(($successful->count('proposals.id') / auth()->user()->proposals()->count()) * 100);
             $monthSum = $successful->where('proposals.created_at', '>=', now()->subMonth())->sum('proposals.creditAmount');
-        } catch (\Exception|DivisionByZeroError $exception) {
+        } catch (\Exception $exception) {
             $totalSum = $monthSum = $targetPercent = 0;
         }
+
         $proposals = auth()->user()->proposals()->orderByDesc('proposals.id')->paginate();
         return view('proposal.index', compact('proposals', 'totalSum', 'monthSum', 'targetPercent'));
     }
