@@ -20,10 +20,10 @@ class RoleMiddleware
         if (!auth()->check()) {
             return redirect()->route('login');
         }
-        if (!auth()->user()->hasRole($role) && auth()->user()->isAdmin()) {
-            return redirect('/admin');
-        }
-        if (!auth()->user()->hasRole($role)) {
+//        if (!auth()->user()->hasRole($role) && auth()->user()->isAdmin()) {
+//            return redirect('/admin');
+//        }
+        if (!auth()->user()->hasRole($role) && !auth()->user()->isAdmin()) {
             abort(404);
         }
 

@@ -6,7 +6,6 @@ use App\Constants\Status;
 use App\Http\Requests\ProposalRequest;
 use App\Models\Proposal;
 use App\Models\Role;
-use Illuminate\Http\Request;
 
 class ProposalController extends Controller
 {
