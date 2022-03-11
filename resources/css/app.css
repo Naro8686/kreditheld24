@@ -1,0 +1,34 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+fieldset {
+    all: revert;
+    padding: 5px 12px 10px 12px !important;
+    border-radius: 5px !important;
+    border: 1px solid rgb(209 213 218) !important;
+
+}
+
+[type='checkbox'], [type='radio'] {
+    color: #4b5563;
+}
+
+.border-red {
+    border-color: red !important;
+}
+
+.text-danger {
+    color: red;
+}
+
+input.border-red + label {
+    border-color: red !important;
+    color: red;
+}
+
