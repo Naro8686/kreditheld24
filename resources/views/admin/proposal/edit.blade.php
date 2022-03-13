@@ -1,5 +1,12 @@
 @extends('layouts.admin')
 @section('content')
+    @push('css')
+        <style>
+            label {
+                margin-bottom: 0;
+            }
+        </style>
+    @endpush
     <h1 class="h3 mb-4 text-gray-800">{{__('Edit')}}</h1>
     <div class="py-6">
         <div class="max-w-7xl mx-auto">

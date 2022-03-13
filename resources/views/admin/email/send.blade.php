@@ -33,8 +33,6 @@
         $(document).ready(function () {
             $('#message').summernote({
                 height: 300,
-                minHeight: null,
-                maxHeight: null,
                 focus: true
             });
         });

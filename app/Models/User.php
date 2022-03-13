@@ -98,6 +98,6 @@ class User extends Authenticatable implements HasLocalePreference
 
     public function preferredLocale()
     {
-        return 'en';
+        return config('app.locale');
     }
 }
