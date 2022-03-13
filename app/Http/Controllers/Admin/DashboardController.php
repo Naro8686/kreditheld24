@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $proposals = Proposal::paginate();
+        $proposals = Proposal::orderByDesc('id')->paginate();
         return view('admin.dashboard', compact('proposals'));
     }
 

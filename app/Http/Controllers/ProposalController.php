@@ -38,7 +38,7 @@ class ProposalController extends Controller
             $totalSum = $monthSum = $targetPercent = 0;
         }
 
-        $proposals = auth()->user()->proposals()->orderByDesc('proposals.id')->paginate(1);
+        $proposals = auth()->user()->proposals()->orderByDesc('proposals.id')->paginate();
         return view('proposal.index', compact('proposals', 'totalSum', 'monthSum', 'targetPercent'));
     }
 

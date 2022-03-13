@@ -36,7 +36,7 @@
                         class="p-3 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                         <div class="mb-4 font-bold tracking-tight text-gray-900 dark:text-white">
                             <div class="flex justify-between mb-1">
-                                <h2 class="font-bold tracking-tight text-gray-900 dark:text-white">{{__('TARGET')}}</h2>
+                                <h2 class="font-bold tracking-tight text-gray-900 dark:text-white">{{__('Target')}}</h2>
                                 <span
                                     class="text-sm font-medium text-blue-700 dark:text-white">{{$targetPercent}}%</span>
                             </div>
@@ -67,6 +67,10 @@
                                     </th>
                                     <th scope="col"
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('Proposal number')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
                                         {{__('Sum')}}
                                     </th>
                                     <th scope="col"
@@ -91,6 +95,9 @@
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{$proposal->id}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{$proposal->number}}
                                         </td>
                                         <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                             {{$proposal->creditAmount.' '.$proposal::CURRENCY}}

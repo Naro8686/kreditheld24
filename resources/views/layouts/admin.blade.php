@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{{ config('app.name', 'Laravel').'| Admin' }}</title>
+    <title>{{ config('app.name', 'Laravel') . ' | Admin' }}</title>
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
@@ -64,6 +64,11 @@
             <a class="nav-link" href="{{route('admin.managers.index')}}">
                 <i class="fas fa-fw fa-users"></i>
                 <span>{{__('Managers')}}</span></a>
+        </li>
+        <li @class(['nav-item','active'=>request()->routeIs('admin.email.*')])>
+            <a class="nav-link" href="{{route('admin.email.manager.index')}}">
+                <i class="fas fa-fw fa-envelope"></i>
+                <span>{{__('Send message')}}</span></a>
         </li>
 
         <!-- Divider -->

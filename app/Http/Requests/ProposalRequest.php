@@ -119,6 +119,7 @@ class ProposalRequest extends FormRequest
             'oldAddress.postcode' => '"' . Str::lower(__('Postcode')) . '"',
             'creditType' => '"' . Str::lower(__('Credit Type')) . '"',
             'deadline' => '"' . Str::lower(__('For what time (month) ?')) . '"',
+            'number' => '"' . Str::lower(__('Proposal number')) . '"',
             'monthlyPayment' => '"' . Str::lower(__('Desired amount of payment per month ?')) . '"',
             'creditAmount' => '"' . Str::lower(__('Desired loan amount ?')) . '"',
             'firstName' => '"' . Str::lower(__('Name')) . '"',

@@ -54,7 +54,9 @@
                                                     {{$manager->name}}
                                                 </td>
                                                 <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                                    {{$manager->email}}
+                                                    <div>
+                                                        <a href="{{route('admin.email.manager.index',[$manager->id])}}">{{$manager->email}}</a>
+                                                    </div>
                                                 </td>
                                                 <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                                     {{$manager->card_number}}
@@ -66,9 +68,11 @@
                                                     {{$manager->proposals_count}}
                                                 </td>
                                                 <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                                    <button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
+                                                    <button type='button' class='btn btn-sm btn-danger mr-1'
+                                                            data-toggle='modal'
                                                             data-target='#confirmModal'
-                                                            data-url='{{route('admin.managers.delete',[$manager->id])}}'><i class='fa fa-trash'></i>
+                                                            data-url='{{route('admin.managers.delete',[$manager->id])}}'>
+                                                        <i class='fa fa-trash'></i>
                                                     </button>
                                                 </td>
                                             </tr>

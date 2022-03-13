@@ -52,8 +52,14 @@
                                              x-bind:value="formData.bonus" min="0"
                                              x-model.number="formData.bonus"/>
                                 </div>
-
-
+                                <div class="mt-3">
+                                    <x-label class="font-bold text-lg" for="bonus"
+                                             :value="__('Proposal number')"/>
+                                    <x-input id="number" class="block mt-1 w-full"
+                                             type="text" name="number"
+                                             x-bind:value="formData.number"
+                                    />
+                                </div>
                             </div>
                         </fieldset>
 

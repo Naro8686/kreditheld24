@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ManagerController;
 use App\Http\Controllers\Admin\ProposalController;
+use App\Http\Controllers\Admin\SendEmailToManagerController;
 use App\Models\Role;
 
 Route::middleware(['auth', 'role:' . Role::ADMIN])
@@ -27,5 +28,12 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])
                 Route::get('/managers/create', 'create')->name('create');
                 Route::post('/managers/create', 'store')->name('store');
                 Route::delete('/managers/{id}', 'delete')->name('delete');
+            });
+        Route::controller(SendEmailToManagerController::class)
+            ->name('email.manager.')
+            ->prefix('email/manager')
+            ->group(function () {
+                Route::get('/{manager_id?}', 'index')->name('index');
+                Route::post('/{manager_id?}', 'send')->name('send');
             });
     });

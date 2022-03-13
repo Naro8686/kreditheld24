@@ -18,6 +18,7 @@ class ProposalResource extends JsonResource
         /** @var Proposal $this */
         return [
             'id' => $this->id,
+            'number' => $this->number,
             'status' => $this->status,
             'notice' => $this->notice,
             'commission' => $this->commission,

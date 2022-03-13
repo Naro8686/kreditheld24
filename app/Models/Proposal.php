@@ -6,6 +6,7 @@ use App\Casts\AsCustomCollection;
 use App\Constants\Status;
 use App\Http\Requests\ProposalRequest;
 use App\Traits\File;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -79,6 +80,11 @@ use Illuminate\Support\Facades\Log;
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $bonus
+ * @property string|null $commission
+ * @property-read mixed $payout_amount
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereBonus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereCommission($value)
  */
 class Proposal extends Model
 {
@@ -103,9 +109,22 @@ class Proposal extends Model
     ];
     protected $appends = ['payoutAmount'];
 
+    /**
+     * @return float|int|string
+     */
     public function getPayoutAmountAttribute()
     {
-        return (($this->creditAmount * ($this->commission ?? 0)) / 100) + ($this->bonus ?? 0);
+        return (($this->creditAmount * ($this->commission ?? 0)))
+            ? 0
+            : (($this->creditAmount * ($this->commission ?? 0)) / 100) + ($this->bonus ?? 0);
+    }
+
+    /**
+     * @return \Illuminate\Support\Carbon|null
+     */
+    public function deadlineDateFormat(): ?\Illuminate\Support\Carbon
+    {
+        return $this->created_at ? $this->created_at->addMonths($this->deadline) : null;
     }
 
     public function user()

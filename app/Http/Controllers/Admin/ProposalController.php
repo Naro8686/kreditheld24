@@ -35,12 +35,15 @@ class ProposalController extends Controller
     public function update(ProposalRequest $request, $id)
     {
         $proposal = Proposal::findOrFail($id);
-
+        $request->validate([
+            "number" => "sometimes|nullable|unique:proposals,number,$id"
+        ]);
         $request->merge([
             'notice' => $request->get('status') !== Status::REVISION
                 ? null : $request->get('notice')
         ]);
         $success = $proposal->saveData($request->only([
+            "number",
             "status",
             "notice",
             "commission",
