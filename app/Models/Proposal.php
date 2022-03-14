@@ -114,7 +114,7 @@ class Proposal extends Model
      */
     public function getPayoutAmountAttribute()
     {
-        return (($this->creditAmount * ($this->commission ?? 0))) < 0
+        return (($this->creditAmount * ($this->commission ?? 0))) <= 0
             ? 0
             : (($this->creditAmount * ($this->commission ?? 0)) / 100) + ($this->bonus ?? 0);
     }
