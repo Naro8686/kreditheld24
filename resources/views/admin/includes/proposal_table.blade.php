@@ -1,119 +1,98 @@
-<div class="flex flex-col">
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-            <div class="overflow-hidden shadow-md sm:rounded-lg">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Id')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Proposal number')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Manager')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Sum')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Date')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Status')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Payout amount')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Deadline')}}
-                        </th>
-                        <th scope="col"
-                            class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                            {{__('Files')}}
-                        </th>
-                        <th scope="col" class="relative py-3 px-6">
-                            <span class="sr-only">Edit</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($proposals as $proposal)
-                        @php
-                            $bgColor = 'bg-white';
-                            $diff = null;
-                            if ($proposal->deadlineDateFormat()) $diff
-                                = now()->diff($proposal->deadlineDateFormat());
-                            if (!is_null($diff)){
-                                if ($diff->invert) $bgColor = 'bg-red-400';
-                                else if ($diff->y <= 1) $bgColor = 'bg-amber-400';
-                            }
-                        @endphp
-                        <tr class="bg-white border-b">
-                            <td class="{{$bgColor}} py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                {{$proposal->id}}
-                            </td>
-                            <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                {{$proposal->number}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                {{$proposal->user->name ?? $proposal->user->email}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                {{$proposal->creditAmount.' '.$proposal::CURRENCY}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                {{$proposal->created_at}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                {{trans("status.$proposal->status")}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                {{$proposal->payoutAmount.' '.$proposal::CURRENCY}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                {{optional($proposal->deadlineDateFormat())->format('Y-m-d')}}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                <ul class="list-group btn-group btn-group-sm" role="group"
-                                    aria-label="Basic example">
-                                    @foreach($proposal->files as $file)
-                                        <li>
-                                            <a class="btn btn-sm btn-link" target="_blank"
-                                               href="{{route('admin.readFile',['path'=>$file])}}">{{str_replace($proposal::UPLOAD_FILE_PATH.'/','',$file)}}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </td>
-                            <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                <a href="{{route('admin.proposals.edit',[$proposal->id])}}"
-                                   class="btn btn-sm btn-primary mr-1">
-                                    <i class='fa fa-eye'></i>
-                                </a>
-                                <button type='button' class='btn btn-sm btn-danger'
-                                        data-toggle='modal'
-                                        data-target='#confirmModal'
-                                        data-url='{{route('admin.proposals.delete',[$proposal->id])}}'>
-                                    <i class='fa fa-trash'></i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{__('Credits')}}</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="category-filters">
+                <label class="float-left">{{__('Credit Type')}}:<select id="creditType"
+                                                                        class="form-control form-control-sm">
+                        <option value="">{{__('no selected')}}</option>
+                        @foreach(\App\Models\Proposal::$creditTypes as $key => $creditType)
+                            <option value="{{$creditType}}">{{trans("proposal.creditTypes.$creditType")}}</option>
+                        @endforeach
+                    </select>
+                </label>
             </div>
+            <table class="table table-sm table-bordered text-center display responsive nowrap" id="proposals_table"
+                   width="100%"
+                   cellspacing="0">
+                <thead>
+                <tr>
+                    <th scope="col">{{__('Id')}}</th>
+                    <th scope="col">{{__('Credit Type')}}</th>
+                    <th scope="col">{{__('Proposal number')}}</th>
+                    <th scope="col">{{__('Manager')}}</th>
+                    <th scope="col">{{__('Sum')}}</th>
+                    <th scope="col">{{__('Date')}}</th>
+                    <th scope="col">{{__('Status')}}</th>
+                    <th scope="col">{{__('Payout amount')}}</th>
+                    <th scope="col">{{__('Deadline')}}</th>
+                    <th scope="col">{{__('Files')}}</th>
+                    <th scope="col">
+                        <span class="sr-only">{{__('Action')}}</span>
+                    </th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
-<div class="mt-3">
-    {!! $proposals->links() !!}
-</div>
+@push('css')
+    <link href="{{asset('adminPanel/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+    <style>
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        select.form-control {
+            display: inline;
+            width: 200px;
+            margin-left: 5px;
+        }
+
+        #category-filters {
+            display: none;
+        }
+    </style>
+@endpush
+@push('js')
+    <script src="{{asset('adminPanel/vendor/datatables/jquery.dataTables.js')}}"></script>
+    <script src="{{asset('adminPanel/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            let creditType = $("#creditType");
+            let table = $('#proposals_table').DataTable({
+                dom: 'Bfrtip',
+                responsive: true,
+                autoWidth: true,
+                processing: true,
+                serverSide: true,
+                lengthMenu: [[25, 50, 100], [25, 50, 100]],
+                order: [[0, 'desc']],
+                ajax: '{!! route('admin.proposals.index') !!}',
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'creditType', name: 'creditType'},
+                    {data: 'number', name: 'number'},
+                    {data: 'user.name', name: 'user.name'},
+                    {data: 'creditAmount', name: 'creditAmount'},
+                    {data: 'created_at', name: 'created_at'},
+                    {data: 'status', name: 'status'},
+                    {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
+                    {data: 'deadline', name: 'deadline'},
+                    {data: 'files', name: 'files', orderable: false},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ], createdRow: function (row, data, index) {
+                    $('td', row).eq(0).addClass(data['bgColor']);
+                },
+            });
+            $("#category-filters>label").each(function (i, el) {
+                $("#proposals_table_filter.dataTables_filter").prepend(el);
+            });
+            creditType.on('change', function () {
+                table.columns(1).search(this.value ? '^' + this.value + '$' : '', true, false).draw();
+            });
+        });
+    </script>
+@endpush

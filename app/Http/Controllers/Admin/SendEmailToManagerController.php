@@ -38,6 +38,9 @@ class SendEmailToManagerController extends Controller
         })->select('email')->chunk(200, function ($managers) use (&$emails) {
             foreach ($managers as $manager) $emails[] = $manager->email;
         });
+        if (empty($emails))  return redirect()->back()->with('error', $status === 'success'
+            ? __('Message sent successfully')
+            : __("Whoops! Something went wrong."));
         try {
             foreach ($emails as $key => $email) {
                 Mail::to($email)->later(now()->addSeconds($key), new SendEmailToManager($request['message']));

@@ -119,7 +119,6 @@ var purchases = chart(purchasesChart, purchasesChartConfig);
 
 
 function ajax_charts(data = {}) {
-    console.log(data);
     const request = $.ajax({
         url: "/admin/statistics",
         method: "GET",

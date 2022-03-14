@@ -21,8 +21,76 @@ class ProposalController extends Controller
 
     public function index()
     {
-        $proposals = Proposal::orderByDesc('id')->paginate();
-        return view('admin.proposal.index', compact('proposals'));
+        try {
+            if (request()->ajax()) return datatables()
+                ->of(Proposal::with(['user'])->select('proposals.*'))
+                ->addColumn('bgColor', function ($proposal) {
+                    $bgColor = 'bg-white';
+                    $diff = null;
+                    if ($proposal->deadlineDateFormat()) $diff
+                        = now()->diff($proposal->deadlineDateFormat());
+                    if (!is_null($diff)) {
+                        if ($diff->invert) $bgColor = 'bg-red-400';
+                        else if ($diff->y <= 1) $bgColor = 'bg-amber-400';
+                    }
+                    return $bgColor;
+                })
+                ->editColumn('id', function ($proposal) {
+                    return "<strong>$proposal->id</strong>";
+                })
+                ->editColumn('creditType', function ($proposal) {
+                    return trans("proposal.creditTypes.$proposal->creditType");
+                })
+                ->editColumn('user.name', function ($proposal) {
+                    return $proposal->user->name ?? $proposal->user->email;
+                })
+                ->editColumn('creditAmount', function ($proposal) {
+                    return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
+                })
+                ->editColumn('status', function ($proposal) {
+                    return trans("status.$proposal->status");
+                })
+                ->editColumn('payoutAmount', function ($proposal) {
+                    return $proposal->payoutAmount . ' ' . $proposal::CURRENCY;
+                })
+                ->editColumn('created_at', function ($proposal) {
+                    return $proposal->created_at->format('Y-m-d H:i:s');
+                })
+                ->editColumn('deadline', function ($proposal) {
+                    return optional($proposal->deadlineDateFormat())->format('Y-m-d');
+                })
+                ->editColumn('files', function ($proposal) {
+                    $ul = "<ul class='list-group btn-group btn-group-sm' role='group' aria-label='Basic example'>";
+                    foreach ($proposal->files as $file):
+                        $url = route('admin.readFile', ['path' => $file]);
+                        $name = str_replace($proposal::UPLOAD_FILE_PATH . '/', '', $file);
+                        $ul .= "<li>
+                                            <a class='btn btn-sm btn-link' target='_blank'
+                                               href='$url'>$name</a>
+                                        </li>";
+                    endforeach;
+                    $ul .= "</ul>";
+                    return $ul;
+                })
+                ->addColumn('action', function ($proposal) {
+                    $linkEdit = route('admin.proposals.edit', [$proposal->id]);
+                    $linkDelete = route('admin.proposals.delete', [$proposal->id]);
+                    return "<div class='d-flex justify-content-between' role='group'>
+                                        <a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1'>
+                                            <i class='fa fa-eye'></i>
+                                        </a>
+                                        <button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
+                                                data-target='#confirmModal'
+                                                data-url='$linkDelete'><i class='fa fa-trash'></i>
+                                        </button>
+                                    </div>";
+                })
+                ->rawColumns(['id', 'files', 'action'])
+                ->make(true);
+            return view('admin.proposal.index');
+        } catch (Exception $e) {
+        }
+        return response('Error', 500);
     }
 
     public function edit($id)

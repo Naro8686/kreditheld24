@@ -269,6 +269,7 @@
     "Credit Type": "Тип кредита",
     "Comment": "Комментарий",
     "month": "месяц",
+    "empty": "пустой",
     "Desired loan amount ?": "Желаемая сумма кредита ?",
     "For what time (month) ?": "На какое время (месяц) ?"
 }
