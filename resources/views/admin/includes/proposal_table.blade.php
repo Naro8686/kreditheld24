@@ -73,7 +73,7 @@
                 ajax: '{!! route('admin.proposals.index') !!}',
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'creditType', name: 'creditType'},
+                    {data: 'creditType', name: 'creditType', orderable: false, searchable: false},
                     {data: 'number', name: 'number'},
                     {data: 'user.name', name: 'user.name'},
                     {data: 'creditAmount', name: 'creditAmount'},
@@ -87,7 +87,7 @@
                     $('td', row).eq(0).addClass(data['bgColor']);
                 },
             });
-            $("#category-filters>label").each(function (i, el) {
+            $("#category-filters > label").each(function (i, el) {
                 $("#proposals_table_filter.dataTables_filter").prepend(el);
             });
             creditType.on('change', function () {
