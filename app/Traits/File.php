@@ -68,7 +68,9 @@ trait File
             }
         }
         $zip->close();
-        if (!is_dir($zipPathAndName)) mkdir($zipPathAndName);
+        $dirname = dirname($zipPathAndName);
+        if (!is_dir($dirname)) mkdir($dirname);
+        if (file_exists($zipPathAndName)) unlink($zipPathAndName);
         return rename($tempFileUri, $zipPathAndName);
     }
 }
