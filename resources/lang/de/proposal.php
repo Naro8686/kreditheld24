@@ -18,7 +18,7 @@
     'familyStatuses' => [
         'divorced' => 'geschieden',
         'married' => 'verheiratet',
-        'unmarried' => 'unverheiratet',
+        'unmarried' => 'ledig',
         'widower' => 'Witwer'
     ],
 ];
