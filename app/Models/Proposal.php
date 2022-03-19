@@ -85,13 +85,17 @@ use Illuminate\Support\Facades\Log;
  * @property-read mixed $payout_amount
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereBonus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereCommission($value)
+ * @property string|null $number
+ * @property int|null $category_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNumber($value)
  */
 class Proposal extends Model
 {
     use HasFactory, File;
 
     protected $guarded = [];
-    public static $creditTypes = ['home', 'car', 'repair', 'vacation', 'other'];
+    public static $creditTypes = ['home', 'private_credit', 'car', 'repair', 'vacation', 'other'];
     public static $residenceTypes = ['rent', 'roommate', 'own', 'lodger'];
     public static $familyStatuses = ['divorced', 'married', 'unmarried', 'widower'];
     public static $uploadFileTypes = ['jpg', 'jpeg', 'png', 'doc', 'docx', 'csv', 'txt', 'xlx', 'xls', 'pdf'];
@@ -135,6 +139,22 @@ class Proposal extends Model
     public function deleteAllFiles()
     {
         $this->deleteFiles($this->files ?? []);
+    }
+
+    public function makeZip(): ?string
+    {
+        try {
+            $files = $this->files->map(function ($file) {
+                $file = trim($file, '/');
+                return public_path("storage/$file");
+            });
+            $path = storage_path("app/tmp/archive.zip");
+
+            return $this->makeZipWithFiles($path, $files->toArray()) ? $path : null;
+        } catch (Exception $e) {
+            Log::error("make zip {$e->getMessage()}");
+        }
+        return null;
     }
 
     public function saveData(array $data, $allFilesName = []): bool

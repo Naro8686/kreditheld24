@@ -61,10 +61,10 @@ class ProposalRequest extends FormRequest
             "otherCreditCount" => "required|int|min:0|max:4",
         ];
         if (!count($this->get('allFilesName', []))) {
-            $validates["uploads"] = "required|array|min:1|max:5";
+            $validates["uploads"] = "required|array|min:1";
             $validates["uploads.*"] = "required|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
         } else {
-            $validates["uploads"] = "sometimes|array|min:1|max:5";
+            $validates["uploads"] = "sometimes|array|min:1";
             $validates["uploads.*"] = "sometimes|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
         }
         if ($this['residenceDate']) {

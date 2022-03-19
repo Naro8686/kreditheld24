@@ -1,6 +1,7 @@
 <?php return [
     'creditTypes' => [
         'home' => 'на постройку дома',
+        'private_credit' => 'частный кредит',
         'car' => 'на машину',
         'repair' => 'на ремонт',
         'vacation' => 'на отпуск',

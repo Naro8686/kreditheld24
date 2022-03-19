@@ -165,7 +165,7 @@
             <option value="">{{__('no selected')}}</option>
             @foreach(\App\Models\Proposal::$residenceTypes as $key => $residenceType)
                 <option :selected="formData.residenceType === '{{$residenceType}}'"
-                    value="{{$residenceType}}">{{trans("proposal.residenceTypes.$residenceType")}}</option>
+                        value="{{$residenceType}}">{{trans("proposal.residenceTypes.$residenceType")}}</option>
             @endforeach
         </x-select>
     </div>
@@ -177,7 +177,7 @@
             <option value="">{{__('no selected')}}</option>
             @foreach(\App\Models\Proposal::$familyStatuses as $key => $familyStatus)
                 <option :selected="formData.familyStatus === '{{$familyStatus}}'"
-                    value="{{$familyStatus}}">{{trans("proposal.familyStatuses.$familyStatus")}}</option>
+                        value="{{$familyStatus}}">{{trans("proposal.familyStatuses.$familyStatus")}}</option>
             @endforeach
         </x-select>
         <template x-if="formData.familyStatus === 'married'">
@@ -332,7 +332,6 @@
 
         <button type="button"
                 @click="addFileField(allFilesName.length )"
-                :disabled="allFilesName.length === 5"
                 class="mt-2 mr-2 bg-gray-500
                                 hover:bg-gray-700 text-white
                                 font-bold py-1 px-3 rounded
@@ -341,6 +340,9 @@
             +
         </button>
     </div>
+    @isset($footer)
+        {{ $footer }}
+    @endisset
     <button type="submit" :disabled="loading"
             x-text="btnText || '{{__("Send")}}'"
             class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>

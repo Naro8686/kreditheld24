@@ -40,6 +40,15 @@ class DashboardController extends Controller
         return 'not found';
     }
 
+    public function downloadZip($proposal_id)
+    {
+        $proposal = Proposal::findOrFail($proposal_id);
+        $zipPath = $proposal->makeZip();
+        return is_null($zipPath)
+            ? back()->with('error', __("Whoops! Something went wrong."))
+            : response()->download($zipPath);
+    }
+
     public function statistics(Request $request)
     {
         try {

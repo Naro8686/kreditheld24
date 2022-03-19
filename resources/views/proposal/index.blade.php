@@ -27,7 +27,7 @@
                     <div
                         class="p-3 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                         <h2 class="mb-1 font-bold tracking-tight text-gray-900 dark:text-white">
-                        {{__('TOTAL VOLUME (YEAR)')}}</h2>
+                            {{__('TOTAL VOLUME (YEAR)')}}</h2>
                         <p class="font-normal text-gray-700 dark:text-gray-400">{{$totalSum.' '.\App\Models\Proposal::CURRENCY}}</p>
                     </div>
                 </div>
@@ -63,10 +63,6 @@
                                 <tr>
                                     <th scope="col"
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Id')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
                                         {{__('Proposal number')}}
                                     </th>
                                     <th scope="col"
@@ -85,6 +81,34 @@
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
                                         {{__('Status')}}
                                     </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('Full Name')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('Phone Number')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('Email')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('Street')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('House')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('City')}}
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                        {{__('Postcode')}}
+                                    </th>
                                     <th scope="col" class="relative py-3 px-6">
                                         <span class="sr-only">Edit</span>
                                     </th>
@@ -93,9 +117,6 @@
                                 <tbody>
                                 @foreach($proposals as $proposal)
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{$proposal->id}}
-                                        </td>
                                         <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{$proposal->number}}
                                         </td>
@@ -110,6 +131,28 @@
                                         </td>
                                         <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                             {{trans("status.$proposal->status")}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            {{"$proposal->firstName $proposal->lastName"}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            {{$proposal->phoneNumber}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            <a class="background-transparent font-bold outline-none focus:outline-none ease-linear transition-all duration-150"
+                                               href="mailto:{{$proposal->email}}">{{$proposal->email}}</a>
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            {{$proposal->street}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            {{$proposal->house}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            {{$proposal->city}}
+                                        </td>
+                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                            {{$proposal->postcode}}
                                         </td>
                                         <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap"
                                             x-data="{show:{{(int)($proposal->status === \App\Constants\Status::REVISION)}}}">

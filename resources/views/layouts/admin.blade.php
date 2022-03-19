@@ -66,9 +66,17 @@
                 <span>{{__('Managers')}}</span></a>
         </li>
         <li @class(['nav-item','active'=>request()->routeIs('admin.email.*')])>
-            <a class="nav-link" href="{{route('admin.email.manager.index')}}">
+            <a @class(['nav-link','collapsed'=>!request()->routeIs('admin.email.*')]) href="#" data-toggle="collapse" data-target="#collapseTwo"
+               aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-envelope"></i>
-                <span>{{__('Send message')}}</span></a>
+                <span>{{__('Send message')}}</span>
+            </a>
+            <div id="collapseTwo" @class(['collapse','show'=>request()->routeIs('admin.email.*')]) aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a @class(['collapse-item','active' => request()->is('admin/email/manager*')]) href="{{route('admin.email.index',['type'=>'manager'])}}">{{__('Manager')}}</a>
+                    <a @class(['collapse-item','active' => request()->is('admin/email/client*')]) href="{{route('admin.email.index',['type'=>'client'])}}">{{__('Client')}}</a>
+                </div>
+            </div>
         </li>
 
         <!-- Divider -->

@@ -56,8 +56,15 @@ class ProposalController extends Controller
                 ->editColumn('created_at', function ($proposal) {
                     return $proposal->created_at->format('Y-m-d H:i:s');
                 })
+                ->editColumn('birthday', function ($proposal) {
+                    return $proposal->created_at->format('Y-m-d');
+                })
                 ->editColumn('deadline', function ($proposal) {
                     return optional($proposal->deadlineDateFormat())->format('Y-m-d');
+                })
+                ->editColumn('email', function ($proposal) {
+                    $link = route('admin.email.index', ['type' => 'client', 'email' => $proposal->email]);
+                    return "<a href='$link'>$proposal->email</a>";
                 })
                 ->editColumn('files', function ($proposal) {
                     $ul = "<ul class='list-group btn-group btn-group-sm' role='group' aria-label='Basic example'>";
@@ -69,6 +76,9 @@ class ProposalController extends Controller
                                                href='$url'>$name</a>
                                         </li>";
                     endforeach;
+                    $url = route('admin.downloadZip', [$proposal->id]);
+                    $name = __('Download');
+                    $ul .= "<li><a class='mt-2 btn btn-outline-info btn-sm btn-link' href='$url'>$name</a></li>";
                     $ul .= "</ul>";
                     return $ul;
                 })
@@ -85,7 +95,7 @@ class ProposalController extends Controller
                                         </button>
                                     </div>";
                 })
-                ->rawColumns(['id', 'files', 'action'])
+                ->rawColumns(['id', 'files', 'email', 'action'])
                 ->make(true);
             return view('admin.proposal.index');
         } catch (Exception $e) {

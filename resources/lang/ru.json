@@ -126,6 +126,9 @@
     "Go to page :page": "Перейти к :page-й странице",
     "Hello!": "Здравствуйте!",
     "I accept the terms of service": "Я принимаю условия предоставления услуг",
+    "I agree": "Я соглашаюсь",
+    "privacy policy": "политика конфиденциальности",
+    "personal data": "персональные данные",
     "I agree to the :terms_of_service and :privacy_policy": "Я соглашаюсь с :terms_of_service и :privacy_policy",
     "ID": "ID",
     "If you did not create an account, no further action is required.": "Если Вы не создавали учетную запись, никаких дополнительных действий не требуется.",
@@ -270,6 +273,8 @@
     "Comment": "Комментарий",
     "month": "месяц",
     "empty": "пустой",
+    "Client": "Клиент",
+    "Full Name": "Полное имя",
     "Desired loan amount ?": "Желаемая сумма кредита ?",
     "For what time (month) ?": "На какое время (месяц) ?"
 }

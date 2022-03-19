@@ -28,6 +28,8 @@
                     <th scope="col">{{__('Status')}}</th>
                     <th scope="col">{{__('Payout amount')}}</th>
                     <th scope="col">{{__('Deadline')}}</th>
+                    <th scope="col">{{__('Birthday')}}</th>
+                    <th scope="col">{{__('Email')}}</th>
                     <th scope="col">{{__('Files')}}</th>
                     <th scope="col">
                         <span class="sr-only">{{__('Action')}}</span>
@@ -81,6 +83,8 @@
                     {data: 'status', name: 'status'},
                     {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
                     {data: 'deadline', name: 'deadline'},
+                    {data: 'birthday', name: 'birthday'},
+                    {data: 'email', name: 'email'},
                     {data: 'files', name: 'files', orderable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {

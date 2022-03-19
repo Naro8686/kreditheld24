@@ -52,7 +52,7 @@
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         <div>
-                                            <a href="{{route('admin.email.manager.index',[$manager->id])}}">{{$manager->email}}</a>
+                                            <a href="{{route('admin.email.index',['type' => 'manager', 'email' => $manager->email])}}">{{$manager->email}}</a>
                                         </div>
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">

@@ -6,6 +6,7 @@ use App\Constants\Status;
 use App\Http\Requests\ProposalRequest;
 use App\Models\Proposal;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
 
 class ProposalController extends Controller
 {
@@ -21,6 +22,10 @@ class ProposalController extends Controller
 
     public function store(ProposalRequest $request)
     {
+        $request->validate([
+            'agree.privacy_policy' => 'required',
+            'agree.personal_data' => 'required',
+        ]);
         $proposal = new Proposal();
         $request->merge(['user_id' => optional($request->user())->id]);
         return $this->defaultFields($proposal, $request, ['user_id']);
@@ -65,12 +70,12 @@ class ProposalController extends Controller
     }
 
     /**
-     * @param $proposal
+     * @param Proposal $proposal
      * @param ProposalRequest $request
      * @param array $merge
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function defaultFields($proposal, ProposalRequest $request, $merge = []): \Illuminate\Http\JsonResponse
+    public function defaultFields(Proposal $proposal, ProposalRequest $request, array $merge = []): JsonResponse
     {
         $default = array_merge([
             "creditType",

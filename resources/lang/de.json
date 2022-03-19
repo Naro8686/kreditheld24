@@ -236,6 +236,11 @@
     "Credit Type": "Art des Darlehens",
     "Comment": "Ein Kommentar",
     "month": "monat",
+    "Client": "Klient",
+    "Full Name": "Vollständiger Name",
     "Desired loan amount ?": "Gewünschte Kreditsumme?",
-    "For what time (month) ?": "Für welche Zeit (Monat)?"
+    "For what time (month) ?": "Für welche Zeit (Monat)?",
+    "I agree": "Ich stimme zu",
+    "privacy policy": "Datenschutz-Bestimmungen",
+    "personal data": "persönliche Daten"
 }

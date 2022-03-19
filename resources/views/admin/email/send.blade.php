@@ -8,12 +8,15 @@
         <div class="max-w-7xl mx-auto">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form action="{{route('admin.email.manager.send',[optional($manager)->id])}}" method="POST"
+                    <form action="{{route('admin.email.send',['type' => $data['type']])}}" method="POST"
                           autocomplete="off">
                         @csrf
+                        @isset($data['email'])
+                            <input type="hidden" name="email" value="{{$data['email']}}">
+                        @endisset
                         <div class="form-group">
                             <label for="message">{{__('Message for')}}
-                                - @if($manager) {{$manager->email}} @else {{__('all')}} @endif</label>
+                                - @isset($data['email']) {{$data['email']}} @else {{__('all')}} @endisset</label>
                             <textarea rows="7" class="form-control" id="message"
                                       name="message">{!! old('message') !!}</textarea>
                             @error('message')

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SendEmailToManager extends Mailable
+class SendEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,9 @@ class SendEmailToManager extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.manager.send', [
+        return $this
+            ->subject(config('app.name'))
+            ->markdown('emails.send', [
             'message' => $this->message,
         ]);
     }
