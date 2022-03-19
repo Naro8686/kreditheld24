@@ -46,27 +46,6 @@ trait File
         }
         return null;
     }
-
-//    public function zip($fileName = 'files.zip', $files = [])
-//    {
-//        $zip = new ZipArchive;
-//
-//        $zip_file = $fileName;
-//
-//        if ($zip->open(public_path($zip_file), ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-//            $files = \File::files(storage_path('myFiles'));
-//
-//            foreach ($files as $key => $value) {
-//                $relativeNameInZipFile = basename($value);
-//                $zip->addFile($value, $relativeNameInZipFile);
-//            }
-//
-//            $zip->close();
-//        }
-//
-//        return public_path($zip_file);
-//    }
-
     /**
      * @param string $zipPathAndName
      * @param array $filesAndPaths
@@ -89,7 +68,7 @@ trait File
             }
         }
         $zip->close();
-
+        if (!is_dir($zipPathAndName)) mkdir($zipPathAndName);
         return rename($tempFileUri, $zipPathAndName);
     }
 }
