@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Constants\Status;
+use App\Models\Category;
 use App\Models\Proposal;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -40,7 +41,7 @@ class ProposalRequest extends FormRequest
         ]);
         $otherCreditCount = $this['otherCreditCount'] ?? 0;
         $validates = [
-            "creditType" => "required|in:$creditTypes",
+            "category_id" => "required|exists:categories,id",
             "creditComment" => "string|max:255|nullable",
             "deadline" => "required|int|min:1",
             "monthlyPayment" => "required|numeric|min:1",
@@ -93,7 +94,7 @@ class ProposalRequest extends FormRequest
         }
         if ($this->get('status')) {
             $validates["status"] = "required|in:$statuses";
-            if ($this['status'] === Status::APPROVED){
+            if ($this['status'] === Status::APPROVED) {
                 $validates["bonus"] = "sometimes|nullable|numeric|min:0";
                 $validates["commission"] = "required|numeric|min:1|max:100";
             }
@@ -117,7 +118,7 @@ class ProposalRequest extends FormRequest
             'otherCredit.*.monthlyPayment' => '"' . Str::lower(__('Monthly Payment')) . '"',
             'otherCredit.*.creditBalance' => '"' . Str::lower(__('Credit balance')) . '"',
             'oldAddress.postcode' => '"' . Str::lower(__('Postcode')) . '"',
-            'creditType' => '"' . Str::lower(__('Credit Type')) . '"',
+            'category_id' => '"' . Str::lower(__('Credit Type')) . '"',
             'deadline' => '"' . Str::lower(__('For what time (month) ?')) . '"',
             'number' => '"' . Str::lower(__('Proposal number')) . '"',
             'monthlyPayment' => '"' . Str::lower(__('Desired amount of payment per month ?')) . '"',

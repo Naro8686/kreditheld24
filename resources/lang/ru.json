@@ -276,5 +276,6 @@
     "Client": "Клиент",
     "Full Name": "Полное имя",
     "Desired loan amount ?": "Желаемая сумма кредита ?",
-    "For what time (month) ?": "На какое время (месяц) ?"
+    "For what time (month) ?": "На какое время (месяц) ?",
+    "Category": "Категория"
 }

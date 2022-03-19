@@ -5,11 +5,15 @@
     <div class="card-body">
         <div class="table-responsive">
             <div id="category-filters">
-                <label class="float-left">{{__('Credit Type')}}:<select id="creditType"
+                <label class="float-left ml-2">{{__('Credit Type')}}:<select id="creditType"
                                                                         class="form-control form-control-sm">
                         <option value="">{{__('no selected')}}</option>
-                        @foreach(\App\Models\Proposal::$creditTypes as $key => $creditType)
-                            <option value="{{$creditType}}">{{trans("proposal.creditTypes.$creditType")}}</option>
+                        @foreach(\App\Models\Category::whereNull('parent_id')->get() as $category)
+                            <optgroup data-id="{{$category->id}}"  label="{{$category->name}}">
+                                @foreach($category->children as $type)
+                                    <option value="{{$type->name}}">{{$type->name}}</option>
+                                @endforeach
+                            </optgroup>
                         @endforeach
                     </select>
                 </label>
@@ -20,6 +24,7 @@
                 <thead>
                 <tr>
                     <th scope="col">{{__('Id')}}</th>
+                    <th scope="col">{{__('Category')}}</th>
                     <th scope="col">{{__('Credit Type')}}</th>
                     <th scope="col">{{__('Proposal number')}}</th>
                     <th scope="col">{{__('Manager')}}</th>
@@ -75,7 +80,8 @@
                 ajax: '{!! route('admin.proposals.index') !!}',
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'creditType', name: 'creditType', orderable: false, searchable: false},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: false},
+                    {data: 'category.name', name: 'category.name'},
                     {data: 'number', name: 'number'},
                     {data: 'user.name', name: 'user.name'},
                     {data: 'creditAmount', name: 'creditAmount'},
@@ -95,7 +101,10 @@
                 $("#proposals_table_filter.dataTables_filter").prepend(el);
             });
             creditType.on('change', function () {
-                table.columns(1).search(this.value ? '^' + this.value + '$' : '', true, false).draw();
+                let category = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
+                table.columns(1).search(category ? '^' + category + '$' : '', true, false);
+                table.columns(2).search(this.value ? '^' + this.value + '$' : '', true, false);
+                table.draw();
             });
         });
     </script>

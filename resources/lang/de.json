@@ -242,5 +242,6 @@
     "Comment": "Ein Kommentar",
     "month": "monat",
     "Desired loan amount ?": "Nettokreditbetrag?",
-    "For what time (month) ?": "Laufzeit in Monaten?"
+    "For what time (month) ?": "Laufzeit in Monaten?",
+    "Category": "Kategorie"
 }

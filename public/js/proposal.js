@@ -70,6 +70,14 @@ function render(proposal) {
             }
             return false
         },
+        showHideComment(name) {
+            let category_name = null;
+            try {
+                category_name = this.formData.categories[this.formData.parent_category_id].filter(category => category.id === parseInt(this.formData.category_id))[0].name;
+            } catch (e) {
+            }
+            return category_name === name
+        },
         submitData() {
             clearErrors();
             let form = document.forms.namedItem('proposal');

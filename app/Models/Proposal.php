@@ -111,7 +111,15 @@ class Proposal extends Model
         'birthday' => 'date',
         'residenceDate' => 'date',
     ];
-    protected $appends = ['payoutAmount'];
+    protected $appends = ['payoutAmount', 'creditType'];
+
+    /**
+     * @return string|null
+     */
+    public function getCreditTypeAttribute(): ?string
+    {
+        return optional($this->category)->name;
+    }
 
     /**
      * @return float|int|string
@@ -134,6 +142,11 @@ class Proposal extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function deleteAllFiles()

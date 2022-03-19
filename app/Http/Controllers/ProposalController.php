@@ -78,7 +78,7 @@ class ProposalController extends Controller
     public function defaultFields(Proposal $proposal, ProposalRequest $request, array $merge = []): JsonResponse
     {
         $default = array_merge([
-            "creditType",
+            "category_id",
             "creditComment",
             "deadline",
             "otherCredit",

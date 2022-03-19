@@ -23,7 +23,7 @@ class ProposalController extends Controller
     {
         try {
             if (request()->ajax()) return datatables()
-                ->of(Proposal::with(['user'])->select('proposals.*'))
+                ->of(Proposal::with(['user','category','category.parent'])->select('proposals.*'))
                 ->addColumn('bgColor', function ($proposal) {
                     $bgColor = 'bg-white';
                     $diff = null;
@@ -38,11 +38,14 @@ class ProposalController extends Controller
                 ->editColumn('id', function ($proposal) {
                     return "<strong>$proposal->id</strong>";
                 })
-                ->editColumn('creditType', function ($proposal) {
-                    return trans("proposal.creditTypes.$proposal->creditType");
-                })
                 ->editColumn('user.name', function ($proposal) {
                     return $proposal->user->name ?? $proposal->user->email;
+                })
+                ->editColumn('category.name', function ($proposal) {
+                    return $proposal->category->name ?? '';
+                })
+                ->editColumn('category.parent.name', function ($proposal) {
+                    return $proposal->category->parent->name ?? '';
                 })
                 ->editColumn('creditAmount', function ($proposal) {
                     return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
@@ -126,7 +129,7 @@ class ProposalController extends Controller
             "notice",
             "commission",
             "bonus",
-            "creditType",
+            "category_id",
             "creditComment",
             "otherCredit",
             "deadline",

@@ -12,29 +12,41 @@
     @endif
     {{ $slot }}
     <h2 class="text-danger text-center" x-show="message" x-text="message"></h2>
-    <div>
-        <x-label class="font-bold text-lg" for="creditType" :value="__('Credit Type')"/>
-        <x-select id="creditType" required
-                  class="block mt-1 w-full" name="creditType"
-                  x-model="formData.creditType">
-            <option value="">{{__('no selected')}}</option>
-            @foreach(\App\Models\Proposal::$creditTypes as $key => $creditType)
-                <option :selected="formData.creditType === '{{$creditType}}'"
-                        value="{{$creditType}}">{{trans("proposal.creditTypes.$creditType")}}</option>
-            @endforeach
-        </x-select>
-        <fieldset class="mt-3"
-                  x-show="formData.creditType === 'other'"
-                  x-transition.scale.origin.bottom
-                  x-transition:leave.scale.origin.top>
-            <legend>{{__('Comment')}}</legend>
-            <x-input id="creditComment" class="block mt-1 w-full" type="text" name="creditComment"
-                     :value="old('creditComment')"
-                     x-model="formData.creditComment"/>
-
-        </fieldset>
+    <div x-data="{showHide:showHideComment('{{trans("proposal.creditTypes.other")}}'), otherName:'{{trans("proposal.creditTypes.other")}}'}">
+        <div>
+            <x-label class="font-bold text-lg" for="parent_category" :value="__('Category')"/>
+            <x-select id="parent_category" required x-on:change="showHide = showHideComment(otherName)"
+                      class="block mt-1 w-full" name="parent_category_id"
+                      x-model="formData.parent_category_id">
+                <option value="">{{__('no selected')}}</option>
+                <template x-for="parent_category in formData.parent_categories" :key="parent_category.id">
+                    <option :selected="formData.parent_category_id === parent_category.id"
+                            :value="parent_category.id" x-text="parent_category.name"/>
+                </template>
+            </x-select>
+        </div>
+        <div class="mt-3">
+            <x-label class="font-bold text-lg" for="category" :value="__('Credit Type')"/>
+            <x-select id="category" required
+                      x-on:change="showHide = showHideComment(otherName)"
+                      class="block mt-1 w-full" name="category_id"
+                      x-model="formData.category_id">
+                <option value="">{{__('no selected')}}</option>
+                <template x-for="category in formData.categories[formData.parent_category_id]" :key="category.id">
+                    <option :selected="formData.category_id === category.id"
+                            :value="category.id" x-text="category.name"/>
+                </template>
+            </x-select>
+            <fieldset class="mt-3" x-show="showHide"
+                      x-transition.scale.origin.bottom
+                      x-transition:leave.scale.origin.top>
+                <legend>{{__('Comment')}}</legend>
+                <x-input id="creditComment" class="block mt-1 w-full" type="text" name="creditComment"
+                         :value="old('creditComment')"
+                         x-model="formData.creditComment"/>
+            </fieldset>
+        </div>
     </div>
-
     <div class="mt-3">
         <x-label class="font-bold text-lg" for="deadline" :value="__('For what time (month) ?')"/>
         <x-input id="deadline" class="block mt-1 w-full"

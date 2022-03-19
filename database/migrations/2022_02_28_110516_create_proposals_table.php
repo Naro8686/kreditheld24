@@ -21,7 +21,6 @@ class CreateProposalsTable extends Migration
                 ->onDelete('cascade');
             $table->string('status')->default(\App\Constants\Status::PENDING);
             $table->text('notice')->nullable();
-            $table->string('creditType');
             $table->integer('deadline');
             $table->decimal('monthlyPayment', 10);
             $table->decimal('creditAmount', 10);

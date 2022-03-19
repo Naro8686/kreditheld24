@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Category;
 use App\Models\Proposal;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,9 @@ class ProposalResource extends JsonResource
     public function toArray($request)
     {
         /** @var Proposal $this */
+        $parent_categories = Category::whereNull('parent_id')->get();
+        $categories = Category::whereIn('parent_id', $parent_categories->pluck('id')->toArray())
+            ->get()->groupBy('parent_id');
         return [
             'id' => $this->id,
             'number' => $this->number,
@@ -24,6 +28,10 @@ class ProposalResource extends JsonResource
             'commission' => $this->commission,
             'bonus' => $this->bonus,
             'creditType' => $this->creditType ?? '',
+            'category_id' => $this->category_id ?? '',
+            'parent_category_id' => $this->category->parent->id ?? '',
+            'parent_categories' => $parent_categories,
+            'categories' => $categories,
             'creditComment' => $this->creditComment ?? '',
             'deadline' => $this->deadline ?? '',
             'monthlyPayment' => $this->monthlyPayment ?? '',
