@@ -18,15 +18,32 @@
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                                    {{__('Name')}}
-                                </th>
-                                <th scope="col"
-                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                     {{__('Email')}}
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Name')}}
+                                </th>
+                                <th scope="col"
+                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Surname')}}
+                                </th>
+                                <th scope="col"
+                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Address')}}
+                                </th>
+                                <th scope="col"
+                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Phone')}}
+                                </th>
+
+                                <th scope="col"
+                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                     {{__('Card Number')}}
+                                </th>
+                                <th scope="col"
+                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Birthday')}}
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
@@ -48,18 +65,31 @@
                                         {{$manager->id}}
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                        {{$manager->name}}
-                                    </td>
-                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         <div>
                                             <a href="{{route('admin.email.index',['type' => 'manager', 'email' => $manager->email])}}">{{$manager->email}}</a>
                                         </div>
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                        {{$manager->name}}
+                                    </td>
+                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                        {{$manager->surname}}
+                                    </td>
+                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                        {{$manager->address}}
+                                    </td>
+                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                        {{$manager->phone}}
+                                    </td>
+
+                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         {{$manager->card_number}}
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                        {{$manager->created_at}}
+                                        {{optional($manager->birthday)->format('d.m.Y')}}
+                                    </td>
+                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                        {{optional($manager->created_at)->format('d.m.Y H:i:s')}}
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         {{$manager->proposals_count}}

@@ -91,7 +91,6 @@
                     {data: 'deadline', name: 'deadline'},
                     {data: 'birthday', name: 'birthday'},
                     {data: 'email', name: 'email'},
-                    {data: 'files', name: 'files', orderable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {
                     $('td', row).eq(0).addClass(data['bgColor']);

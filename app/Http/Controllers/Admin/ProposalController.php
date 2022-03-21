@@ -23,7 +23,7 @@ class ProposalController extends Controller
     {
         try {
             if (request()->ajax()) return datatables()
-                ->of(Proposal::with(['user','category','category.parent'])->select('proposals.*'))
+                ->of(Proposal::with(['user', 'category', 'category.parent'])->select('proposals.*'))
                 ->addColumn('bgColor', function ($proposal) {
                     $bgColor = 'bg-white';
                     $diff = null;
@@ -57,33 +57,17 @@ class ProposalController extends Controller
                     return $proposal->payoutAmount . ' ' . $proposal::CURRENCY;
                 })
                 ->editColumn('created_at', function ($proposal) {
-                    return $proposal->created_at->format('Y-m-d H:i:s');
+                    return $proposal->created_at->format('d.m.Y H:i:s');
                 })
                 ->editColumn('birthday', function ($proposal) {
-                    return $proposal->created_at->format('Y-m-d');
+                    return $proposal->birthday->format('d.m.Y');
                 })
                 ->editColumn('deadline', function ($proposal) {
-                    return optional($proposal->deadlineDateFormat())->format('Y-m-d');
+                    return optional($proposal->deadlineDateFormat())->format('d.m.Y');
                 })
                 ->editColumn('email', function ($proposal) {
                     $link = route('admin.email.index', ['type' => 'client', 'email' => $proposal->email]);
                     return "<a href='$link'>$proposal->email</a>";
-                })
-                ->editColumn('files', function ($proposal) {
-                    $ul = "<ul class='list-group btn-group btn-group-sm' role='group' aria-label='Basic example'>";
-                    foreach ($proposal->files as $file):
-                        $url = route('admin.readFile', ['path' => $file]);
-                        $name = str_replace($proposal::UPLOAD_FILE_PATH . '/', '', $file);
-                        $ul .= "<li>
-                                            <a class='btn btn-sm btn-link' target='_blank'
-                                               href='$url'>$name</a>
-                                        </li>";
-                    endforeach;
-                    $url = route('admin.downloadZip', [$proposal->id]);
-                    $name = __('Download');
-                    $ul .= "<li><a class='mt-2 btn btn-outline-info btn-sm btn-link' href='$url'>$name</a></li>";
-                    $ul .= "</ul>";
-                    return $ul;
                 })
                 ->addColumn('action', function ($proposal) {
                     $linkEdit = route('admin.proposals.edit', [$proposal->id]);
@@ -98,7 +82,7 @@ class ProposalController extends Controller
                                         </button>
                                     </div>";
                 })
-                ->rawColumns(['id', 'files', 'email', 'action'])
+                ->rawColumns(['id', 'email', 'action'])
                 ->make(true);
             return view('admin.proposal.index');
         } catch (Exception $e) {

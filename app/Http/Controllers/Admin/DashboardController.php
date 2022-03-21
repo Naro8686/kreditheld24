@@ -37,8 +37,21 @@ class DashboardController extends Controller
             $headers = $data['headers'];
             return response()->file($pathToFile, $headers);
         }
-        return 'not found';
+        return redirect()->back()->with('error', __('Not Found'));
     }
+
+    public function downloadFile(Request $request)
+    {
+        $path = $request->get('path');
+        if (!is_null($path) && $data = $this->read($path)) {
+            $pathToFile = public_path("storage/{$data['meta']['path']}");
+            $headers = $data['headers'];
+            $name = str_replace(Proposal::UPLOAD_FILE_PATH . '/', '', $path);
+            return response()->download($pathToFile, $name, $headers);
+        }
+        return redirect()->back()->with('error', __('Not Found'));
+    }
+
 
     public function downloadZip($proposal_id)
     {
@@ -97,7 +110,6 @@ class DashboardController extends Controller
                 DB::raw("IFNULL(SUM(CASE WHEN status = '{$approved}' THEN 1 ELSE 0 END),0) AS 'completed'"),
                 DB::raw("IFNULL(SUM(CASE WHEN status = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum'")
             ])
-//                ->whereNotNull('email')
                 ->where(function ($query) use ($from, $to) {
                     return $query
                         ->whereDate('created_at', '>=', $from)

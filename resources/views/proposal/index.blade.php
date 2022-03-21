@@ -110,7 +110,7 @@
                                         {{__('Postcode')}}
                                     </th>
                                     <th scope="col" class="relative py-3 px-6">
-                                        <span class="sr-only">Edit</span>
+                                        <span class="sr-only">{{__('Edit')}}</span>
                                     </th>
                                 </tr>
                                 </thead>

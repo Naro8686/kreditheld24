@@ -14,6 +14,7 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
         Route::get('/read-file', [DashboardController::class, 'readFile'])->name('readFile');
+        Route::get('/download-file', [DashboardController::class, 'downloadFile'])->name('downloadFile');
         Route::get('/download-zip/{proposal_id}', [DashboardController::class, 'downloadZip'])->name('downloadZip');
         Route::controller(ProposalController::class)
             ->name('proposals.')

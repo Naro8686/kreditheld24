@@ -14,18 +14,75 @@
                         @csrf
                         @method('PUT')
                         <div>
+                            <x-label class="font-bold text-lg " for="email" :value="__('Email')"/>
+                            <x-input id="email" class="block mt-1 w-full"
+                                     type="email" name="email" required
+                                     :value="old('email',auth()->user()->email)"
+                            />
+                            @error('email')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="name" :value="__('Name')"/>
+                            <x-input id="name" class="block mt-1 w-full"
+                                     type="text" name="name"
+                                     :value="old('name',auth()->user()->name)"
+                            />
+                            @error('name')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="surname" :value="__('Surname')"/>
+                            <x-input id="surname" class="block mt-1 w-full"
+                                     type="text" name="surname"
+                                     :value="old('surname',auth()->user()->surname)"
+                            />
+                            @error('surname')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg" for="birthday" :value="__('Birthday')"/>
+                            <x-input id="birthday" class="block mt-1 w-full"
+                                     type="date" name="birthday"
+                                     :value="old('birthday',optional(auth()->user()->birthday)->format('Y-m-d'))"
+                            />
+                            @error('birthday')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="tel" :value="__('Phone Number')"/>
+                            <x-input id="phone" class="block mt-1 w-full"
+                                     type="tel" name="phone"
+                                     :value="old('phone',auth()->user()->phone)"
+                            />
+                            @error('phone')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="address" :value="__('Address')"/>
+                            <x-input id="address" class="block mt-1 w-full"
+                                     type="text" name="address"
+                                     :value="old('address',auth()->user()->address)"
+                            />
+                            @error('address')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
                             <x-label class="font-bold text-lg " for="card_number" :value="__('Card Number')"/>
                             <x-input id="card_number" class="block mt-1 w-full"
                                      type="number" name="card_number"
                                      :value="old('card_number',auth()->user()->card_number)"
-{{--                                     x-bind:value="user.card_number || ''"--}}
-                                     x-model="user.card_number"
                             />
                             @error('card_number')
                             <p class="text-sm text-danger">{{$message}}</p>
                             @enderror
                         </div>
-
                         <button type="submit"
                                 x-text="'{{__("Save")}}'"
                                 class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>

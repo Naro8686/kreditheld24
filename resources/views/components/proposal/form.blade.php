@@ -327,7 +327,7 @@
         <x-label class="font-bold text-lg" :value="__('Upload file')"/>
         <template x-for="(name,i) in allFilesName" :key="i">
             <label
-                class="relative border-2 border-gray-300 p-3 w-full block rounded cursor-pointer my-2">
+                class="overflow-x-hidden relative border-2 border-gray-300 p-3 w-full block rounded cursor-pointer my-2">
                 <input type="file" class="sr-only file"
                        x-bind:required="!name"
                        x-bind:name="`uploads[${i}]`"

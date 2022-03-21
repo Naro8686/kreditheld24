@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         $admin->name = 'SuperAdmin';
         $admin->email = 'admin@panel.com';
         $admin->email_verified_at = now();
-        $admin->password = bcrypt('secret');
+        $admin->password = '$2y$10$pMSfQw29K5Iz80lLhL2GbOCrJ30oAjwjXSkpZKShmufi6fwscDFiu';
         $admin->save();
         $admin->roles()->attach($adminRole);
         $admin->permissions()->attach($createProposalsPermission);

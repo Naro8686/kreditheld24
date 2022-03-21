@@ -89,6 +89,8 @@ use Illuminate\Support\Facades\Log;
  * @property int|null $category_id
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNumber($value)
+ * @property-read \App\Models\Category|null $category
+ * @property-read string|null $credit_type
  */
 class Proposal extends Model
 {

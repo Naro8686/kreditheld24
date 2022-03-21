@@ -46,6 +46,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $surname
+ * @property string|null $phone
+ * @property string|null $address
+ * @property \Illuminate\Support\Carbon|null $birthday
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -58,6 +66,10 @@ class User extends Authenticatable implements HasLocalePreference
      */
     protected $fillable = [
         'name',
+        'surname',
+        'phone',
+        'address',
+        'birthday',
         'email',
         'password',
     ];
@@ -79,6 +91,7 @@ class User extends Authenticatable implements HasLocalePreference
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birthday' => 'date',
     ];
 
     public function proposals()

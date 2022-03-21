@@ -30,7 +30,6 @@ class ProposalRequest extends FormRequest
     {
         $familyStatuses = implode(',', Proposal::$familyStatuses);
         $residenceTypes = implode(',', Proposal::$residenceTypes);
-        $creditTypes = implode(',', Proposal::$creditTypes);
         $uploadFileTypes = implode(',', Proposal::$uploadFileTypes);
         $uploadFileMaxSize = Proposal::MAX_FILE_SIZE;
         $statuses = implode(',', [
@@ -53,7 +52,7 @@ class ProposalRequest extends FormRequest
             "city" => "required|string|min:2",
             "postcode" => "required|regex:/\b\d{4,10}\b/",
             "birthday" => "required|date|before:today|date_format:Y-m-d",
-            "residenceDate" => "required|date|after_or_equal:birthday|date_format:Y-m-d",
+            "residenceDate" => "required|date|after_or_equal:birthday|before:today|date_format:Y-m-d",
             "phoneNumber" => "required|numeric|phone_number:6",
             "email" => "required|email",
             "birthplace" => "required|string|min:2",

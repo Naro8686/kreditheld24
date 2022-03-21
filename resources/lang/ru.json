@@ -277,5 +277,8 @@
     "Full Name": "Полное имя",
     "Desired loan amount ?": "Желаемая сумма кредита ?",
     "For what time (month) ?": "На какое время (месяц) ?",
-    "Category": "Категория"
+    "Category": "Категория",
+    "Download all files": "Скачать все файлы",
+    "View file": "Просмотр файла",
+    "Save": "Сохранить"
 }

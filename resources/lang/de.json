@@ -243,5 +243,9 @@
     "month": "monat",
     "Desired loan amount ?": "Nettokreditbetrag?",
     "For what time (month) ?": "Laufzeit in Monaten?",
-    "Category": "Kategorie"
+    "Category": "Kategorie",
+    "Download all files": "Laden Sie alle Dateien herunter",
+    "Download": "Herunterladen",
+    "View file": "Datei ansehen",
+    "Save": "Speichern"
 }
