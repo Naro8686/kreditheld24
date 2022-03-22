@@ -23,9 +23,4 @@ class AsCustomCollection implements CastsAttributes
         }
         return [$key => json_encode($value)];
     }
-
-//    public function serialize($model, string $key, $value, array $attributes)
-//    {
-//        return $value->getArrayCopy();
-//    }
 }

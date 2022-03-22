@@ -99,7 +99,7 @@
         <div class="mt-3">
             <x-label class="font-bold text-lg " for="card_number" :value="__('Card Number')"/>
             <x-input id="card_number" class="block mt-1 w-full"
-                     type="number" name="card_number"
+                     type="text" name="card_number"
                      :value="old('card_number',$manager->card_number)"
             />
             @error('card_number')
