@@ -29,7 +29,9 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])
             ->group(function () {
                 Route::get('/managers', 'index')->name('index');
                 Route::get('/managers/create', 'create')->name('create');
-                Route::post('/managers/create', 'store')->name('store');
+                Route::post('/managers/store', 'store')->name('store');
+                Route::get('/managers/edit/{id}', 'edit')->name('edit');
+                Route::put('/managers/update/{id}', 'update')->name('update');
                 Route::delete('/managers/{id}', 'delete')->name('delete');
             });
         Route::controller(SendEmailController::class)

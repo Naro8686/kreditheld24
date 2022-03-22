@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProposalRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\Proposal;
 use App\Models\Role;
 use Exception;
@@ -23,31 +24,17 @@ class ProfileController extends Controller
         return view('profile.index');
     }
 
-    public function update(Request $request)
+    public function update(UserRequest $request)
     {
-        if ($request->has('phone')) $request->merge([
-            "phone" => Str::replace('+', '', $request['phone']),
-        ]);
-
-        $request->validate([
-            'email' => 'required|email:rfc,dns',
-            'name' => 'required|string|min:2|max:191',
-            'surname' => 'sometimes|nullable|string|min:2|max:191',
-            'phone' => 'sometimes|nullable|numeric|phone_number:6,50',
-            'address' => 'sometimes|nullable|string|min:5|max:191',
-            'card_number' => 'sometimes|nullable|digits_between:12,18',
-            'birthday' => 'sometimes|nullable|date|before:today|date_format:Y-m-d',
-        ], [
-            'card_number.digits_between' => __('Enter the correct number'),
-            'phone.phone_number' => __('Enter the correct number')
-        ]);
-
         $user = auth()->user();
         $user->email = $request->get('email', $user->email);
         $user->name = $request->get('name', $user->name);
         $user->surname = $request->get('surname', $user->surname);
         $user->phone = $request->get('phone', $user->phone);
-        $user->address = $request->get('address', $user->address);
+        $user->city = $request->get('city', $user->city);
+        $user->street = $request->get('street', $user->street);
+        $user->house = $request->get('house', $user->house);
+        $user->postcode = $request->get('postcode', $user->postcode);
         $user->birthday = $request->get('birthday', $user->birthday);
         $user->card_number = $request->get('card_number', $user->card_number);
         if ($user->isDirty('email')) {

@@ -6,10 +6,10 @@
         <div class="table-responsive">
             <div id="category-filters">
                 <label class="float-left ml-2">{{__('Credit Type')}}:<select id="creditType"
-                                                                        class="form-control form-control-sm">
+                                                                             class="form-control form-control-sm">
                         <option value="">{{__('no selected')}}</option>
                         @foreach(\App\Models\Category::whereNull('parent_id')->get() as $category)
-                            <optgroup data-id="{{$category->id}}"  label="{{$category->name}}">
+                            <optgroup data-id="{{$category->id}}" label="{{$category->name}}">
                                 @foreach($category->children as $type)
                                     <option value="{{$type->name}}">{{$type->name}}</option>
                                 @endforeach

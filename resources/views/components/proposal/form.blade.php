@@ -12,7 +12,8 @@
     @endif
     {{ $slot }}
     <h2 class="text-danger text-center" x-show="message" x-text="message"></h2>
-    <div x-data="{showHide:showHideComment('{{trans("proposal.creditTypes.other")}}'), otherName:'{{trans("proposal.creditTypes.other")}}'}">
+    <div
+        x-data="{showHide:showHideComment('{{trans("proposal.creditTypes.other")}}'), otherName:'{{trans("proposal.creditTypes.other")}}'}">
         <div>
             <x-label class="font-bold text-lg" for="parent_category" :value="__('Category')"/>
             <x-select id="parent_category" required x-on:change="showHide = showHideComment(otherName)"
@@ -250,7 +251,7 @@
                  type="number" required min="0" max="4"
                  name="otherCreditCount"
                  x-model.number="otherCreditCount"
-                 @keyup="createdOtherCreditField(otherCreditCount)"/>
+                 x-on:keyup="createdOtherCreditField(otherCreditCount)"/>
         <template x-if="otherCreditCount > 0">
             <fieldset class="mt-3">
                 <legend>{{__('Other credits')}}</legend>
@@ -327,13 +328,17 @@
         <x-label class="font-bold text-lg" :value="__('Upload file')"/>
         <template x-for="(name,i) in allFilesName" :key="i">
             <label
+                x-bind:class="dropFile ? 'bg-gray-400' : ''"
+                x-on:drop="dropFile = false"
+                x-on:drop.prevent="handleFileDrop($event,i)"
+                x-on:dragover.prevent="dropFile = true"
+                x-on:dragleave.prevent="dropFile = false"
                 class="overflow-x-hidden relative border-2 border-gray-300 p-3 w-full block rounded cursor-pointer my-2">
                 <input type="file" class="sr-only file"
                        x-bind:required="!name"
-                       x-bind:name="`uploads[${i}]`"
-                       x-on:change="uploadFile($event,i)"
+                       x-on:change="uploadFile($event.target.files[0],i)"
                 />
-                <button type="button" :disabled="allFilesName.length === 1"
+                <button type="button" :disabled="allFilesName.length <= 1"
                         class="absolute right-0 top-0 mt-2 mr-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
                         @click="deleteFile(i)">
                     -
@@ -343,7 +348,7 @@
         </template>
 
         <button type="button"
-                @click="addFileField(allFilesName.length )"
+                @click="addFileField(allFilesName.length)"
                 class="mt-2 mr-2 bg-gray-500
                                 hover:bg-gray-700 text-white
                                 font-bold py-1 px-3 rounded

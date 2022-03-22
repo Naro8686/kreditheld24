@@ -7,6 +7,7 @@ function render(proposal) {
         allFilesName: [],
         otherCreditCount: 0,
         formData: proposal,
+        dropFile: false,
         init() {
             this.otherCreditCount = this.formData.otherCredit.length || 0;
             this.allFilesName = proposal.uploads.map((name) => name.replace(/uploads\//gi, ''));
@@ -21,23 +22,39 @@ function render(proposal) {
         addFileField(key = 0) {
             return this.allFilesName[key] = '';
         },
-        uploadFile(event, key = 0) {
-            let el = event.target;
-            if (el.files.length) {
-                let file = el.files[0];
-                this.allFilesName[key] = file.name;
-                this.formData.uploads[key] = file;
-                el.classList.add('upload');
-                return true;
-            }
-            return false;
-        },
         deleteFile(key = 0) {
             if (this.allFilesName[key] !== undefined) {
                 this.allFilesName.splice(key, 1);
             }
             if (this.formData.uploads[key] !== undefined) {
                 this.formData.uploads.splice(key, 1)
+            }
+        },
+        uploadFile(file, key = 0) {
+            try {
+                this.allFilesName[key] = file.name;
+                this.formData.uploads[key] = file;
+                setTimeout(function () {
+                    let el = document.querySelector(`[name='uploads[${key}]']`);
+                    if (el) {
+                        el.classList.add('upload');
+                    }
+                }, 500);
+                return true;
+            } catch (e) {
+                console.error(e.message);
+            }
+            return false;
+        },
+        handleFileDrop(event, key) {
+            if (event.dataTransfer.files.length > 0) {
+                const files = event.dataTransfer.files;
+                this.uploadFile(files[0], key);
+                for (let i = 1; i < files.length; i++) {
+                    key = this.allFilesName.length
+                    this.addFileField(key);
+                    this.uploadFile(files[i], key);
+                }
             }
         },
         createdOtherCreditField(count) {
@@ -82,6 +99,11 @@ function render(proposal) {
             clearErrors();
             let form = document.forms.namedItem('proposal');
             let data = new FormData(form);
+            this.formData.uploads.forEach(function (file, key) {
+                if (typeof file === 'object') {
+                    data.append(`uploads[${key}]`, file);
+                }
+            });
             this.allFilesName.forEach(function (fileName) {
                 if (fileName) data.append('allFilesName[]', fileName);
             });
@@ -92,7 +114,7 @@ function render(proposal) {
                     this.btnText = data.message;
                     if (data.hasOwnProperty("errors")) renderError(data.errors)
                     else if (data.success) setTimeout(function () {
-                        location.href = data.redirectUrl;
+                        // location.href = data.redirectUrl;
                     }, 1000);
                     else throw 'error';
                 }).catch((e) => {

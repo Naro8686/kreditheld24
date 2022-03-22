@@ -64,12 +64,42 @@
                             @enderror
                         </div>
                         <div class="mt-3">
-                            <x-label class="font-bold text-lg " for="address" :value="__('Address')"/>
-                            <x-input id="address" class="block mt-1 w-full"
-                                     type="text" name="address"
-                                     :value="old('address',auth()->user()->address)"
+                            <x-label class="font-bold text-lg " for="city" :value="__('City')"/>
+                            <x-input id="city" class="block mt-1 w-full"
+                                     type="text" name="city"
+                                     :value="old('city',auth()->user()->city)"
                             />
-                            @error('address')
+                            @error('city')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="street" :value="__('Street')"/>
+                            <x-input id="street" class="block mt-1 w-full"
+                                     type="text" name="street"
+                                     :value="old('street',auth()->user()->street)"
+                            />
+                            @error('street')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="house" :value="__('House')"/>
+                            <x-input id="house" class="block mt-1 w-full"
+                                     type="text" name="house"
+                                     :value="old('house',auth()->user()->house)"
+                            />
+                            @error('house')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="postcode" :value="__('Postcode')"/>
+                            <x-input id="postcode" class="block mt-1 w-full"
+                                     type="text" name="postcode"
+                                     :value="old('postcode',auth()->user()->postcode)"
+                            />
+                            @error('postcode')
                             <p class="text-sm text-danger">{{$message}}</p>
                             @enderror
                         </div>

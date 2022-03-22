@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Constants\Status;
-use App\Models\Category;
 use App\Models\Proposal;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -18,7 +17,7 @@ class ProposalRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->check();
     }
 
     /**

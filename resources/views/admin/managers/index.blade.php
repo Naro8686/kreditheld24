@@ -76,7 +76,7 @@
                                         {{$manager->surname}}
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
-                                        {{$manager->address}}
+                                        {{"$manager->city, $manager->street, $manager->house, $manager->postcode"}}
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         {{$manager->phone}}
@@ -95,7 +95,8 @@
                                         {{$manager->proposals_count}}
                                     </td>
                                     <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                        <button type='button' class='btn btn-sm btn-danger mr-1'
+                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.edit',[$manager->id])}}"><i class="fas fa-user-edit"></i></a>
+                                        <button type='button' class='btn btn-sm btn-danger'
                                                 data-toggle='modal'
                                                 data-target='#confirmModal'
                                                 data-url='{{route('admin.managers.delete',[$manager->id])}}'>

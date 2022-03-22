@@ -54,6 +54,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereBirthday($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
+ * @property string|null $postcode
+ * @property string|null $house
+ * @property string|null $street
+ * @property string|null $city
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereHouse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePostcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereStreet($value)
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -68,7 +76,10 @@ class User extends Authenticatable implements HasLocalePreference
         'name',
         'surname',
         'phone',
-        'address',
+        'city',
+        'street',
+        'house',
+        'postcode',
         'birthday',
         'email',
         'password',

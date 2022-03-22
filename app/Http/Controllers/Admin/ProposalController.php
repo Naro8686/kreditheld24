@@ -59,11 +59,20 @@ class ProposalController extends Controller
                 ->editColumn('created_at', function ($proposal) {
                     return $proposal->created_at->format('d.m.Y H:i:s');
                 })
+                ->filterColumn('created_at', function ($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(`proposals`.`created_at`,'%d.%m.%Y %H:%i:%s') LIKE ?", ["%$keyword%"]);
+                })
                 ->editColumn('birthday', function ($proposal) {
                     return $proposal->birthday->format('d.m.Y');
                 })
+                ->filterColumn('birthday', function ($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(`proposals`.`birthday`,'%d.%m.%Y') LIKE ?", ["%$keyword%"]);
+                })
                 ->editColumn('deadline', function ($proposal) {
                     return optional($proposal->deadlineDateFormat())->format('d.m.Y');
+                })
+                ->filterColumn('deadline', function ($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(DATE_ADD(`proposals`.`created_at`, INTERVAL `proposals`.`deadline` MONTH),'%d.%m.%Y') LIKE ?", ["%$keyword%"]);
                 })
                 ->editColumn('email', function ($proposal) {
                     $link = route('admin.email.index', ['type' => 'client', 'email' => $proposal->email]);
