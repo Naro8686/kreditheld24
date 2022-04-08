@@ -30,6 +30,7 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $appends = ['category_key'];
     protected $guarded = [];
 
     public function children()
@@ -40,5 +41,19 @@ class Category extends Model
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id', 'id');
+    }
+
+    public function getCategoryKeyAttribute()
+    {
+        $key = null;
+        if (is_null($this->parent_id)) switch ($this->name) {
+            case trans('proposal.creditTypes.home'):
+                $key = 'home';
+                break;
+            case trans('proposal.creditTypes.private_credit'):
+                $key = 'private_credit';
+                break;
+        }
+        return $key;
     }
 }

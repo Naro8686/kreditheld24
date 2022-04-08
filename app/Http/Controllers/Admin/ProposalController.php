@@ -23,7 +23,7 @@ class ProposalController extends Controller
     {
         try {
             if (request()->ajax()) return datatables()
-                ->of(Proposal::with(['user', 'category', 'category.parent'])->select('proposals.*'))
+                ->of(Proposal::with(['user', 'category', 'category.parent'])->select('proposals.*')->limit(1))
                 ->addColumn('bgColor', function ($proposal) {
                     $bgColor = 'bg-white';
                     $diff = null;
@@ -74,6 +74,15 @@ class ProposalController extends Controller
                 ->filterColumn('deadline', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(DATE_ADD(`proposals`.`created_at`, INTERVAL `proposals`.`deadline` MONTH),'%d.%m.%Y') LIKE ?", ["%$keyword%"]);
                 })
+                ->editColumn('user.email', function ($proposal) {
+                    $email = $proposal->user->email;
+                    $name = $proposal->user->name ?? $proposal->user->email;
+                    $link = route('admin.email.index', ['type' => 'manager', 'email' => $email]);
+                    return "<div>
+                                <input class='user_id' type='hidden' value='$proposal->user_id'>
+                                <a class='email' href='$link'>$name</a>
+                            </div>";
+                })
                 ->editColumn('email', function ($proposal) {
                     $link = route('admin.email.index', ['type' => 'client', 'email' => $proposal->email]);
                     return "<a href='$link'>$proposal->email</a>";
@@ -82,16 +91,16 @@ class ProposalController extends Controller
                     $linkEdit = route('admin.proposals.edit', [$proposal->id]);
                     $linkDelete = route('admin.proposals.delete', [$proposal->id]);
                     return "<div class='d-flex justify-content-between' role='group'>
-                                        <a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1'>
-                                            <i class='fa fa-eye'></i>
-                                        </a>
-                                        <button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
-                                                data-target='#confirmModal'
-                                                data-url='$linkDelete'><i class='fa fa-trash'></i>
-                                        </button>
-                                    </div>";
+                                <a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1'>
+                                    <i class='fa fa-eye'></i>
+                                </a>
+                                <button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
+                                        data-target='#confirmModal'
+                                        data-url='$linkDelete'><i class='fa fa-trash'></i>
+                                </button>
+                            </div>";
                 })
-                ->rawColumns(['id', 'email', 'action'])
+                ->rawColumns(['id', 'email', 'user.email', 'action'])
                 ->make(true);
             return view('admin.proposal.index');
         } catch (Exception $e) {
@@ -117,6 +126,11 @@ class ProposalController extends Controller
                 ? null : $request->get('notice')
         ]);
         $success = $proposal->saveData($request->only([
+            "gender",
+            "childrenCount",
+            "rentAmount",
+            "applicantType",
+            "objectData",
             "number",
             "status",
             "notice",

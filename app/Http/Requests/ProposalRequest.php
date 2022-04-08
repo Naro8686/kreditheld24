@@ -28,6 +28,7 @@ class ProposalRequest extends FormRequest
     public function rules()
     {
         $familyStatuses = implode(',', Proposal::$familyStatuses);
+        $applicantTypes = implode(',', Proposal::$applicantTypes);
         $residenceTypes = implode(',', Proposal::$residenceTypes);
         $uploadFileTypes = implode(',', Proposal::$uploadFileTypes);
         $uploadFileMaxSize = Proposal::MAX_FILE_SIZE;
@@ -44,6 +45,10 @@ class ProposalRequest extends FormRequest
             "deadline" => "required|int|min:1",
             "monthlyPayment" => "required|numeric|min:1",
             "creditAmount" => "required|numeric|min:1",
+            "rentAmount" => "required|numeric|min:0",
+            "gender" => ["required", 'regex:/^(male|female)$/'],
+            "applicantType" => "required|in:$applicantTypes",
+            "childrenCount" => "sometimes|nullable|integer|min:0",
             "firstName" => "required|string|min:2",
             "lastName" => "required|string|min:2",
             "street" => "required|string|min:2",
@@ -96,7 +101,22 @@ class ProposalRequest extends FormRequest
                 $validates["bonus"] = "sometimes|nullable|numeric|min:0";
                 $validates["commission"] = "required|numeric|min:1|max:100";
             }
-
+        }
+        if ($this['objectData']) {
+            $objectTypes = implode(',', Proposal::$objectTypes);
+            $validates["objectData"] = "required|array";
+            $validates["objectData.street"] = "sometimes|nullable|string|min:2";
+            $validates["objectData.house"] = "sometimes|nullable|string|min:2";
+            $validates["objectData.city"] = "sometimes|nullable|string|min:2";
+            $validates["objectData.postcode"] = "sometimes|nullable|regex:/\b\d{4,10}\b/";
+            $validates["objectData.objectType"] = "sometimes|nullable|in:$objectTypes";
+            $validates["objectData.yearConstruction"] = "sometimes|nullable|integer|min:1900";
+            $validates["objectData.yearRepair"] = "sometimes|nullable|integer|min:1900";
+            $validates["objectData.plotSize"] = "sometimes|nullable|numeric";
+            $validates["objectData.livingSpace"] = "sometimes|nullable|numeric";
+            $validates["objectData.buildPrice"] = "sometimes|nullable|numeric";
+            $validates["objectData.accumulation"] = "sometimes|nullable|numeric";
+            $validates["objectData.brokerageFees"] = "sometimes|nullable|integer|min:0|max:100";
         }
         return $validates;
     }

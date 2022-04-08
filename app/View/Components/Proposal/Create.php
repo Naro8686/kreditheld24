@@ -4,7 +4,6 @@ namespace App\View\Components\Proposal;
 
 use App\Http\Resources\ProposalResource;
 use App\Models\Proposal;
-use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
 class Create extends Component

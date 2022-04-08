@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Constants\Status;
+use App\Exports\ProposalsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StatisticResource;
 use App\Models\Proposal;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
 class DashboardController extends Controller
@@ -25,6 +27,10 @@ class DashboardController extends Controller
 
     public function index()
     {
+//        dd(3);
+//        return Excel::download(new ProposalsExport(), 'Proposals.pdf');
+
+//        return (new ProposalsExport)->download('invoices.pdf', \Maatwebsite\Excel\Excel::MPDF);
         $proposals = Proposal::orderByDesc('id')->paginate();
         return view('admin.dashboard', compact('proposals'));
     }

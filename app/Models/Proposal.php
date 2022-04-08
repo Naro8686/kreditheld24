@@ -3,15 +3,10 @@
 namespace App\Models;
 
 use App\Casts\AsCustomCollection;
-use App\Constants\Status;
-use App\Http\Requests\ProposalRequest;
 use App\Traits\File;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -97,19 +92,22 @@ class Proposal extends Model
     use HasFactory, File;
 
     protected $guarded = [];
-    public static $creditTypes = ['home', 'private_credit', 'car', 'repair', 'vacation', 'other'];
-    public static $residenceTypes = ['rent', 'roommate', 'own', 'lodger'];
-    public static $familyStatuses = ['divorced', 'married', 'unmarried', 'widower'];
-    public static $uploadFileTypes = ['jpg', 'jpeg', 'png', 'doc', 'docx', 'csv', 'txt', 'xlx', 'xls', 'pdf'];
+    public static array $applicantTypes = ['individual', 'juridical'];
+    public static array $objectTypes = ['penthouse', 'own_apartment', 'townhouse', 'semi-detached_house', 'house', 'estate', 'house_for_two_families'];
+    public static array $creditTypes = ['home', 'private_credit', 'car', 'repair', 'vacation', 'capital', 'other'];
+    public static array $residenceTypes = ['rent', 'roommate', 'own', 'lodger'];
+    public static array $familyStatuses = ['divorced', 'married', 'unmarried', 'widower', 'cohabitation', 'separately'];
+    public static array $uploadFileTypes = ['jpg', 'jpeg', 'png', 'doc', 'docx', 'csv', 'txt', 'xlx', 'xls', 'pdf'];
     public const MAX_FILE_SIZE = '10000'; //kb
-    public const UPLOAD_FILE_PATH = 'uploads'; //kb
-    public const CURRENCY = '€'; //kb
+    public const UPLOAD_FILE_PATH = 'uploads';
+    public const CURRENCY = '€';
     protected $casts = [
         'files' => AsCustomCollection::class,
         'spouse' => AsCustomCollection::class,
         'oldAddress' => AsCustomCollection::class,
         'insurance' => AsCustomCollection::class,
         'otherCredit' => AsCustomCollection::class,
+        'objectData' => AsCustomCollection::class,
         'birthday' => 'date',
         'residenceDate' => 'date',
     ];

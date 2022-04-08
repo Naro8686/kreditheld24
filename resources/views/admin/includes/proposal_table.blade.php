@@ -69,7 +69,40 @@
     <script>
         $(document).ready(function () {
             let creditType = $("#creditType");
+            let groupColumn = 4;
             let table = $('#proposals_table').DataTable({
+                "drawCallback": function (settings) {
+                    // var api = this.api();
+                    // var rows = api.rows({page: 'current'}).nodes();
+                    // console.log(rows);
+                    // var last = null;
+                    //
+                    // api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                    //     // console.log(last,group);
+                    //     if (last !== group) {
+                    //         let tr = $(rows).eq(i);
+                    //         let user_id = tr.find('input[class="user_id"]').val();
+                    //         let email = $(group).find('a.email').attr('href');
+                    //         let name = $(group).find('a.email').text();
+                    //         console.log(user_id, $(group).find('a.email').attr('href'));
+                    //         tr.before(`<tr class="group">
+                    //                         <td colspan="13">
+                    //                             <button class="btn btn-primary">${name}</button>
+                    //                         </td>
+                    //                     </tr>`);
+                    //         last = group;
+                    //     }
+                    // });
+                },
+                select: {
+                    style: 'os',
+                    selector: 'td:first-child'
+                },
+                columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets: 1
+                }],
                 dom: 'Bfrtip',
                 responsive: true,
                 autoWidth: true,
@@ -83,7 +116,7 @@
                     {data: 'category.parent.name', name: 'category.parent.name', searchable: false},
                     {data: 'category.name', name: 'category.name'},
                     {data: 'number', name: 'number'},
-                    {data: 'user.name', name: 'user.name'},
+                    {data: 'user.email', name: 'user.email'},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'status', name: 'status'},
@@ -95,6 +128,14 @@
                 ], createdRow: function (row, data, index) {
                     $('td', row).eq(0).addClass(data['bgColor']);
                 },
+            });
+            table.on('click', 'tr.group', function () {
+                let currentOrder = table.order()[0];
+                console.log(currentOrder);
+                let orderBy = (currentOrder[0] === groupColumn && currentOrder[1] === 'asc')
+                    ? 'desc'
+                    : 'asc';
+                table.order([groupColumn, orderBy]).draw();
             });
             $("#category-filters > label").each(function (i, el) {
                 $("#proposals_table_filter.dataTables_filter").prepend(el);
