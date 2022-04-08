@@ -4,27 +4,27 @@
         'juridical' => 'Juristische',
     ],
     'creditTypes' => [
-        'home' => 'ein Haus bauen',
-        'private_credit' => 'privater Kredit',
-        'car' => 'mit dem Auto',
-        'repair' => 'zur Reparatur',
-        'vacation' => 'Urlaub',
+        'home' => 'Baufinanzierung',
+        'private_credit' => 'Kredit',
+        'car' => 'Fahrzeugkauf',
+        'repair' => 'Modernisiereng',
+        'vacation' => 'Umschuldung',
         'other' => 'zu einem anderen',
         'capital' => 'kapitalbeschaffung'
     ],
 
     'residenceTypes' => [
-        'rent' => 'Mietwohnung',
-        'roommate' => 'Mitbewohner',
+        'rent' => 'zur Miete',
+        'roommate' => 'zur Untermiete',
         'own' => 'Eigentum',
-        'lodger' => 'Untermieter'
+        'lodger' => 'mitfrei / bei den Eltern'
     ],
 
     'familyStatuses' => [
         'divorced' => 'geschieden',
-        'married' => 'verheiratet',
-        'unmarried' => 'ledig',
-        'widower' => 'Witwer',
+        'married' => 'Verheiratet',
+        'unmarried' => 'Ledig',
+        'widower' => 'verwitwet',
         'cohabitation' => 'Zusammenleben',
         'separately' => 'Wir leben getrennt'
     ],
