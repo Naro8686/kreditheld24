@@ -152,9 +152,7 @@
             <form id="proposals" action="#" method="POST">
                 @csrf
                 <table id="proposals_table"
-                       class="table table-sm table-bordered display responsive nowrap"
-                       width="100%"
-                       cellspacing="0">
+                       class="table table-sm table-bordered display responsive nowrap w-100">
                     <thead>
                     <tr>
                         <th class="not-export-col" scope="col"></th>
@@ -203,6 +201,7 @@
     <script src="{{asset('adminPanel/vendor/datatables/dataTables.buttons.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/jszip.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/pdfmake.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('adminPanel/vendor/datatables/vfs_fonts.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.html5.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.print.min.js')}}" type="text/javascript"></script>
 
@@ -247,8 +246,14 @@
                     {
                         text: 'pdf',
                         extend: 'pdfHtml5',
+                        orientation: 'landscape',
+                        pageSize: 'TABLOID',
                         exportOptions: {
                             columns: ':visible:not(.not-export-col)'
+                        },
+                        customize: function (doc) {
+                            doc.content[1].table.widths =
+                                Array(doc.content[1].table.body[0].length + 1).join('*').split('');
                         }
                     },
                     {
@@ -267,7 +272,7 @@
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
-                lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']],
+                lengthMenu: [[1, 50, 100, -1], [1, 50, 100, 'All']],
                 order: [[1, 'desc'], [groupColumn, 'asc']],
                 ajax: '{!! route('admin.proposals.index') !!}',
                 columns: [
