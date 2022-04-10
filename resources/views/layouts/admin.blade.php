@@ -24,7 +24,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{{asset('adminPanel/css/sb-admin-2.min.css')}}" rel="stylesheet">
-
+    <link href="{{asset('adminPanel/summernote-0.8.18-dist/summernote.min.css')}}" rel="stylesheet">
     @stack('css')
 
 </head>
@@ -66,12 +66,15 @@
                 <span>{{__('Managers')}}</span></a>
         </li>
         <li @class(['nav-item','active'=>request()->routeIs('admin.email.*')])>
-            <a @class(['nav-link','collapsed'=>!request()->routeIs('admin.email.*')]) href="#" data-toggle="collapse" data-target="#collapseTwo"
+            <a @class(['nav-link','collapsed'=>!request()->routeIs('admin.email.*')]) href="#" data-toggle="collapse"
+               data-target="#collapseTwo"
                aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-envelope"></i>
                 <span>{{__('Send message')}}</span>
             </a>
-            <div id="collapseTwo" @class(['collapse','show'=>request()->routeIs('admin.email.*')]) aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseTwo"
+                 @class(['collapse','show'=>request()->routeIs('admin.email.*')]) aria-labelledby="headingTwo"
+                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->is('admin/email/manager*')]) href="{{route('admin.email.index',['type'=>'manager'])}}">{{__('Manager')}}</a>
                     <a @class(['collapse-item','active' => request()->is('admin/email/client*')]) href="{{route('admin.email.index',['type'=>'client'])}}">{{__('Client')}}</a>
@@ -134,16 +137,9 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                @if(session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {!! session('success') !!}
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {!! session('error') !!}
-                    </div>
-                @endif
+                <div id="alert" @class(['alert','alert-success' => session('success'),'alert-danger' => session('error')]) role="alert">
+                    {!! session('success') ?? session('error') !!}
+                </div>
                 @yield('content')
             </div>
             <!-- /.container-fluid -->
@@ -183,7 +179,8 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">{{__('Select "Logout" below if you are ready to end your current session.')}}</div>
+            <div
+                class="modal-body">{{__('Select "Logout" below if you are ready to end your current session.')}}</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">{{__('Cancel')}}</button>
                 <form method="POST" action="{{ route('logout') }}">
@@ -231,12 +228,34 @@
 
 <!-- Custom scripts for all pages-->
 <script src="{{asset('adminPanel/js/sb-admin-2.min.js')}}"></script>
+<script src="{{asset('adminPanel/summernote-0.8.18-dist/summernote.min.js')}}"></script>
 <script>
-    $('#confirmModal').on('shown.bs.modal', function (event) {
-        let button = $(event.relatedTarget)
-        let url = button.data('url')
-        let modal = $(this)
-        modal.find('form').attr('action', url)
+
+    $(document).ready(function () {
+        $('.js-form').on('submit', function (e) {
+            e.preventDefault();
+            alert();
+        });
+        $('#confirmModal').on('shown.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let url = button.data('url');
+            let modal = $(this);
+            modal.find('form').attr('action', url);
+        });
+        $('textarea.summernote').summernote({
+            height: 300,
+            focus: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['codeview', 'help']],
+            ]
+        });
     });
 </script>
 @stack('js')

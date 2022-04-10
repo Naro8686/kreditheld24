@@ -12,15 +12,17 @@ class SendEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $message;
+    public $data;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $data = [])
     {
         $this->message = $message;
+        $this->data = $data;
     }
 
     /**
@@ -33,7 +35,8 @@ class SendEmail extends Mailable
         return $this
             ->subject(config('app.name'))
             ->markdown('emails.send', [
-            'message' => $this->message,
-        ]);
+                'message' => $this->message,
+                'data' => $this->data,
+            ]);
     }
 }

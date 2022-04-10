@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Constants\Status;
+use App\Exports\ProposalExport;
+use App\Exports\ProposalsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProposalRequest;
 use App\Http\Resources\ProposalResource;
@@ -10,6 +12,7 @@ use App\Models\Proposal;
 use App\Models\Role;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProposalController extends Controller
 {
@@ -23,7 +26,8 @@ class ProposalController extends Controller
     {
         try {
             if (request()->ajax()) return datatables()
-                ->of(Proposal::with(['user', 'category', 'category.parent'])->select('proposals.*')->limit(1))
+                ->of(Proposal::with(['user', 'category', 'category.parent'])
+                    ->select('proposals.*'))
                 ->addColumn('bgColor', function ($proposal) {
                     $bgColor = 'bg-white';
                     $diff = null;
@@ -78,9 +82,9 @@ class ProposalController extends Controller
                     $email = $proposal->user->email;
                     $name = $proposal->user->name ?? $proposal->user->email;
                     $link = route('admin.email.index', ['type' => 'manager', 'email' => $email]);
-                    return "<div>
+                    return "<div class='inline-flex'>
                                 <input class='user_id' type='hidden' value='$proposal->user_id'>
-                                <a class='email' href='$link'>$name</a>
+                                <a class='email' href='$link'>$email</a>
                             </div>";
                 })
                 ->editColumn('email', function ($proposal) {
@@ -178,5 +182,15 @@ class ProposalController extends Controller
         }
         return redirect()->back()->with('error', __("Whoops! Something went wrong."));
 
+    }
+
+    public function export($id)
+    {
+        try {
+//            return (new ProposalExport($id))->download('invoices.xlsx');
+            return Excel::download(new ProposalExport($id), "proposal_$id.csv");
+        } catch (\Throwable $exception) {
+            dd($exception->getMessage());
+        }
     }
 }

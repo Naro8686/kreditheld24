@@ -23,6 +23,7 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])
                 Route::get('/proposals/{id}', 'edit')->name('edit');
                 Route::put('/proposals/{id}', 'update')->name('update');
                 Route::delete('/proposals/{id}', 'delete')->name('delete');
+                Route::get('/export/{id}', 'export')->name('export');
             });
         Route::controller(ManagerController::class)
             ->name('managers.')

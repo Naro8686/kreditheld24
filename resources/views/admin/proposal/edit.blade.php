@@ -122,5 +122,7 @@
             </div>
         </div>
     @endif
+{{--    <a title="{{__('print')}}" class='btn btn-block btn-secondary'--}}
+{{--       href='{{route('admin.proposals.export', [$proposal->id])}}'>Export</a>--}}
 @endsection
 

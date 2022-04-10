@@ -28,18 +28,21 @@
         </div>
         <h2 class="mt-3 block font-bold text-center capitalize font-medium text-black text-lg">{{__('personal data')}}</h2>
         <div class="grid grid-cols-2 gap-2">
-            <div class="col-span-1 text-center">
-                <x-label class="text-lg" for="gender_male" :value="__('Male')"/>
-                <x-input id="gender_male" class="mt-1"
-                         type="radio" name="gender" required
-                         :value="old('gender','male')" x-model="formData.gender"/>
+            <div class="col-span-2 md:text-left text-center">
+                <div class="text-center inline-flex items-center mr-2">
+                    <x-input id="gender_male" class="mr-1"
+                             type="radio" name="gender" required
+                             :value="old('gender','male')" x-model="formData.gender"/>
+                    <x-label class="text-lg" for="gender_male" :value="__('Male')"/>
+                </div>
+                <div class="text-center inline-flex items-center">
+                    <x-input id="gender_female" class="mr-1"
+                             type="radio" name="gender" required
+                             :value="old('gender','female')" x-model="formData.gender"/>
+                    <x-label class="text-lg" for="gender_female" :value="__('Female')"/>
+                </div>
             </div>
-            <div class="col-span-1 text-center">
-                <x-label class="text-lg" for="gender_female" :value="__('Female')"/>
-                <x-input id="gender_female" class="mt-1"
-                         type="radio" name="gender" required
-                         :value="old('gender','female')" x-model="formData.gender"/>
-            </div>
+
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="firstName" :value="__('Name')"/>
                 <x-input id="firstName" class="block mt-1 w-full"
