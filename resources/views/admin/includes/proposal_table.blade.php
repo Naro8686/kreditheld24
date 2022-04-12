@@ -267,7 +267,7 @@
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
-                lengthMenu: [[1, 50, 100, -1], [1, 50, 100, 'All']],
+                lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']],
                 order: [[1, 'desc'], [groupColumn, 'asc']],
                 ajax: '{!! route('admin.proposals.index') !!}',
                 columns: [
