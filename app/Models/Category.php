@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|Category[] $children
  * @property-read int|null $children_count
  * @property-read Category|null $parent
+ * @property-read mixed $category_key
  */
 class Category extends Model
 {

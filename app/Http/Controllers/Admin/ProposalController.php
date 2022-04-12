@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Constants\Status;
 use App\Exports\ProposalExport;
-use App\Exports\ProposalsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProposalRequest;
 use App\Http\Resources\ProposalResource;
 use App\Models\Proposal;
 use App\Models\Role;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
+use Throwable;
+use Excel;
+use Dompdf\Dompdf;
 
 class ProposalController extends Controller
 {
@@ -184,13 +186,27 @@ class ProposalController extends Controller
 
     }
 
-    public function export($id)
+    public function export($id, Request $request)
     {
+        $proposal = Proposal::findOrFail($id);
+        $ext = $request->get('ext', 'xlsx');
+
         try {
-//            return (new ProposalExport($id))->download('invoices.xlsx');
-            return Excel::download(new ProposalExport($id), "proposal_$id.csv");
-        } catch (\Throwable $exception) {
-            dd($exception->getMessage());
+            if (in_array($ext, ['pdf', 'csv', 'xlsx'])) {
+                $fileName = "proposal_{$proposal->id}.$ext";
+                if ($ext === 'pdf') {
+                    $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
+                    $dompdf->loadHtml(view('proposal.pdf', compact('proposal'))->render());
+                    $dompdf->setPaper('A4');
+                    $dompdf->render();
+                    $dompdf->stream($fileName);
+                    return null;
+                }
+                return Excel::download(new ProposalExport($id), $fileName);
+            }
+        } catch (Throwable $exception) {
+            Log::error("export {$exception->getMessage()}");
         }
+        return back()->with('error', 'Error');
     }
 }

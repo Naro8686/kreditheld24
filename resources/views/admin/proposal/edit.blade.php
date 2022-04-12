@@ -52,7 +52,9 @@
                                       x-transition.scale.origin.bottom
                                       x-transition:leave.scale.origin.top>
                                 <legend>{{__('Notice')}}</legend>
-                                <textarea id="notice" class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full" type="text" name="notice"
+                                <textarea id="notice"
+                                          class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full"
+                                          type="text" name="notice"
                                           x-bind:value="formData.notice"
                                           x-model="formData.notice"></textarea>
                             </fieldset>
@@ -76,12 +78,29 @@
                                          x-model.number="formData.bonus"/>
                             </div>
                             <div class="mt-3">
-                                <x-label class="font-bold text-lg" for="bonus"
+                                <x-label class="font-bold text-lg" for="number"
                                          :value="__('Proposal number')"/>
                                 <x-input id="number" class="block mt-1 w-full"
                                          type="text" name="number"
                                          x-bind:value="formData.number"
                                 />
+                            </div>
+                            <div class="mt-3">
+                                <div class="dropdown show">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                       aria-expanded="false">
+                                        {{__("Export")}}
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item"
+                                           href="{{route('admin.proposals.export', ['id'=>$proposal->id,'ext'=>'xlsx'])}}">Excel</a>
+                                        <a class="dropdown-item"
+                                           href="{{route('admin.proposals.export', ['id'=>$proposal->id,'ext'=>'pdf'])}}">Pdf</a>
+                                        <a class="dropdown-item"
+                                           href="{{route('admin.proposals.export', ['id'=>$proposal->id,'ext'=>'csv'])}}">Csv</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </fieldset>
@@ -122,7 +141,5 @@
             </div>
         </div>
     @endif
-{{--    <a title="{{__('print')}}" class='btn btn-block btn-secondary'--}}
-{{--       href='{{route('admin.proposals.export', [$proposal->id])}}'>Export</a>--}}
 @endsection
 

@@ -1,7 +1,5 @@
 @push('css')
     <link href="{{asset('adminPanel/vendor/datatables/datatables.min.css')}}" rel="stylesheet">
-    {{--    <link href="{{asset('adminPanel/vendor/datatables/dataTables.bootstrap4.css')}}" rel="stylesheet">--}}
-    {{--    <link href="{{asset('adminPanel/vendor/datatables/rowGroup.bootstrap4.min.css')}}" rel="stylesheet"/>--}}
     <link href="{{asset('adminPanel/vendor/datatables/dataTables.checkboxes.css')}}" rel="stylesheet"/>
     <style>
         .dt-buttons {
@@ -192,10 +190,8 @@
         </div>
     </div>
 </div>
-
 @push('js')
     <script src="{{asset('adminPanel/vendor/datatables/datatables.min.js')}}"></script>
-    {{--    <script src="{{asset('adminPanel/vendor/datatables/dataTables.rowGroup.min.js')}}"/>--}}
     <script src="{{asset('adminPanel/vendor/datatables/dataTables.checkboxes.min.js')}}"/>
     <script src="{{asset('adminPanel/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('adminPanel/vendor/datatables/dataTables.buttons.min.js')}}" type="text/javascript"></script>
@@ -204,7 +200,6 @@
     <script src="{{asset('adminPanel/vendor/datatables/vfs_fonts.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.html5.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.print.min.js')}}" type="text/javascript"></script>
-
     <script>
         $(document).ready(function () {
             let proposal_form = $('form#proposals');
@@ -420,13 +415,11 @@
                 table.columns(3).search(this.value ? '^' + this.value + '$' : '', true, false);
                 table.draw();
             });
-            $('.modal', proposal_form)
-                .on('shown.bs.modal', function (event) {
+            $('.modal', proposal_form).on('shown.bs.modal', function (event) {
                     let button = $(event.relatedTarget);
                     let url = button.data('url');
                     proposal_form.attr('action', url);
-                })
-                .on('hidden.bs.modal', function (event) {
+                }).on('hidden.bs.modal', function (event) {
                     proposal_form.attr('action', '#');
                 });
         });

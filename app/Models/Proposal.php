@@ -86,6 +86,16 @@ use Illuminate\Support\Facades\Log;
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNumber($value)
  * @property-read \App\Models\Category|null $category
  * @property-read string|null $credit_type
+ * @property string $gender
+ * @property int $childrenCount
+ * @property string $rentAmount
+ * @property string $applicantType
+ * @property |null $objectData
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereApplicantType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereChildrenCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereObjectData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereRentAmount($value)
  */
 class Proposal extends Model
 {

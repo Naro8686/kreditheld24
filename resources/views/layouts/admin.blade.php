@@ -234,7 +234,6 @@
     $(document).ready(function () {
         $('.js-form').on('submit', function (e) {
             e.preventDefault();
-            alert();
         });
         $('#confirmModal').on('shown.bs.modal', function (event) {
             let button = $(event.relatedTarget);
