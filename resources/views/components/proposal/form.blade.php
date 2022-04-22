@@ -14,7 +14,7 @@
         <h2 class="text-danger text-center" x-show="message" x-text="message"></h2>
         <div class="grid grid-cols-3 gap-3">
             <div class="col-span-3 md:col-span-1">
-                <x-label class="text-lg" for="parent_category" :value="__('Category')"/>
+                <x-label class="text-sm" for="parent_category" :value="__('Category')"/>
                 <x-select id="parent_category"
                           required x-on:change="showHideComment();"
                           class="block mt-1 w-full" name="parent_category_id"
@@ -27,7 +27,7 @@
                 </x-select>
             </div>
             <div class="col-span-3 md:col-span-1">
-                <x-label class="text-lg" for="applicantType" :value="__('Type')"/>
+                <x-label class="text-sm" for="applicantType" :value="__('Type')"/>
                 <x-select id="applicantType" required
                           class="block mt-1 w-full" name="applicantType"
                           x-model="formData.applicantType">
@@ -39,7 +39,7 @@
                 </x-select>
             </div>
             <div class="col-span-3 md:col-span-1">
-                <x-label class="text-lg" for="category" :value="__('Credit Type')"/>
+                <x-label class="text-sm" for="category" :value="__('Credit Type')"/>
                 <x-select id="category" required
                           x-on:change="showHideComment()"
                           class="block mt-1 w-full" name="category_id"
@@ -67,55 +67,55 @@
                     <x-input id="gender_male" class="mr-1"
                              type="radio" name="gender" required
                              :value="old('gender','male')" x-model="formData.gender"/>
-                    <x-label class="text-lg" for="gender_male" :value="__('Male')"/>
+                    <x-label class="text-sm" for="gender_male" :value="__('Male')"/>
                 </div>
                 <div class="text-center inline-flex items-center">
                     <x-input id="gender_female" class="mr-1"
                              type="radio" name="gender" required
                              :value="old('gender','female')" x-model="formData.gender"/>
-                    <x-label class="text-lg" for="gender_female" :value="__('Female')"/>
+                    <x-label class="text-sm" for="gender_female" :value="__('Female')"/>
                 </div>
             </div>
 
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="firstName" :value="__('Name')"/>
+                <x-label class="text-sm" for="firstName" :value="__('Name')"/>
                 <x-input id="firstName" class="block mt-1 w-full"
                          type="text" name="firstName" required
                          :value="old('firstName')" x-model="formData.firstName"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="lastName" :value="__('Surname')"/>
+                <x-label class="text-sm" for="lastName" :value="__('Surname')"/>
                 <x-input id="lastName" class="block mt-1 w-full"
                          type="text" name="lastName" required
                          :value="old('lastName')" x-model="formData.lastName"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="phoneNumber" :value="__('Phone Number')"/>
+                <x-label class="text-sm" for="phoneNumber" :value="__('Phone Number')"/>
                 <x-input id="phoneNumber" class="block mt-1 w-full"
                          type="tel" name="phoneNumber" required
                          :value="old('phoneNumber')" x-model="formData.phoneNumber"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="email" :value="__('Email')"/>
+                <x-label class="text-sm" for="email" :value="__('Email')"/>
                 <x-input id="email" class="block mt-1 w-full"
                          type="email" name="email" required
                          :value="old('email')" x-model="formData.email"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="birthday" :value="__('Birthday')"/>
+                <x-label class="text-sm" for="birthday" :value="__('Birthday')"/>
                 <x-input id="birthday" class="block mt-1 w-full"
                          type="date" name="birthday"
                          :value="old('birthday')" x-model="formData.birthday"/>
             </div>
 
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="birthplace" :value="__('Birthplace')"/>
+                <x-label class="text-sm" for="birthplace" :value="__('Birthplace')"/>
                 <x-input id="birthplace" class="block mt-1 w-full"
                          type="text" name="birthplace" required
                          :value="old('birthplace')" x-model="formData.birthplace"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="familyStatus" :value="__('Family status')"/>
+                <x-label class="text-sm" for="familyStatus" :value="__('Family status')"/>
                 <x-select id="familyStatus" class="block mt-1 w-full" name="familyStatus"
                           x-model="formData.familyStatus">
                     <option value="">{{__('no selected')}}</option>
@@ -127,7 +127,7 @@
             </div>
             <div x-show="formData.familyStatus && formData.familyStatus !== 'unmarried'"
                  x-transition class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="childrenCount" :value="__('Count children')"/>
+                <x-label class="text-sm" for="childrenCount" :value="__('Count children')"/>
                 <x-input id="childrenCount" class="block mt-1 w-full"
                          type="number" min="0" name="childrenCount"
                          required x-model="formData.childrenCount"/>
@@ -138,25 +138,25 @@
                           x-transition:leave.scale.origin.top>
                     <legend>{{__('Spouse details')}}</legend>
                     <div class="mt-3">
-                        <x-label class="text-lg" for="spouse-firstName" :value="__('Name')"/>
+                        <x-label class="text-sm" for="spouse-firstName" :value="__('Name')"/>
                         <x-input id="spouse-firstName" class="block mt-1 w-full"
                                  type="text" name="spouse[firstName]" required
                                  :value="old('spouse.firstName')" x-model="formData.spouse.firstName"/>
                     </div>
                     <div class="mt-3">
-                        <x-label class="text-lg" for="spouse-lastName" :value="__('Surname')"/>
+                        <x-label class="text-sm" for="spouse-lastName" :value="__('Surname')"/>
                         <x-input id="spouse-lastName" class="block mt-1 w-full"
                                  type="text" name="spouse[lastName]" required
                                  :value="old('spouse.lastName')" x-model="formData.spouse.lastName"/>
                     </div>
                     <div class="mt-3">
-                        <x-label class="text-lg" for="spouse-birthday" :value="__('Birthday')"/>
+                        <x-label class="text-sm" for="spouse-birthday" :value="__('Birthday')"/>
                         <x-input id="spouse-birthday" class="block mt-1 w-full"
                                  type="date" name="spouse[birthday]" required
                                  :value="old('spouse.birthday')" x-model="formData.spouse.birthday"/>
                     </div>
                     <div class="mt-3">
-                        <x-label class="text-lg" for="spouse-birthplace"
+                        <x-label class="text-sm" for="spouse-birthplace"
                                  :value="__('Birthplace')"/>
                         <x-input id="spouse-birthplace" class="block mt-1 w-full"
                                  type="text" name="spouse[birthplace]" required
@@ -168,31 +168,31 @@
         <h2 class="mt-3 block font-bold text-center capitalize font-medium text-black text-lg">{{__('Life situation')}}</h2>
         <div class="grid grid-cols-2 gap-2">
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="street" :value="__('Street')"/>
+                <x-label class="text-sm" for="street" :value="__('Street')"/>
                 <x-input id="street" class="block mt-1 w-full"
                          type="text" name="street"
                          :value="old('street')" x-model="formData.street"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="house" :value="__('House')"/>
+                <x-label class="text-sm" for="house" :value="__('House')"/>
                 <x-input id="house" class="block mt-1 w-full"
                          type="text" name="house"
                          :value="old('house')" x-model="formData.house"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="postcode" :value="__('Postcode')"/>
+                <x-label class="text-sm" for="postcode" :value="__('Postcode')"/>
                 <x-input id="postcode" class="block mt-1 w-full"
                          type="text" name="postcode"
                          :value="old('postcode')" x-model="formData.postcode"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="city" :value="__('City')"/>
+                <x-label class="text-sm" for="city" :value="__('City')"/>
                 <x-input id="city" class="block mt-1 w-full"
                          type="text" name="city"
                          :value="old('city')" x-model="formData.city"/>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="residenceType" :value="__('residence Type')"/>
+                <x-label class="text-sm" for="residenceType" :value="__('residence Type')"/>
                 <x-select id="residenceType"
                           class="block mt-1 w-full" name="residenceType"
                           x-model="formData.residenceType">
@@ -214,7 +214,7 @@
                 </fieldset>
             </div>
             <div class="col-span-2 md:col-span-1">
-                <x-label class="text-lg" for="residenceDate" :value="__('residence Date')"/>
+                <x-label class="text-sm" for="residenceDate" :value="__('residence Date')"/>
                 <x-input id="residenceDate" class="block mt-1 w-full"
                          type="date" name="residenceDate"
                          :value="old('residenceDate')" x-model="formData.residenceDate"/>
@@ -224,26 +224,26 @@
                               x-transition:leave.scale.origin.top>
                         <legend>{{__('Old Address')}}</legend>
                         <div class="mt-3">
-                            <x-label class="text-lg" for="old-street" :value="__('Street')"/>
+                            <x-label class="text-sm" for="old-street" :value="__('Street')"/>
                             <x-input id="old-street" class="block mt-1 w-full"
                                      type="text" name="oldAddress[street]"
                                      :value="old('oldAddress.street')" x-model="formData.oldAddress.street"/>
                         </div>
                         <div class="mt-3">
-                            <x-label class="text-lg" for="old-house" :value="__('House')"/>
+                            <x-label class="text-sm" for="old-house" :value="__('House')"/>
                             <x-input id="old-house" class="block mt-1 w-full"
                                      type="text" name="oldAddress[house]" required
                                      :value="old('oldAddress.house')" x-model="formData.oldAddress.house"/>
                         </div>
                         <div class="mt-3">
-                            <x-label class="text-lg" for="old-postcode" :value="__('Postcode')"/>
+                            <x-label class="text-sm" for="old-postcode" :value="__('Postcode')"/>
                             <x-input id="old-postcode" class="block mt-1 w-full"
                                      type="text" name="oldAddress[postcode]" required
                                      :value="old('oldAddress.postcode')"
                                      x-model="formData.oldAddress.postcode"/>
                         </div>
                         <div class="mt-3">
-                            <x-label class="text-lg" for="old-city" :value="__('City')"/>
+                            <x-label class="text-sm" for="old-city" :value="__('City')"/>
                             <x-input id="old-city" class="block mt-1 w-full"
                                      type="text" name="oldAddress[city]" required
                                      :value="old('oldAddress.city')" x-model="formData.oldAddress.city"/>
@@ -255,7 +255,7 @@
         <h2 class="mt-3 block font-bold text-center capitalize font-medium text-black text-lg">{{__('Funding request')}}</h2>
         <div class="grid grid-cols-3 gap-3">
             <div class="col-span-3 md:col-span-1">
-                <x-label class="text-lg" for="creditAmount" :value="__('Desired loan amount ?')"/>
+                <x-label class="text-sm" for="creditAmount" :value="__('Desired loan amount ?')"/>
                 <x-input id="creditAmount" class="block mt-1 w-full"
                          type="number" name="creditAmount" required step=".01"
                          :value="old('creditAmount')" min="1" x-bind:placeholder="currency"
@@ -264,7 +264,7 @@
 
             </div>
             <div class="col-span-3 md:col-span-1">
-                <x-label class="text-lg" for="deadline" :value="__('For what time (month) ?')"/>
+                <x-label class="text-sm" for="deadline" :value="__('For what time (month) ?')"/>
                 <x-input id="deadline" class="block mt-1 w-full"
                          type="number" name="deadline"
                          :value="old('deadline')" min="1" :placeholder="__('month')"
@@ -273,7 +273,7 @@
                 />
             </div>
             <div class="col-span-3 md:col-span-1">
-                <x-label class="text-lg" for="monthlyPayment"
+                <x-label class="text-sm" for="monthlyPayment"
                          :value="__('Desired amount of payment per month ?')"/>
                 <x-input id="monthlyPayment" class="block mt-1 w-full"
                          type="number" name="monthlyPayment" step=".01"
@@ -285,7 +285,7 @@
 
             </div>
             <div class="col-span-3">
-                <x-label class="text-lg" for="otherCreditCount"
+                <x-label class="text-sm" for="otherCreditCount"
                          :value="__('Number of existing loans')"/>
                 <x-input id="otherCreditCount" class="block mt-1 w-full" placeholder="{{__('quantity')}}"
                          type="number" required min="0" max="4"
@@ -365,7 +365,7 @@
                 </template>
             </div>
             <div class="col-span-3">
-                <x-label class="text-lg" :value="__('Insurance')"/>
+                <x-label class="text-sm" :value="__('Insurance')"/>
                 <div class="flex items-center mt-1">
                     <x-input class="mr-2" id="unemployment" name="insurance[unemployment]"
                              x-model="formData.insurance.unemployment"
@@ -384,7 +384,7 @@
             </div>
         </div>
         <div class="mt-3">
-            <x-label class="text-lg" :value="__('Upload file')"/>
+            <x-label class="text-sm" :value="__('Upload file')"/>
             <template x-for="(name,i) in allFilesName" :key="i">
                 <label
                     :id="`drag_${i}`"
@@ -433,34 +433,34 @@
         <template x-if="getCategory()?.category_key === 'home'">
             <div class="grid grid-cols-2 gap-2">
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_street" :value="__('Street')"/>
+                    <x-label class="text-sm" for="object_data_street" :value="__('Street')"/>
                     <x-input id="object_data_street" class="block mt-1 w-full"
                              type="text" name="objectData[street]"
                              :value="old('objectData.street')"
                              x-model="formData.objectData.street"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_house" :value="__('House')"/>
+                    <x-label class="text-sm" for="object_data_house" :value="__('House')"/>
                     <x-input id="object_data_house" class="block mt-1 w-full"
                              type="text" name="objectData[house]"
                              :value="old('objectData.house')"
                              x-model="formData.objectData.house"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_postcode" :value="__('Postcode')"/>
+                    <x-label class="text-sm" for="object_data_postcode" :value="__('Postcode')"/>
                     <x-input id="object_data_postcode" class="block mt-1 w-full"
                              type="text" name="objectData[postcode]"
                              :value="old('objectData.postcode')"
                              x-model="formData.objectData.postcode"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_city" :value="__('City')"/>
+                    <x-label class="text-sm" for="object_data_city" :value="__('City')"/>
                     <x-input id="object_data_city" class="block mt-1 w-full"
                              type="text" name="objectData[city]"
                              :value="old('objectData.city')" x-model="formData.objectData.city"/>
                 </div>
                 <div class="col-span-2">
-                    <x-label class="text-lg" for="objectData_objectType" :value="__('Object Type')"/>
+                    <x-label class="text-sm" for="objectData_objectType" :value="__('Object Type')"/>
                     <x-select id="objectData_objectType"
                               class="block mt-1 w-full" name="objectData[objectType]"
                               x-model="formData.objectData.objectType">
@@ -472,7 +472,7 @@
                     </x-select>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_yearConstruction" :value="__('Year of construction')"/>
+                    <x-label class="text-sm" for="object_data_yearConstruction" :value="__('Year of construction')"/>
                     <x-input id="object_data_yearConstruction" class="block mt-1 w-full"
                              type="number" name="objectData[yearConstruction]"
                              min="1900" max="2099" step="1"
@@ -480,7 +480,7 @@
                              x-model="formData.objectData.yearConstruction"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_yearRepair" :value="__('Year of repair')"/>
+                    <x-label class="text-sm" for="object_data_yearRepair" :value="__('Year of repair')"/>
                     <x-input id="object_data_yearRepair" class="block mt-1 w-full"
                              type="number" name="objectData[yearRepair]"
                              min="1900" max="2099" step="1"
@@ -488,7 +488,7 @@
                              x-model="formData.objectData.yearRepair"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_plotSize" :value="__('Plot size').' (m<sup>2</sup>)'"/>
+                    <x-label class="text-sm" for="object_data_plotSize" :value="__('Plot size').' (m<sup>2</sup>)'"/>
                     <x-input id="object_data_plotSize" class="block mt-1 w-full"
                              type="number" name="objectData[plotSize]"
                              step=".01"
@@ -496,7 +496,7 @@
                              x-model="formData.objectData.plotSize"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_livingSpace"
+                    <x-label class="text-sm" for="object_data_livingSpace"
                              :value="__('Living space').' (m<sup>2</sup>)'"/>
                     <x-input id="object_data_livingSpace" class="block mt-1 w-full"
                              type="number" name="objectData[livingSpace]"
@@ -506,7 +506,7 @@
                 </div>
 
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_buildPrice" :value="__('Purchase or build price')"/>
+                    <x-label class="text-sm" for="object_data_buildPrice" :value="__('Purchase or build price')"/>
                     <x-input id="object_data_buildPrice" class="block mt-1 w-full"
                              type="number" name="objectData[buildPrice]"
                              step=".01"
@@ -515,7 +515,7 @@
                              x-model="formData.objectData.buildPrice"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_accumulation" :value="__('Own accumulation')"/>
+                    <x-label class="text-sm" for="object_data_accumulation" :value="__('Own accumulation')"/>
                     <x-input id="object_data_accumulation" class="block mt-1 w-full"
                              type="number" name="objectData[accumulation]"
                              x-bind:placeholder="currency"
@@ -524,7 +524,7 @@
                              x-model="formData.objectData.accumulation"/>
                 </div>
                 <div class="col-span-2">
-                    <x-label class="text-lg" for="object_data_brokerageFees" :value="__('Brokerage fees').' (%)'"/>
+                    <x-label class="text-sm" for="object_data_brokerageFees" :value="__('Brokerage fees').' (%)'"/>
                     <x-input id="object_data_brokerageFees" class="block mt-1 w-full"
                              type="number" name="objectData[brokerageFees]"
                              placeholder="%"

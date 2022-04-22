@@ -23,9 +23,6 @@
                 <input class="flatpickr flatpickr-input form-control form-control-sm"
                        type="text" placeholder="Select Date..">
             </label>
-            <label>
-                <a class="btn btn-sm btn-outline-primary" href="{{ route('proposal.create') }}">{{ __('Create') }}</a>
-            </label>
         </div>
     </div>
     <!-- Content Row -->
@@ -148,6 +145,7 @@
 {{--            </div>--}}
 {{--        </div>--}}
 {{--    </div>--}}
+    <a class="btn btn-outline-primary btn-block" href="{{ route('proposal.create') }}">{{ __('Create') }}</a>
     <div class="py-6">
         @includeWhen(auth()->user()->isAdmin(), "admin.includes.proposal_table")
         @includeWhen(auth()->user()->isManager(), "manager.includes.proposal_table")
