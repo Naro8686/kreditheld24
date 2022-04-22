@@ -34,6 +34,21 @@ class ProposalController extends Controller
     public function index()
     {
         try {
+            if (request()->ajax()) return $this->ajaxDataTable(auth()->user()->proposals()->with(['user', 'category', 'category.parent'])->select('proposals.*'));
+            $successful = auth()->user()->proposals()->where('proposals.status', Status::APPROVED);
+            $totalSum = $successful->sum('proposals.creditAmount');
+            $targetPercent = $successful->count('proposals.id') === 0 || auth()->user()->proposals()->count() === 0 ? 0
+                : (int)(($successful->count('proposals.id') / auth()->user()->proposals()->count()) * 100);
+            $monthSum = $successful->where('proposals.created_at', '>=', now()->subMonth())->sum('proposals.creditAmount');
+            return view('proposal.index', compact('totalSum', 'monthSum', 'targetPercent'));
+        } catch (\Throwable $e) {
+        }
+        return response('Error', 500);
+    }
+
+    public function old_index()
+    {
+        try {
             $successful = auth()->user()->proposals()->where('proposals.status', Status::APPROVED);
             $totalSum = $successful->sum('proposals.creditAmount');
             $targetPercent = $successful->count('proposals.id') === 0 || auth()->user()->proposals()->count() === 0 ? 0
@@ -49,8 +64,8 @@ class ProposalController extends Controller
 
     public function draft()
     {
-        $proposals = auth()->user()->proposals()->onlyTrashed()->orderByDesc('proposals.id')->paginate();
-        return view('proposal.draft', compact('proposals'));
+        if (request()->ajax()) return $this->ajaxDataTable(auth()->user()->proposals()->onlyTrashed()->with(['user', 'category', 'category.parent'])->select('proposals.*'));
+        return view('proposal.draft');
     }
 
     public function edit($id)
@@ -134,5 +149,80 @@ class ProposalController extends Controller
             ? __("Application sent")
             : __("Whoops! Something went wrong."),
             'redirectUrl' => route('proposal.index'), 'success' => $success], $success ? 200 : 500);
+    }
+
+    private function ajaxDataTable($proposalsBuilder){
+        return datatables()
+            ->of($proposalsBuilder)
+            ->addColumn('bgColor', function ($proposal) {
+                $bgColor = 'bg-white';
+                $diff = null;
+                if ($proposal->deadlineDateFormat()) $diff
+                    = now()->diff($proposal->deadlineDateFormat());
+                if (!is_null($diff)) {
+                    if ($diff->invert) $bgColor = 'bg-red-400';
+                    else if ($diff->y <= 1) $bgColor = 'bg-amber-400';
+                }
+                return $bgColor;
+            })
+            ->addColumn('statusBgColor', function ($proposal) {
+                return $proposal->statusBgColor();
+            })
+            ->editColumn('number', function ($proposal) {
+                return "<strong>$proposal->number</strong>";
+            })
+            ->editColumn('category.name', function ($proposal) {
+                return $proposal->category->name ?? '';
+            })
+            ->editColumn('category.parent.name', function ($proposal) {
+                return $proposal->category->parent->name ?? '';
+            })
+            ->editColumn('creditAmount', function ($proposal) {
+                return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
+            })
+            ->editColumn('status', function ($proposal) {
+                return trans("status.$proposal->status");
+            })
+            ->editColumn('payoutAmount', function ($proposal) {
+                return $proposal->payoutAmount . ' ' . $proposal::CURRENCY;
+            })
+            ->editColumn('created_at', function ($proposal) {
+                return $proposal->created_at->format('d.m.Y H:i:s');
+            })
+            ->filterColumn('created_at', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(`proposals`.`created_at`,'%d.%m.%Y %H:%i:%s') LIKE ?", ["%$keyword%"]);
+            })
+
+            ->addColumn('fullName', function ($proposal) {
+                return "$proposal->firstName $proposal->lastName";
+            })
+            ->filterColumn('fullName', function ($query, $keyword) {
+                $query->whereRaw("CONCAT(`proposals`.`firstName`,  ' ', `proposals`.`lastName`) LIKE ?", ["%$keyword%"]);
+            })
+            ->editColumn('phoneNumber', function ($proposal) {
+                return "<a href='tel:$proposal->phoneNumber'>$proposal->phoneNumber</a>";
+            })
+            ->editColumn('deadline', function ($proposal) {
+                return optional($proposal->deadlineDateFormat())->format('d.m.Y');
+            })
+            ->filterColumn('deadline', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(DATE_ADD(`proposals`.`created_at`, INTERVAL `proposals`.`deadline` MONTH),'%d.%m.%Y') LIKE ?", ["%$keyword%"]);
+            })
+            ->editColumn('email', function ($proposal) {
+                return "<a href='mailto:$proposal->email'>$proposal->email</a>";
+            })
+            ->addColumn('action', function ($proposal) {
+                $linkEdit = route('proposal.edit', [$proposal->id]);
+
+                return (($proposal->status === \App\Constants\Status::REVISION) || $proposal->trashed())
+                    ? "<div class='d-flex justify-content-between' role='group'>
+                                <a href='$linkEdit'
+                                   class='btn btn-sm btn-info mr-1 edit-link'>
+                                   <i class='fas fa-fw fa-edit'></i></a>
+                          </div>"
+                    : "";
+            })
+            ->rawColumns(['number', 'email', 'phoneNumber', 'action'])
+            ->make(true);
     }
 }

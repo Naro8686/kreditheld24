@@ -153,7 +153,35 @@
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
-
+        @if($contact = \App\Models\Contact::orderByDesc('id')->first())
+            <hr class="sidebar-divider">
+            <ul class="d-none d-md-inline contact navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link">
+                        {{__('Contact')}}
+                    </a>
+                    <div class="collapse">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item"
+                               href="javascript:void(0)">
+                                <i class="fas fa-fw fa-user"></i>
+                                <span>{{"$contact->firstName $contact->lastName"}}</span>
+                            </a>
+                            <a class="collapse-item" href="mailto:{{$contact->email}}">
+                                <i class="fas fa-fw fa-mail-bulk"></i>
+                                <span>{{$contact->email}}</span>
+                            </a>
+                            @if($contact->phone)
+                                <a class="collapse-item" href="tel:{{$contact->phone}}">
+                                    <i class="fas fa-fw fa-phone"></i>
+                                    <span>{{$contact->phone}}</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        @endif
     </ul>
     <!-- End of Sidebar -->
 
@@ -325,9 +353,20 @@
                 ['view', ['codeview', 'help']],
             ]
         });
-        $(".custom-file-input").on("change", function() {
+        $(".custom-file-input").on("change", function () {
             let fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+        $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+            $("ul.contact").toggleClass("d-md-inline");
+        });
+        $(window).resize(function() {
+            if (!$(".sidebar").hasClass("toggled")){
+                $("ul.contact").addClass("d-md-inline");
+            }
+            if ($(window).width() < 768) {
+                $("ul.contact").removeClass("d-md-inline");
+            }
         });
     });
 </script>

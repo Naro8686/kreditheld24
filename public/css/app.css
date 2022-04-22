@@ -634,6 +634,9 @@ select {
   white-space: nowrap;
   border-width: 0;
 }
+.visible {
+  visibility: visible;
+}
 .fixed {
   position: fixed;
 }
@@ -907,6 +910,9 @@ select {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.resize {
+  resize: both;
 }
 .list-inside {
   list-style-position: inside;
@@ -1438,14 +1444,12 @@ input.border-red + label {
     background-color: rgb(134 239 172 / var(--tw-bg-opacity)) !important;
 }
 form#proposal input,
-form#proposal textarea
-{
+form#proposal textarea {
     padding: 5px;
     font-size: 16px;
     line-height: 1rem;
 }
-form#proposal select
-{
+form#proposal select {
     padding: 7px;
     font-size: 16px;
     line-height: 1rem;
@@ -1460,6 +1464,9 @@ form#proposal legend {
     line-height: inherit;
     color: inherit;
     white-space: normal;
+}
+ul.contact .collapse {
+    display: inline-block;
 }
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
@@ -1812,5 +1819,4 @@ form#proposal legend {
     padding-right: 2rem;
   }
 }
-
 

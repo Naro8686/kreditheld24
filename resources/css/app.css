@@ -48,18 +48,18 @@ input.border-red + label {
 }
 
 form#proposal input,
-form#proposal textarea
-{
+form#proposal textarea {
     padding: 5px;
     font-size: 16px;
     line-height: 1rem;
 }
-form#proposal select
-{
+
+form#proposal select {
     padding: 7px;
     font-size: 16px;
     line-height: 1rem;
 }
+
 form#proposal legend {
     display: block;
     width: 100%;
@@ -72,3 +72,6 @@ form#proposal legend {
     white-space: normal;
 }
 
+ul.contact .collapse {
+    display: inline-block;
+}

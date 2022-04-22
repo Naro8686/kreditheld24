@@ -279,9 +279,9 @@
                     },
                     {data: 'id', name: 'id'},
                     {data: 'category.parent.name', name: 'category.parent.name', searchable: false},
-                    {data: 'category.name', name: 'category.name'},
+                    {data: 'category.name', name: 'category.name',visible: false},
                     {data: 'number', name: 'number'},
-                    {data: 'user.email', name: 'user.email'},
+                    {data: 'user.email', name: 'user.email',visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'status', name: 'status'},
@@ -293,7 +293,7 @@
                 ], createdRow: function (row, data, index) {
                     $(row).addClass('cursor-pointer');
                     $('td', row).eq(1).addClass(data['bgColor']);
-                    $('td', row).eq(8).addClass(data['statusBgColor']);
+                    $('td', row).eq(6).addClass(data['statusBgColor']);
                 },
             });
             $("ul li ul li").click(function () {
