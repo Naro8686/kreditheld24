@@ -1,9 +1,4 @@
 <?php
-
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProposalController;
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,24 +10,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(ProposalController::class)
-    ->middleware(['auth'])
-    ->name('proposal.')
-    ->group(function () {
-        Route::get('/', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/proposals', 'index')->name('index');
-        Route::get('/proposals/{id}', 'edit')->name('edit');
-        Route::put('/proposals/{id}', 'update')->name('update');
-    });
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProposalController;
 
-Route::controller(ProfileController::class)
-    ->middleware(['auth'])
-    ->name('profile.')
-    ->group(function () {
-        Route::get('/profile', 'index')->name('index');
-        Route::put('/profile/update', 'update')->name('update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/', 'index')->name('dashboard');
+        Route::get('/statistics', 'statistics')->name('statistics');
+        Route::get('/read-file', 'readFile')->name('readFile');
     });
+    Route::controller(ProposalController::class)->prefix('proposals')->name('proposal.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/draft', 'draft')->name('draft');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}', 'edit')->name('edit');
+        Route::put('/{id}', 'update')->name('update');
+    });
+    Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::put('/update', 'update')->name('update');
+    });
+    Route::get('contacts', [\App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
+    Route::get('formulas', [\App\Http\Controllers\FormulaController::class, 'index'])->name('formulas');
+});
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';

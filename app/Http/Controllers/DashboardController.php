@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Constants\Status;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\StatisticResource;
 use App\Models\Proposal;
 use App\Models\Role;
@@ -20,46 +19,18 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth', 'role:' . Role::ADMIN]);
+        $this->middleware(['role:' . Role::ADMIN])->only(['downloadFile', 'downloadZip']);
     }
 
     public function index()
     {
-        $proposals = Proposal::orderByDesc('id')->paginate();
-        return view('admin.dashboard', compact('proposals'));
-    }
-
-    public function readFile(Request $request)
-    {
-        $path = $request->get('path');
-        if (!is_null($path) && $data = $this->read($path)) {
-            $pathToFile = public_path("storage/{$data['meta']['path']}");
-            $headers = $data['headers'];
-            return response()->file($pathToFile, $headers);
+        $user = auth()->user();
+        $proposals = Proposal::orderByDesc('id');
+        if ($user->isManager()) {
+            $proposals = $proposals->where('user_id', $user->id);
         }
-        return redirect()->back()->with('error', __('Not Found'));
-    }
-
-    public function downloadFile(Request $request)
-    {
-        $path = $request->get('path');
-        if (!is_null($path) && $data = $this->read($path)) {
-            $pathToFile = public_path("storage/{$data['meta']['path']}");
-            $headers = $data['headers'];
-            $name = str_replace(Proposal::UPLOAD_FILE_PATH . '/', '', $path);
-            return response()->download($pathToFile, $name, $headers);
-        }
-        return redirect()->back()->with('error', __('Not Found'));
-    }
-
-
-    public function downloadZip($proposal_id)
-    {
-        $proposal = Proposal::findOrFail($proposal_id);
-        $zipPath = $proposal->makeZip();
-        return is_null($zipPath)
-            ? back()->with('error', __("Whoops! Something went wrong."))
-            : response()->download($zipPath);
+        $proposals = $proposals->paginate();
+        return view('dashboard', compact('proposals'));
     }
 
     public function statistics(Request $request)
@@ -95,8 +66,16 @@ class DashboardController extends Controller
                     $sqlFormat = '%Y-%m-%d %H';
                     break;
             }
+            $user = $request->user();
             $approved = Status::APPROVED;
-            $purchases = Proposal::select([
+            if ($user->isAdmin()) {
+                $purchases = Proposal::query();
+                $orders = Proposal::query();
+            } else {
+                $purchases = $user->proposals();
+                $orders = $user->proposals();
+            }
+            $purchases = $purchases->select([
                 DB::raw("IFNULL(SUM(`proposals`.`creditAmount`),0) AS 'sum'"),
                 DB::raw("DATE_FORMAT(`proposals`.`created_at`, '$sqlFormat') AS 'unit'")
             ])->where('status', $approved)->where(function ($query) use ($from, $to) {
@@ -105,16 +84,15 @@ class DashboardController extends Controller
                     ->whereDate('created_at', '<=', $to);
             })->groupBy("unit")->orderBy("unit");
 
-            $orders = Proposal::select([
+            $orders = $orders->select([
                 DB::raw("COUNT(id) AS 'total'"),
                 DB::raw("IFNULL(SUM(CASE WHEN status = '{$approved}' THEN 1 ELSE 0 END),0) AS 'completed'"),
                 DB::raw("IFNULL(SUM(CASE WHEN status = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum'")
-            ])
-                ->where(function ($query) use ($from, $to) {
-                    return $query
-                        ->whereDate('created_at', '>=', $from)
-                        ->whereDate('created_at', '<=', $to);
-                })->limit(1)->first();
+            ])->where(function ($query) use ($from, $to) {
+                return $query
+                    ->whereDate('created_at', '>=', $from)
+                    ->whereDate('created_at', '<=', $to);
+            })->limit(1)->first();
             return response()->json([
                 'purchases' => StatisticResource::collection($purchases->get()),
                 'populars' => [],
@@ -129,5 +107,37 @@ class DashboardController extends Controller
                 ],
             ], 500);
         }
+    }
+
+    public function readFile(Request $request)
+    {
+        $path = $request->get('path');
+        if (!is_null($path) && $data = $this->read($path)) {
+            $pathToFile = public_path("storage/{$data['meta']['path']}");
+            $headers = $data['headers'];
+            return response()->file($pathToFile, $headers);
+        }
+        return redirect()->back()->with('error', __('Not Found'));
+    }
+
+    public function downloadFile(Request $request)
+    {
+        $path = $request->get('path');
+        if (!is_null($path) && $data = $this->read($path)) {
+            $pathToFile = public_path("storage/{$data['meta']['path']}");
+            $headers = $data['headers'];
+            $name = str_replace(Proposal::UPLOAD_FILE_PATH . '/', '', $path);
+            return response()->download($pathToFile, $name, $headers);
+        }
+        return redirect()->back()->with('error', __('Not Found'));
+    }
+
+    public function downloadZip($proposal_id)
+    {
+        $proposal = Proposal::findOrFail($proposal_id);
+        $zipPath = $proposal->makeZip();
+        return is_null($zipPath)
+            ? back()->with('error', __("Whoops! Something went wrong."))
+            : response()->download($zipPath);
     }
 }

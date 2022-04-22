@@ -29,12 +29,15 @@ function render(proposal) {
             return null;
         },
         showHideComment() {
+            let showHideComm = this.showHideComm;
             try {
-                return this.formData.categories[this.formData.parent_category_id]
+                showHideComm = this.formData.categories[this.formData.parent_category_id]
                     .filter(category => category.id === parseInt(this.formData.category_id))[0].name === this.otherName;
             } catch (e) {
             }
-            return false;
+            this.showHideComm = showHideComm;
+            return showHideComm;
+
         },
         setOtherName(name) {
             this.otherName = name;

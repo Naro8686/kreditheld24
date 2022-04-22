@@ -41,6 +41,6 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
         $user->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', __('Data saved successfully'));
     }
 }

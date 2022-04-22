@@ -76,7 +76,7 @@ address-book:
   label: Address Book
   search:
     terms:
-      - contact
+      - contact.blade.php
       - directory
       - index
       - little black book
@@ -95,7 +95,7 @@ address-card:
   search:
     terms:
       - about
-      - contact
+      - contact.blade.php
       - id
       - identification
       - postcard
@@ -10576,7 +10576,7 @@ id-badge:
   search:
     terms:
       - address
-      - contact
+      - contact.blade.php
       - identification
       - license
       - profile
@@ -10595,7 +10595,7 @@ id-card:
   label: Identification Card
   search:
     terms:
-      - contact
+      - contact.blade.php
       - demographics
       - document
       - identification
@@ -10613,7 +10613,7 @@ id-card-alt:
   label: Alternate Identification Card
   search:
     terms:
-      - contact
+      - contact.blade.php
       - demographics
       - document
       - identification

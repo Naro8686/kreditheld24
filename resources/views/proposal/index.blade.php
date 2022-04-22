@@ -1,18 +1,10 @@
-@push('css')
-    <style>
-        #statistics > div > div {
-            min-height: 80px;
-        }
-    </style>
-@endpush
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Proposals') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
+@section('content')
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Proposals') }}
+    </h2>
     <div class="py-6">
-        <div class="px-2 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
             <div id="statistics" class="flex flex-wrap -mx-2">
                 <div class="sm:w-1/3 w-full px-2 mb-2">
                     <div
@@ -51,125 +43,17 @@
             </div>
         </div>
     </div>
+    @include("manager.includes.proposal_table")
+@endsection
 
-    <div class="py-2">
-        <div class="px-2 max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex flex-col">
-                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="inline-block py-2 min-w-full sm:px-6 lg:px-8">
-                        <div class="overflow-hidden shadow-md sm:rounded-lg">
-                            <table class="min-w-full">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
-                                <tr>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Proposal number')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Sum')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Date')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Payout amount')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Status')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Full Name')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Phone Number')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Email')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Street')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('House')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('City')}}
-                                    </th>
-                                    <th scope="col"
-                                        class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Postcode')}}
-                                    </th>
-                                    <th scope="col" class="relative py-3 px-6">
-                                        <span class="sr-only">{{__('Edit')}}</span>
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($proposals as $proposal)
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{$proposal->number}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->creditAmount.' '.$proposal::CURRENCY}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->created_at}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->payoutAmount.' '.$proposal::CURRENCY}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{trans("status.$proposal->status")}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{"$proposal->firstName $proposal->lastName"}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->phoneNumber}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            <a class="background-transparent font-bold outline-none focus:outline-none ease-linear transition-all duration-150"
-                                               href="mailto:{{$proposal->email}}">{{$proposal->email}}</a>
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->street}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->house}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->city}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                            {{$proposal->postcode}}
-                                        </td>
-                                        <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap"
-                                            x-data="{show:{{(int)($proposal->status === \App\Constants\Status::REVISION)}}}">
-                                            <a x-show="show" href="{{route('proposal.edit',[$proposal->id])}}"
-                                               class="text-blue-600 dark:text-blue-500 hover:underline disabled:opacity-50">{{__('Edit')}}</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-3">
-                {!! $proposals->links() !!}
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+@push('css')
+    <style>
+        #statistics > div > div {
+            min-height: 80px;
+        }
+
+        .h2, h2 {
+            font-size: inherit;
+        }
+    </style>
+@endpush

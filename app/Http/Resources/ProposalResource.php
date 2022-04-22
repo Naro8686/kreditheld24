@@ -86,6 +86,8 @@ class ProposalResource extends JsonResource
                 ],
             'otherCredit' => $this->otherCredit ?? [],
             'uploads' => $this->files ?? [],
+            'myProposal' => (!is_null($this->user_id) && $this->user_id === optional($request->user())->id) || is_null($this->id),
+            'draft' => $this->trashed()
         ];
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
 
@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>{{ config('app.name', 'Laravel') . ' | Admin' }}</title>
+    <title>{{ config('app.name', 'Laravel') . ' | '.(optional(auth()->user())->isAdmin() ? 'Admin' : 'Manager') }}</title>
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
@@ -38,52 +37,117 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('admin.dashboard')}}">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('dashboard')}}">
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-coins"></i>
             </div>
-            <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+            <div class="sidebar-brand-text mx-3">{{ __('Credit') }}</div>
         </a>
-
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li @class(['nav-item','active'=>request()->routeIs('admin.dashboard')])>
-            <a class="nav-link" href="{{route('admin.dashboard')}}">
+        <li @class(['nav-item','active' => request()->routeIs('dashboard')])>
+            <a class="nav-link" href="{{route('dashboard')}}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>{{__('Dashboard')}}</span></a>
         </li>
-        <hr class="sidebar-divider my-0">
-        <li @class(['nav-item','active'=>request()->routeIs('admin.proposals.*')])>
+        <li @class(['nav-item','active' => request()->routeIs('contacts')])>
+            <a class="nav-link" href="{{route('contacts')}}">
+                <i class="fas fa-fw fa-address-book"></i>
+                <span>{{__('Contacts')}}</span></a>
+        </li>
+        <li @class(['nav-item','active' => request()->routeIs('formulas')])>
+            <a class="nav-link" href="{{route('formulas')}}">
+                <i class="fas fa-fw fa-book-reader"></i>
+                <span>{{__('Formulas')}}</span></a>
+        </li>
+        <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            @class(['nav-item','active' => request()->routeIs('proposal.*')])>
+            <a @class(['nav-link','collapsed' => !request()->routeIs('proposal.*')])
+               href="#" data-toggle="collapse" aria-expanded="true"
+               x-bind:data-target="'#' + collapse_id"
+               x-bind:aria-controls="collapse_id">
+                <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                <span>{{__('My Proposals')}}</span>
+            </a>
+            <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
+                @class(['collapse','show' => request()->routeIs('proposal.*')])>
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.index')]) href="{{route('proposal.index')}}">{{__('All')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.draft')]) href="{{route('proposal.draft')}}">{{__('Draft')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) href="{{route('proposal.create')}}">{{__('Create')}}</a>
+                </div>
+            </div>
+        </li>
+        <hr class="sidebar-divider">
+
+        @role('admin')
+        <div class="sidebar-heading">{{__('Admin')}}</div>
+        <li @class(['nav-item','active' => request()->routeIs('admin.proposals.*')])>
             <a class="nav-link" href="{{route('admin.proposals.index')}}">
                 <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                <span>{{__('Proposals')}}</span></a>
+                <span>{{__('All proposal')}}</span></a>
         </li>
-        <li @class(['nav-item','active'=>request()->routeIs('admin.managers.*')])>
+        <li @class(['nav-item','active' => request()->routeIs('admin.managers.*')])>
             <a class="nav-link" href="{{route('admin.managers.index')}}">
                 <i class="fas fa-fw fa-users"></i>
                 <span>{{__('Managers')}}</span></a>
         </li>
-        <li @class(['nav-item','active'=>request()->routeIs('admin.email.*')])>
-            <a @class(['nav-link','collapsed'=>!request()->routeIs('admin.email.*')]) href="#" data-toggle="collapse"
-               data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
+        <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            @class(['nav-item','active' => request()->routeIs('admin.email.*')])>
+            <a @class(['nav-link','collapsed' => !request()->routeIs('admin.email.*')])
+               href="#" data-toggle="collapse" aria-expanded="true"
+               x-bind:data-target="'#' + collapse_id"
+               x-bind:aria-controls="collapse_id">
                 <i class="fas fa-fw fa-envelope"></i>
                 <span>{{__('Send message')}}</span>
             </a>
-            <div id="collapseTwo"
-                 @class(['collapse','show'=>request()->routeIs('admin.email.*')]) aria-labelledby="headingTwo"
-                 data-parent="#accordionSidebar">
+            <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
+                @class(['collapse','show' => request()->routeIs('admin.email.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->is('admin/email/manager*')]) href="{{route('admin.email.index',['type'=>'manager'])}}">{{__('Manager')}}</a>
                     <a @class(['collapse-item','active' => request()->is('admin/email/client*')]) href="{{route('admin.email.index',['type'=>'client'])}}">{{__('Client')}}</a>
                 </div>
             </div>
         </li>
-
+        <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            @class(['nav-item','active' => request()->routeIs('admin.contacts.*')])>
+            <a @class(['nav-link','collapsed' => !request()->routeIs('admin.contacts.*')])
+               href="#" data-toggle="collapse" aria-expanded="true"
+               x-bind:data-target="'#' + collapse_id"
+               x-bind:aria-controls="collapse_id">
+                <i class="fas fa-fw fa-address-book"></i>
+                <span>{{__('Contacts')}}</span>
+            </a>
+            <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
+                @class(['collapse','show' => request()->routeIs('admin.contacts.*')])>
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a @class(['collapse-item','active' => request()->routeIs('admin.contacts.index')]) href="{{route('admin.contacts.index')}}">{{__('All')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('admin.contacts.create')]) href="{{route('admin.contacts.create')}}">{{__('Add')}}</a>
+                </div>
+            </div>
+        </li>
+        <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            @class(['nav-item','active' => request()->routeIs('admin.formulas.*')])>
+            <a @class(['nav-link','collapsed' => !request()->routeIs('admin.formulas.*')])
+               href="#" data-toggle="collapse" aria-expanded="true"
+               x-bind:data-target="'#' + collapse_id"
+               x-bind:aria-controls="collapse_id">
+                <i class="fas fa-fw fa-book-reader"></i>
+                <span>{{__('Formulas')}}</span>
+            </a>
+            <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
+                @class(['collapse','show' => request()->routeIs('admin.formulas.*')])>
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.index')]) href="{{route('admin.formulas.index')}}">{{__('All')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.create')]) href="{{route('admin.formulas.create')}}">{{__('Add')}}</a>
+                </div>
+            </div>
+        </li>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
+        @endrole
 
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
@@ -119,10 +183,15 @@
                             <img class="img-profile rounded-circle" alt=""
                                  src="{{asset('adminPanel/img/undraw_profile.svg')}}">
                         </a>
+
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            {{--                            <div class="dropdown-divider"></div>--}}
+                            <a class="dropdown-item" href="{{route('profile.index')}}">
+                                <i class="fas fa-fw fa-user mr-2 text-gray-400"></i>
+                                {{ __('Personal Area') }}
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 {{__('Logout')}}
@@ -137,10 +206,11 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <div id="alert" @class(['alert','alert-success' => session('success'),'alert-danger' => session('error')]) role="alert">
+                @yield('content')
+                <div id="alert"
+                     @class(['alert','alert-success' => session('success'),'alert-danger' => session('error')]) role="alert">
                     {!! session('success') ?? session('error') !!}
                 </div>
-                @yield('content')
             </div>
             <!-- /.container-fluid -->
 
@@ -254,6 +324,10 @@
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['codeview', 'help']],
             ]
+        });
+        $(".custom-file-input").on("change", function() {
+            let fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     });
 </script>

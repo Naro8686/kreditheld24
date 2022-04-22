@@ -9,6 +9,7 @@
             padding: 0;
             position: relative;
         }
+
         h3 {
             text-transform: capitalize;
         }

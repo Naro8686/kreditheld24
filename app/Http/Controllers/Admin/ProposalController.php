@@ -41,6 +41,9 @@ class ProposalController extends Controller
                     }
                     return $bgColor;
                 })
+                ->addColumn('statusBgColor', function ($proposal) {
+                    return $proposal->statusBgColor();
+                })
                 ->editColumn('id', function ($proposal) {
                     return "<strong>$proposal->id</strong>";
                 })
@@ -69,7 +72,7 @@ class ProposalController extends Controller
                     $query->whereRaw("DATE_FORMAT(`proposals`.`created_at`,'%d.%m.%Y %H:%i:%s') LIKE ?", ["%$keyword%"]);
                 })
                 ->editColumn('birthday', function ($proposal) {
-                    return $proposal->birthday->format('d.m.Y');
+                    return optional($proposal->birthday)->format('d.m.Y');
                 })
                 ->filterColumn('birthday', function ($query, $keyword) {
                     $query->whereRaw("DATE_FORMAT(`proposals`.`birthday`,'%d.%m.%Y') LIKE ?", ["%$keyword%"]);
@@ -97,7 +100,7 @@ class ProposalController extends Controller
                     $linkEdit = route('admin.proposals.edit', [$proposal->id]);
                     $linkDelete = route('admin.proposals.delete', [$proposal->id]);
                     return "<div class='d-flex justify-content-between' role='group'>
-                                <a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1'>
+                                <a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1 edit-link'>
                                     <i class='fa fa-eye'></i>
                                 </a>
                                 <button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
@@ -164,7 +167,8 @@ class ProposalController extends Controller
             "insurance",
             "oldAddress",
             "spouse",
-            "uploads"
+            "uploads",
+            "deleted_at"
         ]), $request->get('allFilesName', []));
         return response()->json(['message' => $success
             ? __("Action Saved Successfully")
@@ -177,7 +181,7 @@ class ProposalController extends Controller
         $proposal = Proposal::findOrFail($id);
         try {
             $proposal->deleteAllFiles();
-            $proposal->delete();
+            $proposal->forceDelete();
             return redirect()->route('admin.proposals.index')->with('success', __('Proposal deleted'));
         } catch (Exception $exception) {
             Log::error("ProposalController::delete {$exception->getMessage()}");

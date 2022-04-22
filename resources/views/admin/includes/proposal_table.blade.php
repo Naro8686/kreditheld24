@@ -291,7 +291,9 @@
                     {data: 'email', name: 'email'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {
+                    $(row).addClass('cursor-pointer');
                     $('td', row).eq(1).addClass(data['bgColor']);
+                    $('td', row).eq(8).addClass(data['statusBgColor']);
                 },
             });
             $("ul li ul li").click(function () {
@@ -332,6 +334,12 @@
                 setTimeout(function () {
                     $('.group-checkbox').prop('checked', selectAll.prop('checked'));
                 }, 0);
+            });
+
+            table.on('click', 'tbody>tr:not(.group)', function (e) {
+                if (e.target.tagName.toLowerCase() === 'td') {
+                    $(this).find('a.edit-link')[0].click();
+                }
             });
             proposal_form.on('submit', function (e) {
                 let form = this;
@@ -416,12 +424,12 @@
                 table.draw();
             });
             $('.modal', proposal_form).on('shown.bs.modal', function (event) {
-                    let button = $(event.relatedTarget);
-                    let url = button.data('url');
-                    proposal_form.attr('action', url);
-                }).on('hidden.bs.modal', function (event) {
-                    proposal_form.attr('action', '#');
-                });
+                let button = $(event.relatedTarget);
+                let url = button.data('url');
+                proposal_form.attr('action', url);
+            }).on('hidden.bs.modal', function (event) {
+                proposal_form.attr('action', '#');
+            });
         });
     </script>
 @endpush

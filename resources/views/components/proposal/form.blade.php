@@ -4,8 +4,7 @@
           action="{{$action}}" id="proposal" method="{{Str::lower($method) === 'put' ? 'POST': $method}}"
           enctype="multipart/form-data"
           x-data="render({{$formData}}).setOtherName('{{trans("proposal.creditTypes.other")}}')"
-          @submit.prevent="submitData()"
-    >
+          @submit.prevent="submitData()">
         <span></span>
         @csrf
         @if(Str::lower($method) === 'put')
@@ -13,18 +12,53 @@
         @endif
         {{ $slot }}
         <h2 class="text-danger text-center" x-show="message" x-text="message"></h2>
-        <div>
-            <x-label class="text-lg" for="parent_category" :value="__('Category')"/>
-            <x-select id="parent_category"
-                      required x-on:change="showHideComm = showHideComment();"
-                      class="block mt-1 w-full" name="parent_category_id"
-                      x-model="formData.parent_category_id">
-                <option value="">{{__('no selected')}}</option>
-                <template x-for="parent_category in formData.parent_categories" :key="parent_category.id">
-                    <option :selected="formData.parent_category_id === parent_category.id"
-                            :value="parent_category.id" x-text="parent_category.name"/>
-                </template>
-            </x-select>
+        <div class="grid grid-cols-3 gap-3">
+            <div class="col-span-3 md:col-span-1">
+                <x-label class="text-lg" for="parent_category" :value="__('Category')"/>
+                <x-select id="parent_category"
+                          required x-on:change="showHideComment();"
+                          class="block mt-1 w-full" name="parent_category_id"
+                          x-model="formData.parent_category_id">
+                    <option value="">{{__('no selected')}}</option>
+                    <template x-for="parent_category in formData.parent_categories" :key="parent_category.id">
+                        <option :selected="formData.parent_category_id === parent_category.id"
+                                :value="parent_category.id" x-text="parent_category.name"/>
+                    </template>
+                </x-select>
+            </div>
+            <div class="col-span-3 md:col-span-1">
+                <x-label class="text-lg" for="applicantType" :value="__('Type')"/>
+                <x-select id="applicantType" required
+                          class="block mt-1 w-full" name="applicantType"
+                          x-model="formData.applicantType">
+                    <option value="">{{__('no selected')}}</option>
+                    @foreach(\App\Models\Proposal::$applicantTypes as $key => $applicantType)
+                        <option :selected="formData.applicantType === '{{$applicantType}}'"
+                                value="{{$applicantType}}">{{trans("proposal.applicantTypes.$applicantType")}}</option>
+                    @endforeach
+                </x-select>
+            </div>
+            <div class="col-span-3 md:col-span-1">
+                <x-label class="text-lg" for="category" :value="__('Credit Type')"/>
+                <x-select id="category" required
+                          x-on:change="showHideComment()"
+                          class="block mt-1 w-full" name="category_id"
+                          x-model="formData.category_id">
+                    <option value="">{{__('no selected')}}</option>
+                    <template x-for="category in formData.categories[formData.parent_category_id]" :key="category.id">
+                        <option :selected="formData.category_id === category.id"
+                                :value="category.id" x-text="category.name"/>
+                    </template>
+                </x-select>
+            </div>
+            <fieldset class="col-span-3" x-show="showHideComm"
+                      x-transition.scale.origin.bottom
+                      x-transition:leave.scale.origin.top>
+                <legend>{{__('Comment')}}</legend>
+                <x-input id="creditComment" class="block mt-1 w-full" type="text" name="creditComment"
+                         :value="old('creditComment')"
+                         x-model="formData.creditComment"/>
+            </fieldset>
         </div>
         <h2 class="mt-3 block font-bold text-center capitalize font-medium text-black text-lg">{{__('personal data')}}</h2>
         <div class="grid grid-cols-2 gap-2">
@@ -70,7 +104,7 @@
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="birthday" :value="__('Birthday')"/>
                 <x-input id="birthday" class="block mt-1 w-full"
-                         type="date" name="birthday" required
+                         type="date" name="birthday"
                          :value="old('birthday')" x-model="formData.birthday"/>
             </div>
 
@@ -82,8 +116,7 @@
             </div>
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="familyStatus" :value="__('Family status')"/>
-                <x-select id="familyStatus" required
-                          class="block mt-1 w-full" name="familyStatus"
+                <x-select id="familyStatus" class="block mt-1 w-full" name="familyStatus"
                           x-model="formData.familyStatus">
                     <option value="">{{__('no selected')}}</option>
                     @foreach(\App\Models\Proposal::$familyStatuses as $key => $familyStatus)
@@ -99,7 +132,7 @@
                          type="number" min="0" name="childrenCount"
                          required x-model="formData.childrenCount"/>
             </div>
-            <template x-if="formData.familyStatus === 'married'">
+            <template x-if="formData.familyStatus === 'married' || formData.familyStatus === 'cohabitation'">
                 <fieldset class="col-span-2"
                           x-transition.scale.origin.bottom
                           x-transition:leave.scale.origin.top>
@@ -137,30 +170,30 @@
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="street" :value="__('Street')"/>
                 <x-input id="street" class="block mt-1 w-full"
-                         type="text" name="street" required
+                         type="text" name="street"
                          :value="old('street')" x-model="formData.street"/>
             </div>
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="house" :value="__('House')"/>
                 <x-input id="house" class="block mt-1 w-full"
-                         type="text" name="house" required
+                         type="text" name="house"
                          :value="old('house')" x-model="formData.house"/>
             </div>
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="postcode" :value="__('Postcode')"/>
                 <x-input id="postcode" class="block mt-1 w-full"
-                         type="text" name="postcode" required
+                         type="text" name="postcode"
                          :value="old('postcode')" x-model="formData.postcode"/>
             </div>
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="city" :value="__('City')"/>
                 <x-input id="city" class="block mt-1 w-full"
-                         type="text" name="city" required
+                         type="text" name="city"
                          :value="old('city')" x-model="formData.city"/>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="residenceType" :value="__('residence Type')"/>
-                <x-select id="residenceType" required
+                <x-select id="residenceType"
                           class="block mt-1 w-full" name="residenceType"
                           x-model="formData.residenceType">
                     <option value="">{{__('no selected')}}</option>
@@ -169,20 +202,21 @@
                                 value="{{$residenceType}}">{{trans("proposal.residenceTypes.$residenceType")}}</option>
                     @endforeach
                 </x-select>
+                <fieldset class="mt-3" x-show="formData.residenceType === 'rent'"
+                          x-transition.scale.origin.bottom
+                          x-transition:leave.scale.origin.top>
+                    <legend>{{__('Rent')}}</legend>
+                    <x-input id="rentAmount" class="block mt-1 w-full"
+                             type="number" name="rentAmount" x-bind:required="formData.residenceType === 'rent'"
+                             step=".01"
+                             :value="old('rentAmount')" min="0" x-bind:placeholder="currency"
+                             x-model.number="formData.rentAmount"/>
+                </fieldset>
             </div>
-            <fieldset class="col-span-2" x-show="formData.residenceType === 'rent'"
-                      x-transition.scale.origin.bottom
-                      x-transition:leave.scale.origin.top>
-                <legend>{{__('Rent')}}</legend>
-                <x-input id="rentAmount" class="block mt-1 w-full"
-                         type="number" name="rentAmount" x-bind:required="formData.residenceType === 'rent'" step=".01"
-                         :value="old('rentAmount')" min="0" x-bind:placeholder="currency"
-                         x-model.number="formData.rentAmount"/>
-            </fieldset>
-            <div class="col-span-2">
+            <div class="col-span-2 md:col-span-1">
                 <x-label class="text-lg" for="residenceDate" :value="__('residence Date')"/>
                 <x-input id="residenceDate" class="block mt-1 w-full"
-                         type="date" name="residenceDate" required
+                         type="date" name="residenceDate"
                          :value="old('residenceDate')" x-model="formData.residenceDate"/>
                 <template x-if="lessTwoYears()">
                     <fieldset class="mt-3"
@@ -192,7 +226,7 @@
                         <div class="mt-3">
                             <x-label class="text-lg" for="old-street" :value="__('Street')"/>
                             <x-input id="old-street" class="block mt-1 w-full"
-                                     type="text" name="oldAddress[street]" required
+                                     type="text" name="oldAddress[street]"
                                      :value="old('oldAddress.street')" x-model="formData.oldAddress.street"/>
                         </div>
                         <div class="mt-3">
@@ -220,49 +254,34 @@
         </div>
         <h2 class="mt-3 block font-bold text-center capitalize font-medium text-black text-lg">{{__('Funding request')}}</h2>
         <div class="grid grid-cols-3 gap-3">
-            <div class="col-span-3">
-                <x-label class="text-lg" for="category" :value="__('Credit Type')"/>
-                <x-select id="category" required
-                          x-on:change="showHideComm = showHideComment()"
-                          class="block mt-1 w-full" name="category_id"
-                          x-model="formData.category_id">
-                    <option value="">{{__('no selected')}}</option>
-                    <template x-for="category in formData.categories[formData.parent_category_id]" :key="category.id">
-                        <option :selected="formData.category_id === category.id"
-                                :value="category.id" x-text="category.name"/>
-                    </template>
-                </x-select>
-                <fieldset class="mt-3" x-show="showHideComm"
-                          x-transition.scale.origin.bottom
-                          x-transition:leave.scale.origin.top>
-                    <legend>{{__('Comment')}}</legend>
-                    <x-input id="creditComment" class="block mt-1 w-full" type="text" name="creditComment"
-                             :value="old('creditComment')"
-                             x-model="formData.creditComment"/>
-                </fieldset>
-            </div>
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-lg" for="creditAmount" :value="__('Desired loan amount ?')"/>
                 <x-input id="creditAmount" class="block mt-1 w-full"
                          type="number" name="creditAmount" required step=".01"
                          :value="old('creditAmount')" min="1" x-bind:placeholder="currency"
-                         x-model.number="formData.creditAmount"/>
+                         x-model.number="formData.creditAmount"
+                />
 
             </div>
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-lg" for="deadline" :value="__('For what time (month) ?')"/>
                 <x-input id="deadline" class="block mt-1 w-full"
-                         type="number" name="deadline" required
+                         type="number" name="deadline"
                          :value="old('deadline')" min="1" :placeholder="__('month')"
-                         x-model.number="formData.deadline"/>
+                         x-model.number="formData.deadline"
+                         x-on:keyup="formData.monthlyPayment = formData.deadline?(Math.round((formData.creditAmount/formData.deadline + Number.EPSILON) * 100) / 100):formData.creditAmount;"
+                />
             </div>
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-lg" for="monthlyPayment"
                          :value="__('Desired amount of payment per month ?')"/>
                 <x-input id="monthlyPayment" class="block mt-1 w-full"
-                         type="number" name="monthlyPayment" required step=".01"
-                         :value="old('monthlyPayment')" min="1" x-bind:placeholder="currency"
-                         x-model.number="formData.monthlyPayment"/>
+                         type="number" name="monthlyPayment" step=".01"
+                         :value="old('monthlyPayment')" min="0.01" x-bind:max="formData.creditAmount"
+                         x-bind:placeholder="currency"
+                         x-model.number="formData.monthlyPayment"
+                         x-on:keyup="formData.deadline = Math.ceil((formData.creditAmount/formData.monthlyPayment));"
+                />
 
             </div>
             <div class="col-span-3">
@@ -363,20 +382,7 @@
                     <x-label class="mr-2" for="death" :value="__('Death')"/>
                 </div>
             </div>
-            <div class="col-span-3">
-                <x-label class="text-lg" for="applicantType" :value="__('Type')"/>
-                <x-select id="applicantType" required
-                          class="block mt-1 w-full" name="applicantType"
-                          x-model="formData.applicantType">
-                    <option value="">{{__('no selected')}}</option>
-                    @foreach(\App\Models\Proposal::$applicantTypes as $key => $applicantType)
-                        <option :selected="formData.applicantType === '{{$applicantType}}'"
-                                value="{{$applicantType}}">{{trans("proposal.applicantTypes.$applicantType")}}</option>
-                    @endforeach
-                </x-select>
-            </div>
         </div>
-
         <div class="mt-3">
             <x-label class="text-lg" :value="__('Upload file')"/>
             <template x-for="(name,i) in allFilesName" :key="i">
@@ -389,7 +395,7 @@
                     x-on:dragleave.prevent="dropFile = false"
                     class="overflow-x-hidden relative rounded-md p-3 w-full block cursor-pointer my-2">
                     <input type="file" class="sr-only file"
-                           x-bind:required="!name"
+                           x-bind:required="!name && !formData.draft"
                            x-on:change="uploadFile($event.target.files[0],i)"
                     />
                     <button type="button" :disabled="allFilesName.length <= 1"
@@ -490,7 +496,8 @@
                              x-model="formData.objectData.plotSize"/>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <x-label class="text-lg" for="object_data_livingSpace" :value="__('Living space').' (m<sup>2</sup>)'"/>
+                    <x-label class="text-lg" for="object_data_livingSpace"
+                             :value="__('Living space').' (m<sup>2</sup>)'"/>
                     <x-input id="object_data_livingSpace" class="block mt-1 w-full"
                              type="number" name="objectData[livingSpace]"
                              step=".01"
@@ -530,9 +537,19 @@
         @isset($footer)
             {{ $footer }}
         @endisset
+        <template x-if="formData.myProposal">
+            <div class="mt-3 col-span-1">
+                <div class="flex items-center mt-1">
+                    <x-input class="mr-2" id="draft" name="draft"
+                             x-model="formData.draft"
+                             type="checkbox"/>
+                    <x-label class="mr-2" for="draft" :value="__('Save to draft')"/>
+                </div>
+            </div>
+        </template>
         <button type="submit" :disabled="loading"
                 x-text="btnText || '{{__("Send")}}'"
-                class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>
+                class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"></button>
     </form>
 </div>
 @push('js')

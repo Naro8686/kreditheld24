@@ -72,7 +72,7 @@ trait HasRolesAndPermissions
 
     /**
      * @param array $permissions
-     * @return Permission[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function getAllPermissions(array $permissions)
     {

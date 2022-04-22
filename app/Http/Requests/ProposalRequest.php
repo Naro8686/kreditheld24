@@ -43,28 +43,28 @@ class ProposalRequest extends FormRequest
             "category_id" => "required|exists:categories,id",
             "creditComment" => "string|max:255|nullable",
             "deadline" => "required|int|min:1",
-            "monthlyPayment" => "required|numeric|min:1",
+            "monthlyPayment" => "required|numeric|min:.01",
             "creditAmount" => "required|numeric|min:1",
-            "rentAmount" => "required|numeric|min:0",
+            "rentAmount" => "sometimes|nullable|numeric|min:0",
             "gender" => ["required", 'regex:/^(male|female)$/'],
             "applicantType" => "required|in:$applicantTypes",
             "childrenCount" => "sometimes|nullable|integer|min:0",
             "firstName" => "required|string|min:2",
             "lastName" => "required|string|min:2",
-            "street" => "required|string|min:2",
-            "house" => "required|string|min:2",
-            "city" => "required|string|min:2",
-            "postcode" => "required|regex:/\b\d{4,10}\b/",
-            "birthday" => "required|date|before:today|date_format:Y-m-d",
-            "residenceDate" => "required|date|after_or_equal:birthday|before:today|date_format:Y-m-d",
+            "street" => "sometimes|nullable|string|min:2",
+            "house" => "sometimes|nullable|string|min:2",
+            "city" => "sometimes|nullable|string|min:2",
+            "postcode" => "sometimes|nullable|regex:/\b\d{4,10}\b/",
+            "birthday" => "sometimes|nullable|date|before:today|date_format:Y-m-d",
+            "residenceDate" => "sometimes|nullable|date|after_or_equal:birthday|before:today|date_format:Y-m-d",
             "phoneNumber" => "required|numeric|phone_number:6",
             "email" => "required|email",
             "birthplace" => "required|string|min:2",
-            "residenceType" => "required|in:$residenceTypes",
-            "familyStatus" => "required|in:$familyStatuses",
+            "residenceType" => "sometimes|nullable|in:$residenceTypes",
+            "familyStatus" => "sometimes|nullable|in:$familyStatuses",
             "otherCreditCount" => "required|int|min:0|max:4",
         ];
-        if (!count($this->get('allFilesName', []))) {
+        if (!count($this->get('allFilesName', [])) && !$this->has('draft')) {
             $validates["uploads"] = "required|array|min:1";
             $validates["uploads.*"] = "required|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
         } else {
@@ -81,7 +81,7 @@ class ProposalRequest extends FormRequest
                 $validates["oldAddress.postcode"] = $validates["postcode"];
             }
         }
-        if ($this['familyStatus'] && $this['familyStatus'] === 'married') {
+        if ($this['familyStatus'] && ($this['familyStatus'] === 'married' || $this['familyStatus'] === 'cohabitation')) {
             $validates["spouse"] = "required|array";
             $validates["spouse.firstName"] = $validates["firstName"];
             $validates["spouse.lastName"] = $validates["lastName"];
@@ -161,9 +161,20 @@ class ProposalRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        $this->merge(['deleted_at' => $this->has('draft') ? Carbon::now() : null]);
         if ($this['phoneNumber']) $this->merge([
             "phoneNumber" => Str::replace('+', '', $this['phoneNumber']),
         ]);
+        if ($this->get('creditAmount', 0) > 0) {
+            if ($this->get('monthlyPayment', 0) > 0) $this->merge([
+                "deadline" => round(($this->get('creditAmount', 0) / $this->get('monthlyPayment'))),
+            ]);
+
+            if ($this->get('deadline', 0) > 0) $this->merge([
+                "monthlyPayment" => round(($this->get('creditAmount', 0) / $this->get('deadline')), 2),
+            ]);
+        }
+
         $this->merge(['insurance' => [
             'unemployment' => $this->has('insurance.unemployment'),
             'disease' => $this->has('insurance.disease'),

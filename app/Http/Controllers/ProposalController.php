@@ -47,12 +47,24 @@ class ProposalController extends Controller
         return view('proposal.index', compact('proposals', 'totalSum', 'monthSum', 'targetPercent'));
     }
 
+    public function draft()
+    {
+        $proposals = auth()->user()->proposals()->onlyTrashed()->orderByDesc('proposals.id')->paginate();
+        return view('proposal.draft', compact('proposals'));
+    }
+
     public function edit($id)
     {
         $proposal = auth()->user()->proposals()
             ->where('proposals.id', $id)
-            ->where('proposals.status', Status::REVISION)
-            ->firstOrFail();
+            ->where(function ($query) {
+                return $query->where([
+                    ['proposals.status', Status::REVISION],
+                    ['proposals.deleted_at', null]
+                ])->orWhere([
+                    ['proposals.deleted_at', '!=', null]
+                ]);
+            })->withTrashed()->firstOrFail();
         return view('proposal.edit', compact('proposal'));
     }
 
@@ -60,9 +72,18 @@ class ProposalController extends Controller
     {
         $proposal = auth()->user()->proposals()
             ->where('proposals.id', $id)
-            ->where('proposals.status', Status::REVISION)
+            ->where(function ($query) {
+                return $query->where([
+                    ['proposals.status', Status::REVISION],
+                    ['proposals.deleted_at', null]
+                ])->orWhere([
+                    ['proposals.deleted_at', '!=', null]
+                ]);
+            })
+            ->withTrashed()
             ->firstOrFail();
-        $request->merge([
+
+        if (!$request->has('draft')) $request->merge([
             'status' => Status::PENDING,
             'notice' => null,
         ]);
@@ -106,6 +127,7 @@ class ProposalController extends Controller
             "oldAddress",
             "spouse",
             "uploads",
+            "deleted_at",
         ], $merge);
         $success = $proposal->saveData($request->only($default), $request->get('allFilesName', []));
         return response()->json(['message' => $success

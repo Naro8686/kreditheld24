@@ -1,6 +1,9 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-Chart.defaults.global.defaultFontColor = '#858796';
+try {
+    Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#858796';
+} catch (e) {}
+
 let loader = $(`<div style="
                 width: 100%;
                 height: 100%;
@@ -120,7 +123,7 @@ var purchases = chart(purchasesChart, purchasesChartConfig);
 
 function ajax_charts(data = {}) {
     const request = $.ajax({
-        url: "/admin/statistics",
+        url: "/statistics",
         method: "GET",
         data: data,
         cache: false,
@@ -145,24 +148,26 @@ function ajax_charts(data = {}) {
 }
 
 function chart(elem, conf = {}) {
-    return new Chart(elem, conf);
+    return elem ? new Chart(elem, conf) : elem;
 }
 
 function purchaseChartEdit(chart, data = []) {
-    chart.data.labels = [];
-    chart.data.datasets[0].data = [];
-    for (let i in data) {
-        let obj = data[i];
-        let timestamp = (obj.timestamp * 1000);
-        let created_at = obj.created_at;
-        let amount = number_format(obj.amount, 2, '.', '');
-        chart.data.labels.push(timestamp);
-        chart.data.datasets[0].data.push({
-            x: timestamp,
-            y: amount,
-        });
+    if (chart) {
+        chart.data.labels = [];
+        chart.data.datasets[0].data = [];
+        for (let i in data) {
+            let obj = data[i];
+            let timestamp = (obj.timestamp * 1000);
+            let created_at = obj.created_at;
+            let amount = number_format(obj.amount, 2, '.', '');
+            chart.data.labels.push(timestamp);
+            chart.data.datasets[0].data.push({
+                x: timestamp,
+                y: amount,
+            });
+        }
+        chart.update();
     }
-    chart.update();
 }
 
 function ordersEdit(ordersContainer, data) {
@@ -198,9 +203,11 @@ $(function () {
             if (selectedDates.length === 2) {
                 dateRange.selectedDates[0] = selectedDates[0];
                 dateRange.selectedDates[1] = selectedDates[1];
+                let selectUnit = $('select#unit');
+                let unit = selectUnit.length ? selectUnit.val().split(":")[0] : 'hour';
                 ajax_charts({
                     dates: [formatDate(selectedDates[0]), formatDate(selectedDates[1])],
-                    unit: $('select#unit').val().split(":")[0]
+                    unit: unit
                 });
             }
         }

@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Casts\AsCustomCollection;
+use App\Constants\Status;
 use App\Traits\File;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -96,10 +98,15 @@ use Illuminate\Support\Facades\Log;
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereObjectData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereRentAmount($value)
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Query\Builder|Proposal onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Proposal withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Proposal withoutTrashed()
  */
 class Proposal extends Model
 {
-    use HasFactory, File;
+    use SoftDeletes, HasFactory, File;
 
     protected $guarded = [];
     public static array $applicantTypes = ['individual', 'juridical'];
@@ -107,7 +114,7 @@ class Proposal extends Model
     public static array $creditTypes = ['home', 'private_credit', 'car', 'repair', 'vacation', 'capital', 'other'];
     public static array $residenceTypes = ['rent', 'roommate', 'own', 'lodger'];
     public static array $familyStatuses = ['divorced', 'married', 'unmarried', 'widower', 'cohabitation', 'separately'];
-    public static array $uploadFileTypes = ['jpg', 'jpeg', 'png', 'doc', 'docx', 'csv', 'txt', 'xlx', 'xls', 'pdf'];
+    public static array $uploadFileTypes = ['jpg', 'jpeg', 'png', 'doc', 'docx', 'csv', 'txt', 'xlx', 'xls', 'xlsx', 'pdf'];
     public const MAX_FILE_SIZE = '10000'; //kb
     public const UPLOAD_FILE_PATH = 'uploads';
     public const CURRENCY = '€';
@@ -146,7 +153,7 @@ class Proposal extends Model
      */
     public function deadlineDateFormat(): ?\Illuminate\Support\Carbon
     {
-        return $this->created_at ? $this->created_at->addMonths($this->deadline) : null;
+        return $this->created_at && $this->deadline ? $this->created_at->addMonths($this->deadline) : null;
     }
 
     public function user()
@@ -206,5 +213,23 @@ class Proposal extends Model
             Log::error("Proposal::saveData {$exception->getMessage()}");
         }
         return false;
+    }
+
+    public function statusBgColor(): string
+    {
+        switch ($this->status) {
+            case Status::APPROVED:
+                $bgColor = 'bg-green-300';
+                break;
+            case Status::DENIED:
+                $bgColor = 'bg-red-300';
+                break;
+            case Status::PENDING:
+                $bgColor = 'bg-yellow-300';
+                break;
+            default:
+                $bgColor = '';
+        }
+        return $bgColor;
     }
 }

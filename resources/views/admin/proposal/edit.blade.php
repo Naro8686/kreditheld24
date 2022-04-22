@@ -109,7 +109,7 @@
             </div>
         </div>
     </div>
-    @if(count($proposal->files))
+    @if(count($proposal->files ?? []))
         <h1 class="h3 mt-4 text-gray-800">{{__('Files')}}</h1>
         <div class="py-6">
             <div class="list-group w-100 max-w-7xl mx-auto">
@@ -117,11 +117,11 @@
                     <div class="list-group-item list-group-item-action d-flex justify-content-between flex-column">
                         <a class='btn btn-link overflow-x-hidden'
                            target='_blank'
-                           href='{{route('admin.readFile', ['path' => $file])}}'>{{str_replace($proposal::UPLOAD_FILE_PATH . '/', '', $file)}}</a>
+                           href='{{route('readFile', ['path' => $file])}}'>{{str_replace($proposal::UPLOAD_FILE_PATH . '/', '', $file)}}</a>
                         <div class="btn-group" role="group">
                             <a class='btn btn-primary'
                                target='file_view'
-                               href='{{route('admin.readFile', ['path' => $file])}}'><i class="fas fa-eye"></i></a>
+                               href='{{route('readFile', ['path' => $file])}}'><i class="fas fa-eye"></i></a>
                             <a class='btn btn-info'
                                href='{{route('admin.downloadFile', ['path' => $file])}}'><i class="fas fa-download"></i></a>
                         </div>
