@@ -385,19 +385,15 @@
             let fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
-        // $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
-        //     $("ul.contact").toggleClass("d-md-inline");
-        // });
+        if ($(window).width() < 768) {
+            $("ul#accordionSidebarFooter .collapse").collapse("hide");
+        } else {
+            $("ul#accordionSidebarFooter .collapse").collapse("show");
+        }
         $(window).resize(function () {
-            if (!$(".sidebar").hasClass("toggled")) {
-                $("ul.contact").addClass("d-md-inline");
+            if ($(window).width() < 768) {
+                $("ul#accordionSidebarFooter .collapse").collapse("hide");
             }
-            // if ($(window).width() < 768) {
-            //     $("ul.contact").removeClass("d-md-inline");
-            // }
-        });
-        $('#accordionSidebarFooter .collapse').collapse({
-            toggle:false
         });
     });
 </script>
