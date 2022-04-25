@@ -721,6 +721,9 @@ select {
 .mb-4 {
   margin-bottom: 1rem;
 }
+.ml-2 {
+  margin-left: 0.5rem;
+}
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -735,9 +738,6 @@ select {
 }
 .mt-4 {
   margin-top: 1rem;
-}
-.ml-2 {
-  margin-left: 0.5rem;
 }
 .ml-1 {
   margin-left: 0.25rem;
@@ -1266,10 +1266,6 @@ select {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
-.text-blue-600 {
-  --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity));
-}
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -1313,6 +1309,10 @@ select {
 .text-green-600 {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;
@@ -1465,9 +1465,12 @@ form#proposal legend {
     color: inherit;
     white-space: normal;
 }
-ul.contact .collapse {
-    display: inline-block;
-}
+/*ul.contact .collapse {*/
+/*    display: inline-block;*/
+/*}*/
+/*.formulas-block {*/
+/*    display: inline-block;*/
+/*}*/
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
@@ -1612,11 +1615,11 @@ ul.contact .collapse {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
 }
-.disabled\:opacity-50:disabled {
-  opacity: 0.5;
-}
 .disabled\:opacity-25:disabled {
   opacity: 0.25;
+}
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
 }
 @media (prefers-color-scheme: dark) {
 
@@ -1655,14 +1658,14 @@ ul.contact .collapse {
     color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 
-  .dark\:text-blue-500 {
-    --tw-text-opacity: 1;
-    color: rgb(59 130 246 / var(--tw-text-opacity));
-  }
-
   .dark\:text-gray-500 {
     --tw-text-opacity: 1;
     color: rgb(107 114 128 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-blue-500 {
+    --tw-text-opacity: 1;
+    color: rgb(59 130 246 / var(--tw-text-opacity));
   }
 
   .dark\:hover\:bg-gray-600:hover {

@@ -153,14 +153,20 @@
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
-        @if($contact = \App\Models\Contact::orderByDesc('id')->first())
-            <hr class="sidebar-divider">
-            <ul class="d-none d-md-inline contact navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link">
-                        {{__('Contact')}}
+        <hr class="sidebar-divider d-none d-md-block">
+        <ul class="navbar-nav" id="accordionSidebarFooter">
+            @if($contact = \App\Models\Contact::orderByDesc('id')->first())
+                <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+                    @class(['nav-item','contact','active' => true])>
+                    <a @class(['nav-link','collapsed' => false])
+                       href="#" data-toggle="collapse" aria-expanded="true"
+                       x-bind:data-target="'#' + collapse_id"
+                       x-bind:aria-controls="collapse_id">
+                        <span>{{__('Contact')}}</span>
                     </a>
-                    <div class="collapse">
+                    <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id"
+                         data-parent="#accordionSidebarFooter"
+                        @class(['collapse','multi-collapse','contact-block','show' => true])>
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item"
                                href="javascript:void(0)">
@@ -180,9 +186,31 @@
                         </div>
                     </div>
                 </li>
-            </ul>
-        @endif
+            @endif
+            <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+                @class(['nav-item','formulas','active' => true])>
+                <a @class(['nav-link','collapsed' => false])
+                   href="#" data-toggle="collapse" aria-expanded="true"
+                   x-bind:data-target="'#' + collapse_id"
+                   x-bind:aria-controls="collapse_id">
+                    <span>{{__('Formulas')}}</span>
+                </a>
+                <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebarFooter"
+                    @class(['collapse','multi-collapse','formulas-block','show' => true])>
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        @foreach(\App\Models\Formula::orderByDesc('id')->limit(5)->get() as $formula)
+                            <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.index')]) target="_blank"
+                               href="{{route('readFile', ['path' => $formula->file])}}">
+                                <i class="fas fa-fw fa-file-alt"></i>
+                                <span>{{$formula->name}}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </li>
+        </ul>
     </ul>
+
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -357,16 +385,19 @@
             let fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
-        $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
-            $("ul.contact").toggleClass("d-md-inline");
-        });
-        $(window).resize(function() {
-            if (!$(".sidebar").hasClass("toggled")){
+        // $("#sidebarToggle, #sidebarToggleTop").on('click', function (e) {
+        //     $("ul.contact").toggleClass("d-md-inline");
+        // });
+        $(window).resize(function () {
+            if (!$(".sidebar").hasClass("toggled")) {
                 $("ul.contact").addClass("d-md-inline");
             }
-            if ($(window).width() < 768) {
-                $("ul.contact").removeClass("d-md-inline");
-            }
+            // if ($(window).width() < 768) {
+            //     $("ul.contact").removeClass("d-md-inline");
+            // }
+        });
+        $('#accordionSidebarFooter .collapse').collapse({
+            toggle:false
         });
     });
 </script>

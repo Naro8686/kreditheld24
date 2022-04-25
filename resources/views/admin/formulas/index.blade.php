@@ -40,7 +40,7 @@
                                         </td>
                                         <td class="py-4 px-6 text-sm  whitespace-nowrap">
                                             @if($formula->file)
-                                                <a href="{{route('readFile',['path'=>$formula->file])}}">{{str_replace($formula::UPLOAD_FILE_PATH . '/', '', $formula->file)}}</a>
+                                                <a target="_blank" href="{{route('readFile',['path'=>$formula->file])}}">{{str_replace($formula::UPLOAD_FILE_PATH . '/', '', $formula->file)}}</a>
                                             @endif
                                         </td>
                                         <td class="py-4 px-6 text-sm  whitespace-nowrap dark:text-gray-400">

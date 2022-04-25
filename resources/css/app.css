@@ -72,6 +72,10 @@ form#proposal legend {
     white-space: normal;
 }
 
-ul.contact .collapse {
-    display: inline-block;
-}
+/*ul.contact .collapse {*/
+/*    display: inline-block;*/
+/*}*/
+
+/*.formulas-block {*/
+/*    display: inline-block;*/
+/*}*/
