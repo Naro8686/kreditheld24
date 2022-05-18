@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Constants\Status;
+use App\Mail\SendEmail;
 use App\Traits\HasRolesAndPermissions;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -62,6 +65,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereHouse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePostcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereStreet($value)
+ * @property-read string $full_name
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -72,18 +76,7 @@ class User extends Authenticatable implements HasLocalePreference
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'surname',
-        'phone',
-        'city',
-        'street',
-        'house',
-        'postcode',
-        'birthday',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -110,6 +103,16 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->hasMany(Proposal::class);
     }
 
+    /**
+     * @return User|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public static function admin()
+    {
+        return User::whereHas('roles', function ($query) {
+            $query->whereIn('roles.slug', [Role::ADMIN]);
+        })->first();
+    }
+
     public function isAdmin(): bool
     {
         return $this->hasRole(Role::ADMIN);
@@ -123,5 +126,38 @@ class User extends Authenticatable implements HasLocalePreference
     public function preferredLocale()
     {
         return config('app.locale');
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return trim("{$this->name} {$this->surname}");
+    }
+
+    /**
+     * @param $sum
+     * @return int|float
+     */
+    public function targetPercent($sum = null): int
+    {
+        $totalSum = is_null($sum) ? $this->proposals()
+            ->where('proposals.status', Status::APPROVED)
+            ->sum('proposals.creditAmount') : $sum;
+        foreach ([500000, 750000, 1000000] as $targetSum) {
+            if ($totalSum <= $targetSum) {
+                break;
+            }
+        }
+        return min($totalSum / $targetSum * 100, 100);
+    }
+
+    /**
+     * @param string $message
+     * @param array $data
+     * @return void
+     */
+    public function sendEmail(string $message, array $data = [])
+    {
+        $data['fullName'] = $this->full_name;
+        Mail::to($this->email)->later(now()->addSecond(), new SendEmail($message, $data));
     }
 }

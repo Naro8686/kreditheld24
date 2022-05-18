@@ -13,6 +13,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\SendEmailController;
 
 
 Route::middleware(['auth'])->group(function () {
@@ -24,17 +25,23 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProposalController::class)->prefix('proposals')->name('proposal.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/draft', 'draft')->name('draft');
+        Route::get('/duplicate/{id}', 'duplicate')->name('duplicate');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
         Route::get('/{id}', 'edit')->name('edit');
         Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
     });
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::put('/update', 'update')->name('update');
     });
+    Route::controller(SendEmailController::class)->name('email.')->prefix('email')->group(function () {
+        Route::post('/send', 'send')->name('send');
+    });
     Route::get('contacts', [\App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('formulas', [\App\Http\Controllers\FormulaController::class, 'index'])->name('formulas');
+    Route::match(['GET', 'POST'], '/export-to-pdf', [\App\Http\Controllers\ProposalController::class, 'exportToPdf'])->name('exportToPdf');
 });
 
 require __DIR__ . '/auth.php';

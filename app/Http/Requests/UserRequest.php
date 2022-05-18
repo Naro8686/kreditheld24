@@ -33,7 +33,8 @@ class UserRequest extends FormRequest
             "house" => "sometimes|nullable|string|min:2",
             "city" => "sometimes|nullable|string|min:2",
             "postcode" => "sometimes|nullable|regex:/\b\d{4,10}\b/",
-            'card_number' => 'sometimes|nullable|string|min:5',
+            'card_number' => 'sometimes|nullable|string|min:22|max:22',
+            'tax_number' => 'sometimes|nullable|string',
             'birthday' => 'sometimes|nullable|date|before:today|date_format:Y-m-d',
         ];
     }

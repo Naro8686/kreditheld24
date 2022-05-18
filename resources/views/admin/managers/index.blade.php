@@ -43,6 +43,10 @@
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Tax number')}}
+                                </th>
+                                <th scope="col"
+                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                     {{__('Birthday')}}
                                 </th>
                                 <th scope="col"
@@ -84,6 +88,9 @@
 
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         {{$manager->card_number}}
+                                    </td>
+                                    <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                                        {{$manager->tax_number}}
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         {{optional($manager->birthday)->format('d.m.Y')}}

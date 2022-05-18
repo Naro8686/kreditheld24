@@ -113,6 +113,16 @@
                             <p class="text-sm text-danger">{{$message}}</p>
                             @enderror
                         </div>
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="tax_number" :value="__('Tax number')"/>
+                            <x-input id="tax_number" class="block mt-1 w-full"
+                                     type="text" name="tax_number"
+                                     :value="old('tax_number',auth()->user()->tax_number)"
+                            />
+                            @error('tax_number')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
                         <button type="submit"
                                 x-text="'{{__("Save")}}'"
                                 class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>

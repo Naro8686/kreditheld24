@@ -2,7 +2,8 @@
 try {
     Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#858796';
-} catch (e) {}
+} catch (e) {
+}
 
 let loader = $(`<div style="
                 width: 100%;
@@ -12,9 +13,10 @@ let loader = $(`<div style="
                 background-color: #0000001c;
                 left: 0;
                 "></div>`);
-let now = new Date();
-const MAX_DATE = formatDate(now);
-const MIN_DATE = formatDate(now.setDate(now.getDate() - 1));
+
+const MAX_DATE = formatDate(new Date());
+const MIN_DATE = formatDate(new Date(new Date().setDate(1)));
+
 // canvas
 var purchasesChart = document.getElementById("purchasesChart");
 var ordersContainer = document.getElementById("orders");
@@ -175,7 +177,7 @@ function ordersEdit(ordersContainer, data) {
     let total = parseInt(data.total);
     let completed = parseInt(data.completed);
     let sum = number_format(data.sum, 2);
-    let percent = (((completed / total) * 100));
+    let percent = data.targetPercent ? data.targetPercent : (((completed / total) * 100));
     percent = isNaN(percent) ? 0 : number_format(percent, 2);
     parent.find('#total').text(total);
     parent.find('#completed').text(completed);

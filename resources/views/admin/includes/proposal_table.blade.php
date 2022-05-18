@@ -134,15 +134,19 @@
     <div class="card-body">
         <div class="table-responsive">
             <div id="category-filters">
-                <label class="float-left ml-2">{{__('Credit Type')}}:<select id="creditType"
-                                                                             class="form-control form-control-sm">
+                <label class="float-left ml-2">{{__('Status')}}
+                    :<select id="status" class="form-control form-control-sm">
+                        <option value="">{{__('no selected')}}</option>
+                        @foreach(\App\Constants\Status::getList(false) as $status)
+                            <option value="{{$status}}">{{__("status.$status")}}</option>
+                        @endforeach
+                    </select>
+                </label>
+                <label class="float-left ml-2">{{__('Credit Type')}}
+                    :<select id="creditType" class="form-control form-control-sm">
                         <option value="">{{__('no selected')}}</option>
                         @foreach(\App\Models\Category::whereNull('parent_id')->get() as $category)
-                            <optgroup data-id="{{$category->id}}" label="{{$category->name}}">
-                                @foreach($category->children as $type)
-                                    <option value="{{$type->name}}">{{$type->name}}</option>
-                                @endforeach
-                            </optgroup>
+                            <option value="{{$category->name}}">{{$category->name}}</option>
                         @endforeach
                     </select>
                 </label>
@@ -204,6 +208,7 @@
         $(document).ready(function () {
             let proposal_form = $('form#proposals');
             let creditType = $("#creditType");
+            let status = $("#status");
             let groupColumn = 5;
             let table = $('#proposals_table').DataTable({
                 orderFixed: [groupColumn, 'asc'],
@@ -216,7 +221,7 @@
                         rowNodes.to$().addClass(groupName);
                         let checkboxesSelected = $('.dt-checkboxes:checked', rowNodes);
                         let isSelected = (checkboxesSelected.length === rowNodes.length);
-                        return '<label style="margin: 0px 18px;width: 45px;border-right: 1px solid">' +
+                        return '<label style="margin: 0 18px;width: 45px;border-right: 1px solid">' +
                             '<input type="checkbox" class="group-checkbox"' +
                             ' data-group-name="' + groupName + '"' + (isSelected ? ' checked' : '') + '> ' +
                             '</label>' + group + ' (' + rows.count() + ')';
@@ -259,10 +264,6 @@
                         }
                     },
                 ],
-                // columnDefs: [{
-                //     orderable: false,
-                //     targets: -1
-                // }],
                 responsive: false,
                 autoWidth: true,
                 processing: true,
@@ -278,10 +279,10 @@
                         checkboxes: true,
                     },
                     {data: 'id', name: 'id'},
-                    {data: 'category.parent.name', name: 'category.parent.name', searchable: false},
-                    {data: 'category.name', name: 'category.name',visible: false},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true},
+                    {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'number', name: 'number'},
-                    {data: 'user.email', name: 'user.email',visible: false},
+                    {data: 'user.email', name: 'user.email', visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'status', name: 'status'},
@@ -418,9 +419,14 @@
                 $("#proposals_table_filter.dataTables_filter").prepend(el);
             });
             creditType.on('change', function () {
-                let category = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                table.columns(2).search(category ? '^' + category + '$' : '', true, false);
-                table.columns(3).search(this.value ? '^' + this.value + '$' : '', true, false);
+                let category = this.value;
+                table.columns(2).search(category ? `${category}` : '', true, false);
+                //table.columns(3).search(this.value ? '^' + this.value + '$' : '', true, false);
+                table.draw();
+            });
+            status.on('change', function () {
+                let category = this.value;
+                table.columns(8).search(category ? `${category}` : '', true, false);
                 table.draw();
             });
             $('.modal', proposal_form).on('shown.bs.modal', function (event) {

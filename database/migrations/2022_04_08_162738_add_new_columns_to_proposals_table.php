@@ -18,7 +18,7 @@ class AddNewColumnsToProposalsTable extends Migration
             $table->enum('gender',['male','female'])->default('male')->after('lastName');
             $table->integer('childrenCount')->default(0)->after('familyStatus');
             $table->decimal('rentAmount', 10)->default(0)->after('commission');
-            $table->enum('applicantType', Proposal::$applicantTypes)->default(Proposal::$applicantTypes[0])->after('commission');
+            $table->enum('applicantType', Proposal::$applicantTypes)->nullable()->default(Proposal::$applicantTypes[0])->after('commission');
             $table->json('objectData')->nullable()->after('commission');
         });
     }

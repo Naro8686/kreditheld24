@@ -20,11 +20,6 @@ class ProposalRequest extends FormRequest
         return auth()->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         $familyStatuses = implode(',', Proposal::$familyStatuses);
@@ -40,13 +35,16 @@ class ProposalRequest extends FormRequest
         ]);
         $otherCreditCount = $this['otherCreditCount'] ?? 0;
         $validates = [
+            "draft" => "required|boolean",
             "category_id" => "required|exists:categories,id",
             "creditComment" => "string|max:255|nullable",
-            "deadline" => "required|int|min:1",
-            "monthlyPayment" => "required|numeric|min:.01",
+            "deadline" => "required_if:monthlyPayment,null|int|min:1",
+            "monthlyPayment" => "required_if:deadline,null|numeric|min:.01",
             "creditAmount" => "required|numeric|min:1",
             "rentAmount" => "sometimes|nullable|numeric|min:0",
-            "gender" => ["required", 'regex:/^(male|female)$/'],
+            "communalAmount" => "sometimes|nullable|numeric|min:0",
+            "communalExpenses" => "sometimes|nullable|numeric|min:0",
+            "gender" => "required|in:male,female",
             "applicantType" => "required|in:$applicantTypes",
             "childrenCount" => "sometimes|nullable|integer|min:0",
             "firstName" => "required|string|min:2",
@@ -64,7 +62,7 @@ class ProposalRequest extends FormRequest
             "familyStatus" => "sometimes|nullable|in:$familyStatuses",
             "otherCreditCount" => "required|int|min:0|max:4",
         ];
-        if (!count($this->get('allFilesName', [])) && !$this->has('draft')) {
+        if (!count($this->get('allFilesName', [])) && !$this->isDraft()) {
             $validates["uploads"] = "required|array|min:1";
             $validates["uploads.*"] = "required|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
         } else {
@@ -98,7 +96,7 @@ class ProposalRequest extends FormRequest
         if ($this->get('status')) {
             $validates["status"] = "required|in:$statuses";
             if ($this['status'] === Status::APPROVED) {
-                $validates["bonus"] = "sometimes|nullable|numeric|min:0";
+                $validates["bonus"] = "sometimes|nullable|numeric|min:1|max:100";
                 $validates["commission"] = "required|numeric|min:1|max:100";
             }
         }
@@ -118,7 +116,11 @@ class ProposalRequest extends FormRequest
             $validates["objectData.accumulation"] = "sometimes|nullable|numeric";
             $validates["objectData.brokerageFees"] = "sometimes|nullable|integer|min:0|max:100";
         }
-        return $validates;
+        $validates = collect($validates);
+//        if ($this->isDraft()) $validates->transform(function ($item, $key) {
+//            return $key === 'draft' ? $item : str_replace("required", "sometimes|nullable", $item);
+//        });
+        return $this->isDraft() ? [] : $validates->all();
     }
 
     public function messages()
@@ -161,7 +163,7 @@ class ProposalRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge(['deleted_at' => $this->has('draft') ? Carbon::now() : null]);
+        $this->merge(['deleted_at' => $this->isDraft() ? now() : null]);
         if ($this['phoneNumber']) $this->merge([
             "phoneNumber" => Str::replace('+', '', $this['phoneNumber']),
         ]);
@@ -180,5 +182,10 @@ class ProposalRequest extends FormRequest
             'disease' => $this->has('insurance.disease'),
             'death' => $this->has('insurance.death'),
         ]]);
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->boolean('draft');
     }
 }

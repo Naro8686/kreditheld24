@@ -85,6 +85,7 @@ class ManagerController extends Controller
         $manager->postcode = $request->get('postcode', $manager->postcode);
         $manager->birthday = $request->get('birthday', $manager->birthday);
         $manager->card_number = $request->get('card_number', $manager->card_number);
+        $manager->tax_number = $request->get('tax_number', $manager->tax_number);
         $manager->save();
         return redirect()->route('admin.managers.index')->with('success', __('Data saved successfully'));
     }

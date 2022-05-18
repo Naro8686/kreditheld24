@@ -93,6 +93,9 @@ class DashboardController extends Controller
                     ->whereDate('created_at', '>=', $from)
                     ->whereDate('created_at', '<=', $to);
             })->limit(1)->first();
+            if ($user->isManager()) {
+                $orders->targetPercent = $user->targetPercent($orders->sum);
+            }
             return response()->json([
                 'purchases' => StatisticResource::collection($purchases->get()),
                 'populars' => [],

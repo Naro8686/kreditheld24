@@ -19,24 +19,26 @@ class SendEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($message, $data = [])
+    public function __construct($message, $data = [],)
     {
         $this->message = $message;
         $this->data = $data;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        return $this
+        $mail = $this
             ->subject(config('app.name'))
             ->markdown('emails.send', [
                 'message' => $this->message,
                 'data' => $this->data,
             ]);
+        if (isset($this->data['invoice_pdf'])) {
+            $mail->attach($this->data['invoice_pdf'], [
+                'mime' => 'application/pdf',
+                'as' => 'invoice.pdf',
+            ]);
+        }
+        return $mail;
     }
 }

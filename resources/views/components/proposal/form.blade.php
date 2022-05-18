@@ -212,6 +212,28 @@
                              :value="old('rentAmount')" min="0" x-bind:placeholder="currency"
                              x-model.number="formData.rentAmount"/>
                 </fieldset>
+                <fieldset class="mt-3" x-show="formData.residenceType === 'roommate'"
+                          x-transition.scale.origin.bottom
+                          x-transition:leave.scale.origin.top>
+                    <legend>{{__('Communal Expenses')}}</legend>
+                    <x-input id="communalExpenses" class="block mt-1 w-full"
+                             type="number" name="communalExpenses"
+                             x-bind:required="formData.residenceType === 'roommate'"
+                             step=".01" min="0"
+                             :value="old('communalExpenses')" x-bind:placeholder="currency"
+                             x-model.number="formData.communalExpenses"/>
+                </fieldset>
+                <fieldset class="mt-3" x-show="formData.residenceType === 'own'"
+                          x-transition.scale.origin.bottom
+                          x-transition:leave.scale.origin.top>
+                    <legend>{{__('Communal Amount')}}</legend>
+                    <x-input id="communalAmount" class="block mt-1 w-full"
+                             type="number" name="communalAmount"
+                             x-bind:required="formData.residenceType === 'own'"
+                             step=".01" min="0" x-bind:placeholder="currency"
+                             :value="old('communalAmount')"
+                             x-model.number="formData.communalAmount"/>
+                </fieldset>
             </div>
             <div class="col-span-2 md:col-span-1">
                 <x-label class="text-sm" for="residenceDate" :value="__('residence Date')"/>
@@ -269,7 +291,6 @@
                          type="number" name="deadline"
                          :value="old('deadline')" min="1" :placeholder="__('month')"
                          x-model.number="formData.deadline"
-                         x-on:keyup="formData.monthlyPayment = formData.deadline?(Math.round((formData.creditAmount/formData.deadline + Number.EPSILON) * 100) / 100):formData.creditAmount;"
                 />
             </div>
             <div class="col-span-3 md:col-span-1">
@@ -280,7 +301,6 @@
                          :value="old('monthlyPayment')" min="0.01" x-bind:max="formData.creditAmount"
                          x-bind:placeholder="currency"
                          x-model.number="formData.monthlyPayment"
-                         x-on:keyup="formData.deadline = Math.ceil((formData.creditAmount/formData.monthlyPayment));"
                 />
 
             </div>
@@ -537,19 +557,22 @@
         @isset($footer)
             {{ $footer }}
         @endisset
-        <template x-if="formData.myProposal">
-            <div class="mt-3 col-span-1">
-                <div class="flex items-center mt-1">
-                    <x-input class="mr-2" id="draft" name="draft"
-                             x-model="formData.draft"
-                             type="checkbox"/>
-                    <x-label class="mr-2" for="draft" :value="__('Save to draft')"/>
-                </div>
-            </div>
-        </template>
-        <button type="submit" :disabled="loading"
-                x-text="btnText || '{{__("Send")}}'"
-                class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"></button>
+
+        <div class="btn-group mt-3" role="group"
+             x-init="save = parseInt('{{(int)!(isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0')}}') && (formData.myProposal && (formData.status === 'pending' || formData.draft))">
+            <input x-show="formData.myProposal" type="submit" :disabled="loading"
+                   @click="document.forms['proposal'].setAttribute('novalidate', true);formData.draft = 1"
+                   id="draft" name="draft" class="btn btn-secondary"
+                   value="{{__("Save")}}"
+            >
+            <button type="button" @click.prevent="exportToPdf()" x-text="'{{__("Print")}}'"
+                    class="btn btn-primary"></button>
+            <button type="submit" :disabled="loading"
+                    @click="document.forms['proposal'].removeAttribute('novalidate');formData.draft = 0"
+                    x-text="btnText || '{{__("Send")}}'"
+                    class="btn btn-success"></button>
+        </div>
+
     </form>
 </div>
 @push('js')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Constants\Status;
 use App\Models\Category;
 use App\Models\Proposal;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,11 +24,11 @@ class ProposalResource extends JsonResource
         return [
             'id' => $this->id,
             'number' => $this->number,
-            'status' => $this->status,
+            'status' => $this->status ?? Status::PENDING,
             'notice' => $this->notice,
             'commission' => $this->commission,
             'bonus' => $this->bonus,
-            'creditType' => $this->creditType ?? '',
+            'creditType' => $this->credit_type ?? '',
             'category_id' => $this->category_id ?? '',
             'parent_category_id' => $this->category->parent->id ?? '',
             'parent_categories' => $parent_categories,
@@ -51,6 +52,8 @@ class ProposalResource extends JsonResource
             'residenceType' => $this->residenceType ?? '',
             'applicantType' => $this->applicantType ?? '',
             'rentAmount' => $this->rentAmount ?? '',
+            'communalAmount' => $this->communalAmount ?? '',
+            'communalExpenses' => $this->communalExpenses ?? '',
             'familyStatus' => $this->familyStatus ?? '',
             'childrenCount' => $this->childrenCount ?? 0,
             'oldAddress' => $this->oldAddress ?? [
@@ -87,7 +90,11 @@ class ProposalResource extends JsonResource
             'otherCredit' => $this->otherCredit ?? [],
             'uploads' => $this->files ?? [],
             'myProposal' => (!is_null($this->user_id) && $this->user_id === optional($request->user())->id) || is_null($this->id),
-            'draft' => $this->trashed()
+            'draft' => $this->trashed(),
+            'revision_at' => optional($this->revision_at)->format('d.m.Y'),
+            'approved_at' => optional($this->approved_at)->format('d.m.Y'),
+            'pending_at' => optional($this->pending_at)->format('d.m.Y'),
+            'denied_at' => optional($this->denied_at)->format('d.m.Y'),
         ];
     }
 }

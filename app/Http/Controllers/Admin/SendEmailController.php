@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\SendEmail;
+use App\Actions\SendEmail;
 use App\Models\Proposal;
 use App\Models\Role;
 use App\Models\User;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -31,7 +30,7 @@ class SendEmailController extends Controller
         return view('admin.email.send', compact('data'));
     }
 
-    public function send(Request $request, $type)
+    public function send(Request $request, $type, SendEmail $sendEmail)
     {
         $request->validate([
             'message' => 'required|string',
@@ -97,19 +96,7 @@ class SendEmailController extends Controller
                     });
                 break;
         }
-
-        try {
-            if (empty($data)) throw new Exception(__('empty'), 422);
-            foreach ($data as $key => $item) {
-                Mail::to($item['email'])->later(now()->addSeconds($key), new SendEmail($request['message'], $item['data']));
-            }
-            $status = 'success';
-        } catch (Throwable $exception) {
-            if ($exception->getCode() !== 422) {
-                Log::error("SendEmailController::send {$exception->getMessage()}");
-            }
-            $status = 'error';
-        }
+        $status = $sendEmail->handle($request['message'], $data);
         $msg = $status === 'success'
             ? __('Message sent successfully')
             : __("Whoops! Something went wrong.");

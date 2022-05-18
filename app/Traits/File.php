@@ -13,9 +13,11 @@ use ZipArchive;
 trait File
 {
     public static $locale = 'public';
+    public static $path = 'uploads';
 
-    public function fileUpload(UploadedFile $file, $path = 'uploads')
+    public function fileUpload(UploadedFile $file, $path = null)
     {
+        if (is_null($path)) $path = self::$path;
         $fileName = time() . '_' . $file->getClientOriginalName();
         return $file->storeAs($path, $fileName, self::$locale);
     }
@@ -27,6 +29,22 @@ trait File
                 Storage::disk(self::$locale)->delete($file);
             }
         }
+    }
+
+    public function copyFiles()
+    {
+        $files = [];
+        foreach ($this->files as $file) {
+            if (Storage::disk(self::$locale)->exists($file)) {
+                $fileName = ltrim($file, self::$path . "/");
+                $fileName = time() . "_copy_" . $fileName;
+                $fullPath = self::$path . "/" . $fileName;
+                if (Storage::disk(self::$locale)->copy($file, $fullPath)) {
+                    $files[] = $fullPath;
+                }
+            }
+        }
+        $this->files = $files;
     }
 
     public function read($file): ?Collection
@@ -46,6 +64,7 @@ trait File
         }
         return null;
     }
+
     /**
      * @param string $zipPathAndName
      * @param array $filesAndPaths

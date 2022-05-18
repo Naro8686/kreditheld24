@@ -28,8 +28,7 @@ class ProposalController extends Controller
     {
         try {
             if (request()->ajax()) return datatables()
-                ->of(Proposal::with(['user', 'category', 'category.parent'])
-                    ->select('proposals.*'))
+                ->of(Proposal::with(['user', 'category', 'category.parent'])->select('proposals.*'))
                 ->addColumn('bgColor', function ($proposal) {
                     $bgColor = 'bg-white';
                     $diff = null;
@@ -56,8 +55,13 @@ class ProposalController extends Controller
                 ->editColumn('category.parent.name', function ($proposal) {
                     return $proposal->category->parent->name ?? '';
                 })
+                ->filterColumn('category.parent.name', function ($query, $keyword) {
+                    $query->whereHas('category.parent', function ($q) use ($keyword) {
+                        $q->whereRaw("name LIKE ?", ["%$keyword%"]);
+                    });
+                })
                 ->editColumn('creditAmount', function ($proposal) {
-                    return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
+                    return $proposal->creditAmountFormat() . ' ' . $proposal::CURRENCY;
                 })
                 ->editColumn('status', function ($proposal) {
                     return trans("status.$proposal->status");
@@ -138,6 +142,8 @@ class ProposalController extends Controller
             "gender",
             "childrenCount",
             "rentAmount",
+            "communalAmount",
+            "communalExpenses",
             "applicantType",
             "objectData",
             "number",

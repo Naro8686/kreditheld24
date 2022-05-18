@@ -130,19 +130,34 @@
             </div>
         </div>
     </div>
-
     <div class="card-body">
         <div class="table-responsive">
             <div id="category-filters">
-                <label class="float-left ml-2">{{__('Credit Type')}}:<select id="creditType"
-                                                                             class="form-control form-control-sm">
+                @if(!request()->routeIs('proposal.draft'))
+                    <label class="float-left ml-2">
+                        <a href="#"
+                           data-toggle="modal"
+                           data-target="#sendEmailModal"
+                           data-url="{{route('email.send')}}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-fw fa-envelope"></i>
+                            <span>{{__("Send message")}}</span>
+                        </a>
+                    </label>
+                @endif
+                <label class="float-left ml-2">{{__('Status')}}
+                    :<select id="status" class="form-control form-control-sm">
+                        <option value="">{{__('no selected')}}</option>
+                        @foreach(\App\Constants\Status::getList(false) as $status)
+                            <option value="{{$status}}">{{__("status.$status")}}</option>
+                        @endforeach
+                    </select>
+                </label>
+                <label class="float-left ml-2">{{__('Credit Type')}}
+                    :<select id="creditType" class="form-control form-control-sm">
                         <option value="">{{__('no selected')}}</option>
                         @foreach(\App\Models\Category::whereNull('parent_id')->get() as $category)
-                            <optgroup data-id="{{$category->id}}" label="{{$category->name}}">
-                                @foreach($category->children as $type)
-                                    <option value="{{$type->name}}">{{$type->name}}</option>
-                                @endforeach
-                            </optgroup>
+                            <option value="{{$category->name}}">{{$category->name}}</option>
                         @endforeach
                     </select>
                 </label>
@@ -153,23 +168,27 @@
                        class="table table-sm table-bordered display responsive nowrap w-100">
                     <thead>
                     <tr>
+                        <th class="not-export-col" scope="col">
+                            <input name="select_all" value="1" id="select-all" type="checkbox"/>
+                        </th>
                         <th scope="col">{{__('Proposal number')}}</th>
+                        <th scope="col">{{__('Full Name')}}</th>
                         <th scope="col">{{__('Category')}}</th>
                         <th scope="col">{{__('Credit Type')}}</th>
                         <th scope="col">{{__('Sum')}}</th>
                         <th scope="col">{{__('Date')}}</th>
-                        <th scope="col">{{__('Payout amount')}}</th>
                         <th scope="col">{{__('Status')}}</th>
                         <th scope="col">{{__('Deadline')}}</th>
-                        <th scope="col">{{__('Full Name')}}</th>
                         <th scope="col">{{__('Phone Number')}}</th>
                         <th scope="col">{{__('Email')}}</th>
+                        <th scope="col">{{__('Payout amount')}}</th>
                         <th class="not-export-col" scope="col">
                             <span class="sr-only">{{__('Action')}}</span>
                         </th>
                     </tr>
                     </thead>
                 </table>
+                @include('manager.includes.modals.sendEmail')
             </form>
         </div>
     </div>
@@ -185,9 +204,11 @@
     <script src="{{asset('adminPanel/vendor/datatables/buttons.html5.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.print.min.js')}}" type="text/javascript"></script>
     <script>
+
         $(document).ready(function () {
             let proposal_form = $('form#proposals');
             let creditType = $("#creditType");
+            let status = $("#status");
             let table = $('#proposals_table').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
@@ -226,31 +247,75 @@
                         }
                     },
                 ],
-                responsive: false,
+                responsive: true,
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
                 lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']],
-                order: [[3, 'desc']],
-                ajax: '{!! request()->routeIs('proposal.draft')?route('proposal.draft'):route('proposal.index') !!}',
+                order: [[6, 'desc']],
+                ajax: '{!! request()->routeIs('proposal.draft') ? route('proposal.draft') : route('proposal.index') !!}',
+                rowCallback: function (row, data) {
+                    let select_all = $('input#select-all');
+                    let input = $(`#select_proposal_${data.id}`);
+                    let checked = ((select_all.prop('checked') && !select_all.prop('indeterminate')) || input.length);
+                    $('input.select-one[type="checkbox"]', row).prop('checked', checked).trigger('change');
+                },
                 columns: [
+                    {
+                        data: 'id', name: 'id',
+                        searchable: false, orderable: false,
+                        className: 'dt-body-center dt-checkboxes-cell',
+                        render: function (data, type, full, meta) {
+                            return '<input type="checkbox" class="select-one" value="' + data + '">';
+                        }
+                    },
                     {data: 'number', name: 'number'},
-                    {data: 'category.parent.name', name: 'category.parent.name', searchable: false},
+                    {data: 'fullName', name: 'fullName', orderable: false},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true},
                     {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
-                    {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
                     {data: 'status', name: 'status'},
                     {data: 'deadline', name: 'deadline'},
-                    {data: 'fullName', name: 'fullName', orderable: false},
                     {data: 'phoneNumber', name: 'phoneNumber'},
                     {data: 'email', name: 'email'},
+                    {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {
                     $(row).addClass('cursor-pointer');
                     $('td', row).eq(0).addClass(data['bgColor']);
                     $('td', row).eq(5).addClass(data['statusBgColor']);
                 },
+            });
+            $('#select-all').on('click', function () {
+                let rows = table.rows({'search': 'applied'}).nodes();
+                $('input.select-one[type="checkbox"]', rows).prop('checked', this.checked).trigger('change');
+            });
+            proposal_form.on('change', 'input#select-all,input.select-one', function () {
+                if ($(this).attr('class') === 'select-one') {
+                    let id = $(this).val();
+                    let elem_id = `select_proposal_${id}`
+                    if (this.checked) {
+                        if (!$(`#${elem_id}`).length) $(proposal_form)
+                            .prepend($('<input>')
+                                .attr('type', 'hidden')
+                                .attr('id', elem_id)
+                                .attr('class', 'select_proposal')
+                                .attr('name', 'ids[]')
+                                .val(id));
+                    } else $(`#${elem_id}`).remove();
+                }
+                // If checkbox is not checked
+                if (!this.checked) {
+                    $('.select_proposal').remove();
+                    var el = $('#select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
             });
             $("ul li ul li").click(function () {
                 let i = $(this).index() + 1
@@ -278,10 +343,92 @@
                 $("#proposals_table_filter.dataTables_filter").prepend(el);
             });
             creditType.on('change', function () {
-                let category = $(this.options[this.selectedIndex]).closest('optgroup').prop('label');
-                table.columns(1).search(category ? '^' + category + '$' : '', true, false);
-                table.columns(2).search(this.value ? '^' + this.value + '$' : '', true, false);
+                let category = this.value;
+                table.columns(3).search(category ? category : '', true, false);
                 table.draw();
+            });
+            status.on('change', function () {
+                let category = this.value;
+                table.columns(7).search(category ? `${category}` : '', true, false);
+                table.draw();
+            });
+            proposal_form.on('submit', function (e) {
+                let form = this;
+                let rows_selected = table.column(0).checkboxes.selected();
+
+                // Iterate over all selected checkboxes
+                $.each(rows_selected, function (index, rowId) {
+                    // Create a hidden element
+                    let proposal_id = parseInt($(rowId).text());
+                    $(form).append(
+                        $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', 'ids[]')
+                            .val(proposal_id)
+                    );
+                });
+                let classList = document.querySelectorAll(".border-red");
+                [].forEach.call(classList, function (el) {
+                    el.classList.remove("border-red");
+                });
+                let elems = document.querySelectorAll("p.text-danger");
+                [].forEach.call(elems, function (el) {
+                    el.remove();
+                });
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: $(form).attr('method'),
+                    data: $(form).serialize(),
+                    cache: false,
+                    dataType: "json",
+                    success: (response) => {
+                        let success = response.status === 'success';
+                        if (success) {
+                            form.reset();
+                            $('.summernote', proposal_form).summernote('code', '');
+                        }
+                        $('.modal', proposal_form).modal('hide');
+                        let classNames = 'alert alert-' + (!success ? 'danger' : 'success');
+                        $('#alert').attr('class', classNames).text(response.msg);
+                    },
+                    error: (response) => {
+                        try {
+                            let data = response.responseJSON.errors;
+                            for (let [name, errors] of Object.entries(data)) {
+                                let field = form.querySelector(`[name="${name}"]`);
+                                if (field === null) {
+                                    let split = name.split('.');
+                                    let iter = split[1] || 0;
+                                    name = split[0];
+                                    if (split.length > 2) {
+                                        field = form.querySelector(`[name="${name}[${iter}][${split[2]}]`);
+                                    } else {
+                                        field = form.querySelector(`[name="${name}[${iter}]`);
+                                    }
+                                }
+
+                                if (field) {
+                                    let errElement = document.createElement("p");
+                                    errElement.className = 'text-danger text-sm';
+                                    errElement.textContent = errors[0];
+                                    field.closest('div').appendChild(errElement);
+                                    field.classList.add('border-red');
+                                }
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                });
+                // Prevent actual form submission
+                e.preventDefault();
+            });
+            $('.modal', proposal_form).on('shown.bs.modal', function (event) {
+                let button = $(event.relatedTarget);
+                let url = button.data('url');
+                proposal_form.attr('action', url);
+            }).on('hidden.bs.modal', function (event) {
+                proposal_form.attr('action', '#');
             });
         });
     </script>

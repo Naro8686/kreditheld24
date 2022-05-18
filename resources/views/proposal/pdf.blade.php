@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <title>{{__('Proposal').' N'.$proposal->id}}</title>
+    <title>{{__('Proposal').' N'.optional($proposal)->id}}</title>
     <style>
         body {
             margin: 5px 20px 5px;
@@ -65,6 +65,8 @@
             {{ __('residence Type').': '.trans("proposal.residenceTypes.{$proposal->residenceType}")}}
             <ul>
                 <li>{{ __('Rent').': '. $proposal->rentAmount }}</li>
+                <li>{{ __('Communal Amount').': '. $proposal->communalAmount }}</li>
+                <li>{{ __('Communal Expenses').': '. $proposal->communalExpenses }}</li>
                 <li>{{ __('residence Date').': '. $proposal->residenceDate }}</li>
             </ul>
         </li>

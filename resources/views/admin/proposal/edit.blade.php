@@ -60,11 +60,12 @@
                             </fieldset>
                             <template x-if="formData.status === '{{\App\Constants\Status::APPROVED}}'">
                                 <div class="mt-3">
-                                    <x-label class="font-bold text-lg" for="bonus"
+                                    <x-label class="font-bold text-lg" for="commission"
                                              :value="__('Commission')"/>
-                                    <x-input id="bonus" class="block mt-1 w-full"
+                                    <x-input id="commission" class="block mt-1 w-full"
                                              type="number" name="commission" required
-                                             x-bind:value="formData.commission" step=".01" min="1"
+                                             x-bind:value="formData.commission"
+                                             step=".01" min="0" max="100"
                                              x-model.number="formData.commission"/>
                                 </div>
                             </template>
@@ -73,8 +74,9 @@
                                 <x-label class="font-bold text-lg" for="bonus"
                                          :value="__('Bonus')"/>
                                 <x-input id="bonus" class="block mt-1 w-full"
-                                         type="number" name="bonus" step=".01"
-                                         x-bind:value="formData.bonus" min="0"
+                                         type="number" name="bonus"
+                                         x-bind:value="formData.bonus"
+                                         step=".01" min="0" max="100"
                                          x-model.number="formData.bonus"/>
                             </div>
                             <div class="mt-3">

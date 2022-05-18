@@ -10,11 +10,29 @@ function render(proposal) {
         dropFile: false,
         otherName: '',
         showHideComm: false,
+        save: true,
         init() {
             this.otherCreditCount = this.formData.otherCredit.length || 0;
             this.allFilesName = proposal.uploads.map((name) => name.replace(/uploads\//gi, ''));
             if (!this.allFilesName.length) this.addFileField();
             this.showHideComm = this.showHideComment();
+            // console.log(this.save,this.formData.draft);
+            window.addEventListener('beforeunload', (e) => {
+                if (this.save && this.formData.draft) {
+                    return this.submitData()?.then(function () {
+                        return undefined;
+                    });
+                }
+            });
+        },
+        exportToPdf() {
+            this.save = false;
+            let url = '/export-to-pdf';
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+            });
+            $.post(url, this.formData, () => location.href = url);
+            return false;
         },
         getCategory() {
             try {
@@ -89,9 +107,6 @@ function render(proposal) {
                 }
             }
             return documents.length ? documents[0] : documents;
-        },
-        appendData(data) {
-            return Object.assign(this, data);
         },
         limitNumberWithinRange(num, min, max) {
             const MIN = min || 0;
@@ -169,8 +184,11 @@ function render(proposal) {
         },
         submitData() {
             clearErrors();
+            this.save = false;
+            let is_draft = this.formData.draft;
             let form = document.forms.namedItem('proposal');
             let data = new FormData(form);
+            data.append('draft', is_draft);
             this.formData.uploads.forEach(function (file, key) {
                 if (typeof file === 'object') {
                     data.append(`uploads[${key}]`, file);
@@ -182,8 +200,8 @@ function render(proposal) {
             this.loading = true;
             this.message = '';
             try {
-                request(form.action, form.method, data).then((data) => {
-                    this.btnText = data.message;
+                return request(form.action, form.method, data).then((data) => {
+                    if (!is_draft) this.btnText = data.message;
                     if (data.hasOwnProperty("errors")) renderError(data.errors)
                     else if (data.success) {
                         if (data.hasOwnProperty("redirectUrl")) setTimeout(function () {
@@ -197,6 +215,7 @@ function render(proposal) {
                 console.error(error);
                 this.message = 'Ooops! Something went wrong!';
             }
+            return null;
         }
     };
 }

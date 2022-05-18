@@ -37,7 +37,8 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('dashboard')}}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+           href="{{url(\App\Providers\RouteServiceProvider::HOME)}}">
             <div class="sidebar-brand-icon">
                 <i class="fas fa-coins"></i>
             </div>
@@ -47,21 +48,6 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li @class(['nav-item','active' => request()->routeIs('dashboard')])>
-            <a class="nav-link" href="{{route('dashboard')}}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{__('Dashboard')}}</span></a>
-        </li>
-        <li @class(['nav-item','active' => request()->routeIs('contacts')])>
-            <a class="nav-link" href="{{route('contacts')}}">
-                <i class="fas fa-fw fa-address-book"></i>
-                <span>{{__('Contacts')}}</span></a>
-        </li>
-        <li @class(['nav-item','active' => request()->routeIs('formulas')])>
-            <a class="nav-link" href="{{route('formulas')}}">
-                <i class="fas fa-fw fa-book-reader"></i>
-                <span>{{__('Formulas')}}</span></a>
-        </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
             @class(['nav-item','active' => request()->routeIs('proposal.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('proposal.*')])
@@ -79,6 +65,21 @@
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) href="{{route('proposal.create')}}">{{__('Create')}}</a>
                 </div>
             </div>
+        </li>
+        <li @class(['nav-item','active' => request()->routeIs('contacts')])>
+            <a class="nav-link" href="{{route('contacts')}}">
+                <i class="fas fa-fw fa-address-book"></i>
+                <span>{{__('Contacts')}}</span></a>
+        </li>
+        <li @class(['nav-item','active' => request()->routeIs('formulas')])>
+            <a class="nav-link" href="{{route('formulas')}}">
+                <i class="fas fa-fw fa-book-reader"></i>
+                <span>{{__('Formulas')}}</span></a>
+        </li>
+        <li @class(['nav-item','active' => request()->routeIs('dashboard')])>
+            <a class="nav-link" href="{{route('dashboard')}}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>{{__('Dashboard')}}</span></a>
         </li>
         <hr class="sidebar-divider">
 
@@ -166,7 +167,7 @@
                     </a>
                     <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id"
                          data-parent="#accordionSidebarFooter"
-                        @class(['collapse','multi-collapse','contact-block','show' => true])>
+                        @class(['collapse','multi-collapse','contact-block','show' => false])>
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item"
                                href="javascript:void(0)">
@@ -187,7 +188,7 @@
                     </div>
                 </li>
             @endif
-            <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            <li x-show="show" x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading'),show:false }"
                 @class(['nav-item','formulas','active' => true])>
                 <a @class(['nav-link','collapsed' => false])
                    href="#" data-toggle="collapse" aria-expanded="true"
@@ -195,12 +196,14 @@
                    x-bind:aria-controls="collapse_id">
                     <span>{{__('Formulas')}}</span>
                 </a>
-                <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebarFooter"
-                    @class(['collapse','multi-collapse','formulas-block','show' => true])>
+                <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id"
+                     data-parent="#accordionSidebarFooter"
+                    @class(['collapse','multi-collapse','formulas-block','show' => false])>
                     <div class="bg-white py-2 collapse-inner rounded">
                         @foreach(\App\Models\Formula::orderByDesc('id')->limit(5)->get() as $formula)
-                            <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.index')]) target="_blank"
-                               href="{{route('readFile', ['path' => $formula->file])}}">
+                            <a x-init="if(!show) show = true"
+                               @class(['collapse-item','active' => request()->routeIs('admin.formulas.index')])
+                               target="_blank" href="{{route('readFile', ['path' => $formula->file])}}">
                                 <i class="fas fa-fw fa-file-alt"></i>
                                 <span>{{$formula->name}}</span>
                             </a>
@@ -356,8 +359,8 @@
 <script src="{{asset('adminPanel/js/sb-admin-2.min.js')}}"></script>
 <script src="{{asset('adminPanel/summernote-0.8.18-dist/summernote.min.js')}}"></script>
 <script>
-
     $(document).ready(function () {
+        let accordionSidebarFooter = $("ul#accordionSidebarFooter .collapse");
         $('.js-form').on('submit', function (e) {
             e.preventDefault();
         });
@@ -386,13 +389,15 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
         if ($(window).width() < 768) {
-            $("ul#accordionSidebarFooter .collapse").collapse("hide");
+            accordionSidebarFooter.collapse("hide");
         } else {
-            $("ul#accordionSidebarFooter .collapse").collapse("show");
+            accordionSidebarFooter.addClass("show");
         }
         $(window).resize(function () {
             if ($(window).width() < 768) {
-                $("ul#accordionSidebarFooter .collapse").collapse("hide");
+                accordionSidebarFooter.collapse("hide");
+            } else {
+                accordionSidebarFooter.addClass("show");
             }
         });
     });
