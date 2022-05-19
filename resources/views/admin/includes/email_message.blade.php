@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label for="message">{{__('Message for')}}
                             - @isset($data['email']) {{$data['email']}} @else {{__('all')}} @endisset</label>
-                        <textarea rows="7" class="form-control" id="message"
+                        <textarea rows="7" class="form-control summernote" id="message"
                                   name="message">{!! old('message') !!}</textarea>
                         @error('message')
                         <small id="messageHelp" class="form-text text-danger">{{$message}}</small>

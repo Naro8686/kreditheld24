@@ -7,11 +7,7 @@ use App\Actions\SendEmail;
 use App\Models\Proposal;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Log;
-use Throwable;
 
 class SendEmailController extends Controller
 {

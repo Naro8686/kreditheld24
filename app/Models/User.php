@@ -66,6 +66,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePostcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereStreet($value)
  * @property-read string $full_name
+ * @property string|null $tax_number
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTaxNumber($value)
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -159,5 +161,10 @@ class User extends Authenticatable implements HasLocalePreference
     {
         $data['fullName'] = $this->full_name;
         Mail::to($this->email)->later(now()->addSecond(), new SendEmail($message, $data));
+    }
+
+    public function emailTemplates()
+    {
+        return $this->hasMany(EmailTemplate::class);
     }
 }

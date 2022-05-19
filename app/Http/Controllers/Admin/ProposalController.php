@@ -101,17 +101,27 @@ class ProposalController extends Controller
                     return "<a href='$link'>$proposal->email</a>";
                 })
                 ->addColumn('action', function ($proposal) {
+                    $linkInvoice = null;
                     $linkEdit = route('admin.proposals.edit', [$proposal->id]);
                     $linkDelete = route('admin.proposals.delete', [$proposal->id]);
-                    return "<div class='d-flex justify-content-between' role='group'>
-                                <a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1 edit-link'>
+                    if ($proposal->status === Status::APPROVED && !is_null($proposal->invoice_file)) {
+                        $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
+                    }
+                    $html = "<div class='d-flex justify-content-between' role='group'>";
+                    $html .= "<a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1 edit-link'>
                                     <i class='fa fa-eye'></i>
-                                </a>
-                                <button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
+                                </a>";
+                    if (!is_null($linkInvoice)) {
+                        $html .= "<a href='$linkInvoice' target='_blank'
+                                   class='btn btn-sm btn-info mr-1'>
+                                   <i class='fas fa-fw fa-file-invoice'></i></a>";
+                    }
+                    $html .= "<button type='button' class='btn btn-sm btn-danger mr-1' data-toggle='modal'
                                         data-target='#confirmModal'
                                         data-url='$linkDelete'><i class='fa fa-trash'></i>
-                                </button>
-                            </div>";
+                                </button>";
+                    $html .= "</div>";
+                    return $html;
                 })
                 ->rawColumns(['id', 'email', 'user.email', 'action'])
                 ->make(true);

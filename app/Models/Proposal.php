@@ -117,6 +117,8 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Query\Builder|Proposal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Proposal withoutTrashed()
  * @mixin \Eloquent
+ * @property string|null $invoice_file
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereInvoiceFile($value)
  */
 class Proposal extends Model
 {
@@ -164,6 +166,7 @@ class Proposal extends Model
                     switch ($model->status) {
                         case Status::APPROVED:
                             $model->approved_at = $date;
+                            $model->invoiceGenerate();
                             break;
                         case Status::DENIED:
                             $model->denied_at = $date;
@@ -189,15 +192,8 @@ class Proposal extends Model
                 $message = $user = null;
                 switch ($model->status) {
                     case Status::APPROVED:
-                        $proposal = $model;
-                        $fileName = "invoice_$proposal->id.pdf";
-                        $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
-                        $dompdf->loadHtml(view('proposal.invoice', compact('proposal'))->render());
-                        $dompdf->setPaper('A4');
-                        $dompdf->render();
-                        $output = $dompdf->output();
-                        if (Storage::disk('tmp')->put($fileName, $output)) {
-                            $data['invoice_pdf'] = storage_path("app/tmp/$fileName");
+                        if ($model->invoice_file) {
+                            $data['invoice_pdf'] = public_path("storage/{$model->invoice_file}");
                         }
                         $message = __("Proposal approved") . ': ' . $model->approved_at->format('d.m.Y');
                         $user = $model->user;
@@ -233,6 +229,25 @@ class Proposal extends Model
         });
     }
 
+    public function invoiceGenerate(): ?string
+    {
+        $proposal = $this;
+        if ($proposal->invoice_file && $this->deleteFile($proposal->invoice_file)) {
+            $proposal->invoice_file = null;
+        }
+        $fileName = "invoice_$proposal->id.pdf";
+        $path = self::UPLOAD_FILE_PATH . '/' . $fileName;
+        $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
+        $dompdf->loadHtml(view('proposal.invoice', compact('proposal'))->render());
+        $dompdf->setPaper('A4');
+        $dompdf->render();
+        $output = $dompdf->output();
+        if (Storage::disk(self::$locale)->put($path, $output)) {
+            $this->invoice_file = $path;
+        }
+        return $this->invoice_file;
+    }
+
     /**
      * @return string|null
      */
@@ -242,15 +257,16 @@ class Proposal extends Model
     }
 
     /**
-     * @return float|int
+     * @return string
      */
     public function getPayoutAmountAttribute()
     {
         try {
-            return (($this->creditAmount * (($this->commission ?? 0) + ($this->bonus ?? 0))) / 100);
+            $payoutAmount = (($this->creditAmount * (($this->commission ?? 0) + ($this->bonus ?? 0))) / 100);
         } catch (\Throwable $throwable) {
-            return 0;
+            $payoutAmount = 0;
         }
+        return number_format((float)$payoutAmount, 2);
     }
 
     public function creditAmountFormat(): ?string
@@ -278,7 +294,11 @@ class Proposal extends Model
 
     public function deleteAllFiles()
     {
-        $this->deleteFiles($this->files ?? []);
+        $files = $this->files ?? [];
+        if (!is_null($this->invoice_file)) {
+            $files[] = $this->invoice_file;
+        }
+        $this->deleteFiles($files);
     }
 
     public function makeZip(): ?string

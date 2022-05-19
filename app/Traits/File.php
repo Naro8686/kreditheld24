@@ -25,10 +25,16 @@ trait File
     public function deleteFiles($files = [])
     {
         foreach ($files as $file) {
-            if (Storage::disk(self::$locale)->exists($file)) {
-                Storage::disk(self::$locale)->delete($file);
-            }
+            $this->deleteFile($file);
         }
+    }
+
+    public function deleteFile($file): bool
+    {
+        if (Storage::disk(self::$locale)->exists($file)) {
+            Storage::disk(self::$locale)->delete($file);
+        }
+        return true;
     }
 
     public function copyFiles()

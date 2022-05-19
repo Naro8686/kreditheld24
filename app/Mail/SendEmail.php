@@ -19,7 +19,7 @@ class SendEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($message, $data = [],)
+    public function __construct($message, $data = [])
     {
         $this->message = $message;
         $this->data = $data;
@@ -27,6 +27,9 @@ class SendEmail extends Mailable
 
     public function build()
     {
+        if (!empty($this->data) && isset($this->data['url']) && app()->environment('production')) {
+            $this->data['url'] = str_replace('http://', 'https://', $this->data['url']);
+        }
         $mail = $this
             ->subject(config('app.name'))
             ->markdown('emails.send', [

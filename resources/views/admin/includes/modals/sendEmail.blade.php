@@ -18,6 +18,9 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                 <input type="submit" class="btn btn-primary">
             </div>
+            @auth
+                @include('email-templates.templates-list', ['templates' => auth()->user()->emailTemplates])
+            @endauth
         </div>
     </div>
 </div>

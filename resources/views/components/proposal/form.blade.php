@@ -279,7 +279,7 @@
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-sm" for="creditAmount" :value="__('Desired loan amount ?')"/>
                 <x-input id="creditAmount" class="block mt-1 w-full"
-                         type="number" name="creditAmount" required step=".01"
+                         type="text" name="creditAmount" required step=".01"
                          :value="old('creditAmount')" min="1" x-bind:placeholder="currency"
                          x-model.number="formData.creditAmount"
                 />

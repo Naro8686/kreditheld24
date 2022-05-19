@@ -247,9 +247,13 @@ class ProposalController extends Controller
                 $linkEdit = route('proposal.edit', [$proposal->id]);
                 $linkDuplicate = route('proposal.duplicate', [$proposal->id]);
                 $linkDelete = route('proposal.delete', [$proposal->id]);
+                $linkInvoice = null;
+                if ($proposal->status === Status::APPROVED && !is_null($proposal->invoice_file)) {
+                    $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
+                }
                 $html = "<div class='d-flex justify-content-between' role='group'>";
                 if ($proposal->trashed() || $proposal->status === Status::REVISION) {
-                    $html .= "<a href='$linkEdit'
+                    $html .= "<a href='$linkEdit' title='Invoice'
                                    class='btn btn-sm btn-info mr-1 edit-link'>
                                    <i class='fas fa-fw fa-edit'></i></a>";
                     if ($proposal->trashed()) {
@@ -260,8 +264,13 @@ class ProposalController extends Controller
                     }
                 }
                 $html .= "<a href='$linkDuplicate'
-                                   class='btn btn-sm btn-info mr-1 edit-link'>
+                                   class='btn btn-sm btn-info mr-1'>
                                    <i class='fas fa-fw fa-copy'></i></a>";
+                if (!is_null($linkInvoice)){
+                    $html .= "<a href='$linkInvoice' target='_blank'
+                                   class='btn btn-sm btn-info mr-1'>
+                                   <i class='fas fa-fw fa-file-invoice'></i></a>";
+                }
 
                 $html .= "</div>";
                 return $html;

@@ -81,6 +81,23 @@
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>{{__('Dashboard')}}</span></a>
         </li>
+        <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            @class(['nav-item','active' => request()->routeIs('email-templates.*')])>
+            <a @class(['nav-link','collapsed' => !request()->routeIs('email-templates.*')])
+               href="#" data-toggle="collapse" aria-expanded="true"
+               x-bind:data-target="'#' + collapse_id"
+               x-bind:aria-controls="collapse_id">
+                <i class="fas fa-fw fa-mail-bulk"></i>
+                <span>{{__('Email Templates')}}</span>
+            </a>
+            <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
+                @class(['collapse','show' => request()->routeIs('email-templates.*')])>
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a @class(['collapse-item','active' => request()->routeIs('email-templates.index')]) href="{{route('email-templates.index')}}">{{__('All')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('email-templates.create')]) href="{{route('email-templates.create')}}">{{__('Create')}}</a>
+                </div>
+            </div>
+        </li>
         <hr class="sidebar-divider">
 
         @role('admin')

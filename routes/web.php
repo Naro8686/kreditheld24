@@ -14,6 +14,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\SendEmailController;
+use App\Http\Controllers\EmailTemplateController;
 
 
 Route::middleware(['auth'])->group(function () {
@@ -22,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/statistics', 'statistics')->name('statistics');
         Route::get('/read-file', 'readFile')->name('readFile');
     });
+    Route::resource('email-templates', EmailTemplateController::class);
     Route::controller(ProposalController::class)->prefix('proposals')->name('proposal.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/draft', 'draft')->name('draft');

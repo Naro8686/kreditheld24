@@ -58,8 +58,8 @@
         <tr>
             <td>{{$proposal->number}}</td>
             <td>{{"$proposal->firstName $proposal->lastName"}}</td>
-            <td>{{$proposal->commission}}</td>
-            <td>{{$proposal->creditAmount}}</td>
+            <td>{{$proposal->commission. '%'}}</td>
+            <td>{{$proposal->payoutAmount . ' ' . $proposal::CURRENCY}}</td>
         </tr>
         </tbody>
     </table>
