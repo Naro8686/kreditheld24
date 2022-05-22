@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use DataTables;
-use Yajra\DataTables\Html\Builder;
 
 class ProposalController extends Controller
 {
@@ -43,9 +42,9 @@ class ProposalController extends Controller
             if (request()->ajax()) return $this->ajaxDataTable(auth()->user()->proposals()->with(['user', 'category', 'category.parent'])->select('proposals.*'));
             $user = auth()->user();
             $successful = $user->proposals()->where('proposals.status', Status::APPROVED);
-            $totalSum = $successful->sum('proposals.creditAmount');
+            $totalSum = Proposal::moneyFormat($successful->sum('proposals.creditAmount'));
             $targetPercent = $user->targetPercent();
-            $monthSum = $successful->where('proposals.created_at', '>=', now()->subMonth())->sum('proposals.creditAmount');
+            $monthSum = Proposal::moneyFormat($successful->where('proposals.created_at', '>=', now()->subMonth())->sum('proposals.creditAmount'));
             return view('proposal.index', compact('totalSum', 'monthSum', 'targetPercent'));
         } catch (Throwable $e) {
         }
@@ -155,10 +154,11 @@ class ProposalController extends Controller
             "uploads",
             "deleted_at",
         ], $merge);
+        $isDraft = $request->isDraft();
         $success = $proposal->saveData($request->only($default), $request->get('allFilesName', []));
-        $redirectUrl = $request->isDraft() ? route('proposal.draft') : route('proposal.index');
+        $redirectUrl = $isDraft ? route('proposal.draft') : route('proposal.index');
         return response()->json(['message' => $success
-            ? __("Application sent")
+            ? $isDraft ? __("Saved.") : __("Application sent")
             : __("Whoops! Something went wrong."),
             'redirectUrl' => $redirectUrl, 'success' => $success], $success ? 200 : 500);
     }
@@ -211,7 +211,7 @@ class ProposalController extends Controller
                 });
             })
             ->editColumn('creditAmount', function ($proposal) {
-                return $proposal->creditAmountFormat() . ' ' . $proposal::CURRENCY;
+                return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
             })
             ->editColumn('status', function ($proposal) {
                 return trans("status.$proposal->status");
@@ -266,7 +266,7 @@ class ProposalController extends Controller
                 $html .= "<a href='$linkDuplicate'
                                    class='btn btn-sm btn-info mr-1'>
                                    <i class='fas fa-fw fa-copy'></i></a>";
-                if (!is_null($linkInvoice)){
+                if (!is_null($linkInvoice)) {
                     $html .= "<a href='$linkInvoice' target='_blank'
                                    class='btn btn-sm btn-info mr-1'>
                                    <i class='fas fa-fw fa-file-invoice'></i></a>";

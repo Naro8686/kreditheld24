@@ -61,7 +61,7 @@ class ProposalController extends Controller
                     });
                 })
                 ->editColumn('creditAmount', function ($proposal) {
-                    return $proposal->creditAmountFormat() . ' ' . $proposal::CURRENCY;
+                    return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
                 })
                 ->editColumn('status', function ($proposal) {
                     return trans("status.$proposal->status");

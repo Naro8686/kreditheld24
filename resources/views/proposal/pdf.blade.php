@@ -61,15 +61,17 @@
         <li>{{ __('House').': '.$proposal->house }}</li>
         <li>{{ __('Postcode').': '.$proposal->postcode }}</li>
         <li>{{ __('City').': '.$proposal->city }}</li>
-        <li>
-            {{ __('residence Type').': '.trans("proposal.residenceTypes.{$proposal->residenceType}")}}
-            <ul>
-                <li>{{ __('Rent').': '. $proposal->rentAmount }}</li>
-                <li>{{ __('Communal Amount').': '. $proposal->communalAmount }}</li>
-                <li>{{ __('Communal Expenses').': '. $proposal->communalExpenses }}</li>
-                <li>{{ __('residence Date').': '. $proposal->residenceDate }}</li>
-            </ul>
-        </li>
+        @if($proposal->residenceType)
+            <li>
+                {{ __('residence Type').': '.trans("proposal.residenceTypes.{$proposal->residenceType}")}}
+                <ul>
+                    <li>{{ __('Rent').': '. $proposal->rentAmount }}</li>
+                    <li>{{ __('Communal Amount').': '. $proposal->communalAmount }}</li>
+                    <li>{{ __('Communal Expenses').': '. $proposal->communalExpenses }}</li>
+                    <li>{{ __('residence Date').': '. $proposal->residenceDate }}</li>
+                </ul>
+            </li>
+        @endif
         <li>
             {{ __('Old Address')}}
             <ul>
@@ -118,7 +120,9 @@
                 <li>{{ __('Unemployment').': '.(optional($proposal->insurance)['unemployment'] ? __('Yes') : __('No')) }}</li>
             </ul>
         </li>
-        <li>{{__('Type').': '.trans("proposal.applicantTypes.{$proposal->applicantType}")}}</li>
+        @if($proposal->applicantType)
+            <li>{{__('Type').': '.trans("proposal.applicantTypes.{$proposal->applicantType}")}}</li>
+        @endif
     </ul>
 </div>
 <div>

@@ -36,7 +36,7 @@ class ProposalResource extends JsonResource
             'creditComment' => $this->creditComment ?? '',
             'deadline' => $this->deadline ?? '',
             'monthlyPayment' => $this->monthlyPayment ?? '',
-            'creditAmount' => $this->creditAmountFormat() ?? '',
+            'creditAmount' => $this->creditAmount ?? '',
             'gender' => $this->gender ?? 'male',
             'firstName' => $this->firstName ?? '',
             'lastName' => $this->lastName ?? '',

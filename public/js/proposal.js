@@ -16,14 +16,14 @@ function render(proposal) {
             this.allFilesName = proposal.uploads.map((name) => name.replace(/uploads\//gi, ''));
             if (!this.allFilesName.length) this.addFileField();
             this.showHideComm = this.showHideComment();
-            // console.log(this.save,this.formData.draft);
             window.addEventListener('beforeunload', (e) => {
-                if (this.save && this.formData.draft) {
-                    return this.submitData()?.then(function () {
-                        return undefined;
+                if (!refreshKeyPressed && this.save && this.formData.draft) {
+                    e.preventDefault();
+                    return e.returnValue = this.submitData()?.then(function () {
+                        return '';
                     });
                 }
-            });
+            }, {capture: true});
         },
         exportToPdf() {
             this.save = false;
@@ -31,7 +31,11 @@ function render(proposal) {
             $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
             });
-            $.post(url, this.formData, () => location.href = url);
+            let data = this.formData;
+            Object.keys(data.insurance).map(function (key, index) {
+                data.insurance[key] = +data.insurance[key];
+            });
+            $.post(url, data, () => location.href = url);
             return false;
         },
         getCategory() {
@@ -201,10 +205,10 @@ function render(proposal) {
             this.message = '';
             try {
                 return request(form.action, form.method, data).then((data) => {
-                    if (!is_draft) this.btnText = data.message;
+                    this.btnText = data.message;
                     if (data.hasOwnProperty("errors")) renderError(data.errors)
                     else if (data.success) {
-                        if (data.hasOwnProperty("redirectUrl")) setTimeout(function () {
+                        if (!is_draft && data.hasOwnProperty("redirectUrl")) setTimeout(function () {
                             location.href = data.redirectUrl;
                         }, 1000);
                     } else throw 'error';
@@ -213,7 +217,7 @@ function render(proposal) {
                 }).finally(() => this.loading = false);
             } catch (error) {
                 console.error(error);
-                this.message = 'Ooops! Something went wrong!';
+                this.message = 'Whoops! Something went wrong.';
             }
             return null;
         }
@@ -270,3 +274,42 @@ async function request(url, method, data = {}) {
     });
     return await response.json();
 }
+
+var refreshKeyPressed = false;
+var modifierPressed = false;
+
+var f5key = 116;
+var rkey = 82;
+var modkey = [17, 224, 91, 93];
+
+// Check for refresh keys
+$(document).bind(
+    'keydown',
+    function (evt) {
+        // Check for refresh
+        if (evt.which == f5key || window.modifierPressed && evt.which == rkey) {
+            refreshKeyPressed = true;
+        }
+
+        // Check for modifier
+        if (modkey.indexOf(evt.which) >= 0) {
+            modifierPressed = true;
+        }
+    }
+);
+
+// Check for refresh keys
+$(document).bind(
+    'keyup',
+    function (evt) {
+        // Check undo keys
+        if (evt.which == f5key || evt.which == rkey) {
+            refreshKeyPressed = false;
+        }
+
+        // Check for modifier
+        if (modkey.indexOf(evt.which) >= 0) {
+            modifierPressed = false;
+        }
+    }
+);

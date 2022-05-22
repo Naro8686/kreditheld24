@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 /**
  * App\Models\Proposal
@@ -229,6 +230,20 @@ class Proposal extends Model
         });
     }
 
+    public static function moneyFormat($value): string
+    {
+        return number_format((float)$value, 2, ',', '.');
+    }
+
+    public static function parse_number($number, $dec_point = ','): float
+    {
+        if (empty($dec_point)) {
+            $locale = localeconv();
+            $dec_point = $locale['decimal_point'];
+        }
+        return floatval(str_replace($dec_point, '.', preg_replace('/[^\d' . preg_quote($dec_point) . ']/', '', $number)));
+    }
+
     public function invoiceGenerate(): ?string
     {
         $proposal = $this;
@@ -262,16 +277,17 @@ class Proposal extends Model
     public function getPayoutAmountAttribute()
     {
         try {
-            $payoutAmount = (($this->creditAmount * (($this->commission ?? 0) + ($this->bonus ?? 0))) / 100);
-        } catch (\Throwable $throwable) {
+            $creditAmount = self::parse_number($this->creditAmount);
+            $payoutAmount = (($creditAmount * (($this->commission ?? 0) + ($this->bonus ?? 0))) / 100);
+        } catch (Throwable $throwable) {
             $payoutAmount = 0;
         }
-        return number_format((float)$payoutAmount, 2);
+        return self::moneyFormat($payoutAmount);
     }
 
-    public function creditAmountFormat(): ?string
+    public function getCreditAmountAttribute($value): ?string
     {
-        return !isset($this->creditAmount) ? null : number_format((float)$this->creditAmount, 2);
+        return !isset($value) ? null : self::moneyFormat($value);
     }
 
     /**
@@ -347,19 +363,11 @@ class Proposal extends Model
 
     public function statusBgColor(): string
     {
-        switch ($this->status) {
-            case Status::APPROVED:
-                $bgColor = 'bg-green-300';
-                break;
-            case Status::DENIED:
-                $bgColor = 'bg-red-300';
-                break;
-            case Status::PENDING:
-                $bgColor = 'bg-yellow-300';
-                break;
-            default:
-                $bgColor = '';
-        }
-        return $bgColor;
+        return match ($this->status) {
+            Status::APPROVED => 'bg-green-300',
+            Status::DENIED => 'bg-red-300',
+            Status::PENDING => 'bg-yellow-300',
+            default => '',
+        };
     }
 }

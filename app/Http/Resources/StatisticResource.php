@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Proposal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,7 +24,7 @@ class StatisticResource extends JsonResource
             ? $this->date_format($this->unit, $request->get('unit', 'hour'))
             : $this->created_at;
         return [
-            "amount" => number_format($this->sum ?? $this->amount, 2, ".", ""),
+            "amount" => Proposal::moneyFormat($this->sum ?? $this->amount ?? 0),
             "timestamp" => $createdAt->getTimestamp(),
             "created_at" => $createdAt->format($this->getTimeFormat())
         ];

@@ -164,7 +164,7 @@ class ProposalRequest extends FormRequest
     protected function prepareForValidation()
     {
         if ($this['creditAmount']) $this->merge([
-            "creditAmount" => $this->parse_number($this['creditAmount']),
+            "creditAmount" => Proposal::parse_number($this['creditAmount']),
         ]);
         $this->merge(['deleted_at' => $this->isDraft() ? now() : null]);
         if ($this['phoneNumber']) $this->merge([
@@ -190,14 +190,5 @@ class ProposalRequest extends FormRequest
     public function isDraft(): bool
     {
         return $this->boolean('draft');
-    }
-
-    function parse_number($number, $dec_point = null): float
-    {
-        if (empty($dec_point)) {
-            $locale = localeconv();
-            $dec_point = $locale['decimal_point'];
-        }
-        return floatval(str_replace($dec_point, '.', preg_replace('/[^\d' . preg_quote($dec_point) . ']/', '', $number)));
     }
 }
