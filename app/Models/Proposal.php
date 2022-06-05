@@ -230,6 +230,22 @@ class Proposal extends Model
         });
     }
 
+    public function isRevision(): bool
+    {
+        return $this->status === Status::REVISION;
+    }
+
+    public function isPending(): bool
+    {
+        $status = $this->status ?? Status::PENDING;
+        return $status === Status::PENDING;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === Status::APPROVED;
+    }
+
     public static function moneyFormat($value): string
     {
         return number_format((float)$value, 2, ',', '.');

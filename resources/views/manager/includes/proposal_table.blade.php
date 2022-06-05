@@ -179,7 +179,6 @@
                         <th scope="col">{{__('Date')}}</th>
                         <th scope="col">{{__('Status')}}</th>
                         <th scope="col">{{__('Deadline')}}</th>
-                        <th scope="col">{{__('Phone Number')}}</th>
                         <th scope="col">{{__('Email')}}</th>
                         <th scope="col">{{__('Payout amount')}}</th>
                         <th class="not-export-col" scope="col">
@@ -277,7 +276,6 @@
                     {data: 'created_at', name: 'created_at'},
                     {data: 'status', name: 'status'},
                     {data: 'deadline', name: 'deadline'},
-                    {data: 'phoneNumber', name: 'phoneNumber'},
                     {data: 'email', name: 'email'},
                     {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},

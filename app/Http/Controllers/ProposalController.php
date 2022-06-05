@@ -80,14 +80,11 @@ class ProposalController extends Controller
     {
         $proposal = auth()->user()->proposals()
             ->where('proposals.id', $id)
-            ->where(function ($query) {
-                return $query->where([
-                    ['proposals.status', Status::REVISION],
-                    ['proposals.deleted_at', null]
-                ])->orWhere([
-                    ['proposals.deleted_at', '!=', null]
-                ]);
-            })->withTrashed()->firstOrFail();
+            ->where(function ($q) {
+                return $q->whereIn('proposals.status', [Status::REVISION, Status::APPROVED])
+                    ->orWhere('proposals.deleted_at', '!=', null);
+            })
+            ->withTrashed()->firstOrFail();
         return view('proposal.edit', compact('proposal'));
     }
 
@@ -231,9 +228,6 @@ class ProposalController extends Controller
             ->filterColumn('fullName', function ($query, $keyword) {
                 $query->whereRaw("CONCAT(`proposals`.`firstName`,  ' ', `proposals`.`lastName`) LIKE ?", ["%$keyword%"]);
             })
-            ->editColumn('phoneNumber', function ($proposal) {
-                return "<a href='tel:$proposal->phoneNumber'>$proposal->phoneNumber</a>";
-            })
             ->editColumn('deadline', function ($proposal) {
                 return optional($proposal->deadlineDateFormat())->format('d.m.Y');
             })
@@ -243,7 +237,7 @@ class ProposalController extends Controller
             ->editColumn('email', function ($proposal) {
                 return "<a href='mailto:$proposal->email'>$proposal->email</a>";
             })
-            ->addColumn('action', function ($proposal) {
+            ->addColumn('action', function (Proposal $proposal) {
                 $linkEdit = route('proposal.edit', [$proposal->id]);
                 $linkDuplicate = route('proposal.duplicate', [$proposal->id]);
                 $linkDelete = route('proposal.delete', [$proposal->id]);
@@ -252,8 +246,8 @@ class ProposalController extends Controller
                     $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
                 }
                 $html = "<div class='d-flex justify-content-between' role='group'>";
-                if ($proposal->trashed() || $proposal->status === Status::REVISION) {
-                    $html .= "<a href='$linkEdit' title='Invoice'
+                if ($proposal->trashed() || $proposal->isRevision() || $proposal->isApproved()) {
+                    $html .= "<a href='$linkEdit' target='_blank'
                                    class='btn btn-sm btn-info mr-1 edit-link'>
                                    <i class='fas fa-fw fa-edit'></i></a>";
                     if ($proposal->trashed()) {
@@ -267,7 +261,7 @@ class ProposalController extends Controller
                                    class='btn btn-sm btn-info mr-1'>
                                    <i class='fas fa-fw fa-copy'></i></a>";
                 if (!is_null($linkInvoice)) {
-                    $html .= "<a href='$linkInvoice' target='_blank'
+                    $html .= "<a href='$linkInvoice' target='_blank' title='Invoice'
                                    class='btn btn-sm btn-info mr-1'>
                                    <i class='fas fa-fw fa-file-invoice'></i></a>";
                 }
@@ -275,7 +269,7 @@ class ProposalController extends Controller
                 $html .= "</div>";
                 return $html;
             })
-            ->rawColumns(['number', 'email', 'phoneNumber', 'action'])
+            ->rawColumns(['number', 'email', 'action'])
             ->toJson();
     }
 

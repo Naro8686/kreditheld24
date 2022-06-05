@@ -90,6 +90,8 @@ class ProposalResource extends JsonResource
             'otherCredit' => $this->otherCredit ?? [],
             'uploads' => $this->files ?? [],
             'myProposal' => (!is_null($this->user_id) && $this->user_id === optional($request->user())->id) || is_null($this->id),
+            'isPending' => $this->isPending(),
+            'isApproved' => $this->isApproved(),
             'draft' => $this->trashed(),
             'revision_at' => optional($this->revision_at)->format('d.m.Y'),
             'approved_at' => optional($this->approved_at)->format('d.m.Y'),

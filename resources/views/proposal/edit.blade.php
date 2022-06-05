@@ -28,23 +28,23 @@
         {{ __('Edit') }}
     </h2>
     <x-proposal.edit :proposal="$proposal"/>
-    @if($proposal->trashed() && count($proposal->files ?? []))
-        <h1 class="h3 mt-4 text-gray-800">{{__('Files')}}</h1>
-        <div class="py-6">
+    @if(count($proposal->files ?? []) && ($proposal->trashed() || $proposal->isRevision()))
+        <h1 class="h4 mt-4 text-gray-800">{{__('Files')}}</h1>
+        <div class="mt-3">
             <div class="list-group w-100 max-w-7xl mx-auto">
                 @foreach ($proposal->files as $file)
                     <div class="list-group-item list-group-item-action d-flex justify-content-between flex-column">
                         <a class='btn btn-link overflow-x-hidden'
                            target='_blank'
                            href='{{route('readFile', ['path' => $file])}}'>{{str_replace($proposal::UPLOAD_FILE_PATH . '/', '', $file)}}</a>
-                        <div class="btn-group" role="group">
+                        <div class="btn-group btn-group-sm" role="group">
                             <a class='btn btn-primary'
                                target='file_view'
                                href='{{route('readFile', ['path' => $file])}}'><i class="fas fa-eye"></i></a>
                         </div>
                     </div>
                 @endforeach
-                <h2 class="mt-4">{{__("View file")}}</h2>
+                <h2 class="h4 text-gray-800 mt-4">{{__("View file")}}</h2>
                 <div class="iframe-container mt-1 border-2 border-gray-300 rounded">
                     <iframe class="responsive-iframe" name="file_view">
                         <p>iframes are not supported by your browser.</p>

@@ -162,6 +162,7 @@
                         <th scope="col">{{__('Category')}}</th>
                         <th scope="col">{{__('Credit Type')}}</th>
                         <th scope="col">{{__('Proposal number')}}</th>
+                        <th scope="col">{{__('Full Name')}}</th>
                         <th scope="col">{{__('Manager')}}</th>
                         <th scope="col">{{__('Sum')}}</th>
                         <th scope="col">{{__('Date')}}</th>
@@ -185,7 +186,7 @@
                                 <i class="fas fa-fw fa-envelope"></i>
                             </button>
                         </th>
-                        <th colspan="13"></th>
+                        <th colspan="14"></th>
                     </tr>
                     </tfoot>
                 </table>
@@ -209,7 +210,7 @@
             let proposal_form = $('form#proposals');
             let creditType = $("#creditType");
             let status = $("#status");
-            let groupColumn = 5;
+            let groupColumn = 6;
             let table = $('#proposals_table').DataTable({
                 orderFixed: [groupColumn, 'asc'],
                 rowGroup: {
@@ -282,6 +283,7 @@
                     {data: 'category.parent.name', name: 'category.parent.name', searchable: true},
                     {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'number', name: 'number'},
+                    {data: 'fullName', name: 'fullName'},
                     {data: 'user.email', name: 'user.email', visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
@@ -294,7 +296,7 @@
                 ], createdRow: function (row, data, index) {
                     $(row).addClass('cursor-pointer');
                     $('td', row).eq(1).addClass(data['bgColor']);
-                    $('td', row).eq(6).addClass(data['statusBgColor']);
+                    $('td', row).eq(7).addClass(data['statusBgColor']);
                 },
             });
             $("ul li ul li").click(function () {
@@ -426,7 +428,7 @@
             });
             status.on('change', function () {
                 let category = this.value;
-                table.columns(8).search(category ? `${category}` : '', true, false);
+                table.columns(9).search(category ? `${category}` : '', true, false);
                 table.draw();
             });
             $('.modal', proposal_form).on('shown.bs.modal', function (event) {

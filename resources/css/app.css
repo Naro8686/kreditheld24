@@ -47,7 +47,7 @@ input.border-red + label {
     background-color: rgb(134 239 172 / var(--tw-bg-opacity)) !important;
 }
 
-form#proposal input,
+form#proposal input:not(.btn),
 form#proposal textarea {
     padding: 5px;
     font-size: 16px;

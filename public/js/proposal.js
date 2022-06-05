@@ -16,9 +16,12 @@ function render(proposal) {
             this.allFilesName = proposal.uploads.map((name) => name.replace(/uploads\//gi, ''));
             if (!this.allFilesName.length) this.addFileField();
             this.showHideComm = this.showHideComment();
+            this.addFileField(this.formData.uploads.length);
+            console.log(this.formData);
             window.addEventListener('beforeunload', (e) => {
-                if (!refreshKeyPressed && this.save && this.formData.draft) {
+                if (!refreshKeyPressed && this.save && (this.formData.isPending || this.formData.draft)) {
                     e.preventDefault();
+                    this.formData.draft = 1;
                     return e.returnValue = this.submitData()?.then(function () {
                         return '';
                     });
@@ -133,10 +136,12 @@ function render(proposal) {
             try {
                 this.allFilesName[key] = file.name;
                 this.formData.uploads[key] = file;
+                this.addFileField(this.formData.uploads.length);
                 setTimeout(function () {
                     let el = document.querySelector(`[name='uploads[${key}]']`);
                     if (el) {
                         el.classList.add('upload');
+
                     }
                 }, 500);
                 return true;

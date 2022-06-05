@@ -66,6 +66,12 @@ class ProposalController extends Controller
                 ->editColumn('status', function ($proposal) {
                     return trans("status.$proposal->status");
                 })
+                ->addColumn('fullName', function ($proposal) {
+                    return "$proposal->firstName $proposal->lastName";
+                })
+                ->filterColumn('fullName', function ($query, $keyword) {
+                    $query->whereRaw("CONCAT(`proposals`.`firstName`,  ' ', `proposals`.`lastName`) LIKE ?", ["%$keyword%"]);
+                })
                 ->editColumn('payoutAmount', function ($proposal) {
                     return $proposal->payoutAmount . ' ' . $proposal::CURRENCY;
                 })
@@ -108,7 +114,7 @@ class ProposalController extends Controller
                         $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
                     }
                     $html = "<div class='d-flex justify-content-between' role='group'>";
-                    $html .= "<a href='$linkEdit' type='button' class='btn btn-sm btn-info mr-1 edit-link'>
+                    $html .= "<a href='$linkEdit' type='button' target='_blank' class='btn btn-sm btn-info mr-1 edit-link'>
                                     <i class='fa fa-eye'></i>
                                 </a>";
                     if (!is_null($linkInvoice)) {

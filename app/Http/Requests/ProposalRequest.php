@@ -38,8 +38,8 @@ class ProposalRequest extends FormRequest
             "draft" => "required|boolean",
             "category_id" => "required|exists:categories,id",
             "creditComment" => "string|max:255|nullable",
-            "deadline" => "required_if:monthlyPayment,null|int|min:1",
-            "monthlyPayment" => "required_if:deadline,null|numeric|min:.01",
+            "deadline" => "required_if:monthlyPayment,null|nullable|int|min:1",
+            "monthlyPayment" => "required_if:deadline,null|nullable|numeric|min:.01",
             "creditAmount" => "required|numeric|min:1",
             "rentAmount" => "sometimes|nullable|numeric|min:0",
             "communalAmount" => "sometimes|nullable|numeric|min:0",
@@ -58,7 +58,7 @@ class ProposalRequest extends FormRequest
             "phoneNumber" => "required|numeric|phone_number:6",
             "email" => "required|email",
             "birthplace" => "required|string|min:2",
-            "residenceType" => "sometimes|nullable|in:$residenceTypes",
+            "residenceType" => "required|in:$residenceTypes",
             "familyStatus" => "sometimes|nullable|in:$familyStatuses",
             "otherCreditCount" => "required|int|min:0|max:4",
         ];
@@ -81,17 +81,17 @@ class ProposalRequest extends FormRequest
         }
         if ($this['familyStatus'] && ($this['familyStatus'] === 'married' || $this['familyStatus'] === 'cohabitation')) {
             $validates["spouse"] = "required|array";
-            $validates["spouse.firstName"] = $validates["firstName"];
-            $validates["spouse.lastName"] = $validates["lastName"];
-            $validates["spouse.birthday"] = $validates["birthday"];
-            $validates["spouse.birthplace"] = $validates["birthplace"];
+            $validates["spouse.firstName"] = "sometimes|nullable|string|min:2";
+            $validates["spouse.lastName"] = "sometimes|nullable|string|min:2";
+            $validates["spouse.birthday"] = "sometimes|nullable|date|before:today|date_format:Y-m-d";
+            $validates["spouse.birthplace"] = "sometimes|nullable|string|min:2";
         }
         if ($otherCreditCount > 0) {
             $validates["otherCredit"] = "required|array|min:{$otherCreditCount}|max:4";
             $validates["otherCredit.*.monthlyPayment"] = $validates['monthlyPayment'];
             $validates["otherCredit.*.creditBalance"] = $validates['creditAmount'];
             $validates["otherCredit.*.repay"] = "required|in:yes,no";
-            $validates["otherCredit.*.bankNumber"] = "required_if:otherCredit.*.repay,yes";
+            $validates["otherCredit.*.bankNumber"] = "required_if:otherCredit.*.repay,yes|nullable|string|min:22|max:22";
         }
         if ($this->get('status')) {
             $validates["status"] = "required|in:$statuses";
@@ -114,12 +114,9 @@ class ProposalRequest extends FormRequest
             $validates["objectData.livingSpace"] = "sometimes|nullable|numeric";
             $validates["objectData.buildPrice"] = "sometimes|nullable|numeric";
             $validates["objectData.accumulation"] = "sometimes|nullable|numeric";
-            $validates["objectData.brokerageFees"] = "sometimes|nullable|integer|min:0|max:100";
+            $validates["objectData.brokerageFees"] = "sometimes|nullable|numeric|min:0|max:100";
         }
         $validates = collect($validates);
-//        if ($this->isDraft()) $validates->transform(function ($item, $key) {
-//            return $key === 'draft' ? $item : str_replace("required", "sometimes|nullable", $item);
-//        });
         return $this->isDraft() ? [] : $validates->all();
     }
 
@@ -170,15 +167,6 @@ class ProposalRequest extends FormRequest
         if ($this['phoneNumber']) $this->merge([
             "phoneNumber" => Str::replace('+', '', $this['phoneNumber']),
         ]);
-        if ($this->get('creditAmount', 0) > 0) {
-            if ($this->get('monthlyPayment', 0) > 0) $this->merge([
-                "deadline" => round(($this->get('creditAmount', 0) / $this->get('monthlyPayment'))),
-            ]);
-
-            if ($this->get('deadline', 0) > 0) $this->merge([
-                "monthlyPayment" => round(($this->get('creditAmount', 0) / $this->get('deadline')), 2),
-            ]);
-        }
 
         $this->merge(['insurance' => [
             'unemployment' => $this->has('insurance.unemployment'),

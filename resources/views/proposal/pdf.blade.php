@@ -39,7 +39,7 @@
         <li>{{ __('Surname').': '.$proposal->lastName }}</li>
         <li>{{ __('Phone Number').': '.$proposal->phoneNumber }}</li>
         <li>{{ __('Email').': '.$proposal->email }}</li>
-        <li>{{ __('Birthday').': '.$proposal->birthday }}</li>
+        <li>{{ __('Birthday').': '.$proposal->birthday?->format('d.m.Y') }}</li>
         <li>{{ __('Birthplace').': '.$proposal->birthplace }}</li>
         <li>{{ __('Family status').': '.$proposal->familyStatus }}</li>
         <li>
@@ -47,7 +47,7 @@
             <ul>
                 <li>{{ __('Name').': '. optional($proposal->spouse)['firstName'] }}</li>
                 <li>{{ __('Surname').': '. optional($proposal->spouse)['lastName'] }}</li>
-                <li>{{ __('Birthday').': '. optional($proposal->spouse)['birthday'] }}</li>
+                <li>{{ __('Birthday').': '. (optional($proposal->spouse)['birthday'] ? \Illuminate\Support\Carbon::parse($proposal->spouse['birthday'])->format('d.m.Y') : '') }}</li>
                 <li>{{ __('Birthplace').': '. optional($proposal->spouse)['birthplace'] }}</li>
             </ul>
         </li>
@@ -68,7 +68,7 @@
                     <li>{{ __('Rent').': '. $proposal->rentAmount }}</li>
                     <li>{{ __('Communal Amount').': '. $proposal->communalAmount }}</li>
                     <li>{{ __('Communal Expenses').': '. $proposal->communalExpenses }}</li>
-                    <li>{{ __('residence Date').': '. $proposal->residenceDate }}</li>
+                    <li>{{ __('residence Date').': '. $proposal->residenceDate?->format('d.m.Y') }}</li>
                 </ul>
             </li>
         @endif
@@ -141,6 +141,9 @@
         <li>{{__('Own accumulation').': '.optional($proposal->objectData)['accumulation']}}</li>
         <li>{{__('Brokerage fees').'(%): '.optional($proposal->objectData)['brokerageFees']}}</li>
     </ul>
+</div>
+<div>
+    <b>Дата/</b>{{now()->format('d.m.Y')}}, <b>Город</b>___________________, <b>Роспись</b>__________________
 </div>
 </body>
 </html>
