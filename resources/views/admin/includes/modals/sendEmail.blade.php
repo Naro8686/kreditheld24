@@ -9,10 +9,18 @@
                 </button>
             </div>
             <div class="modal-body">
+                <label class="w-100">{{__('Theme')}}
+                    <input id="subject" type="text" class="form-control"
+                           name="subject" value="{{ old('subject')}}">
+                </label>
                 <label class="w-100">
                         <textarea rows="7" class="form-control summernote"
                                   name="message">{!! old('message') !!}</textarea>
                 </label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="attachment">
+                    <label class="custom-file-label" for="customFile">{{__("Choose File")}}</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>

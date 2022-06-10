@@ -112,7 +112,7 @@ const purchasesChartConfig = {
                     beginAtZero: true,
                     source: "auto",
                     callback: function (value, index, ticks) {
-                        return `${value} €`;
+                        return `€${value}`;
                     }
                 },
             }],
@@ -182,7 +182,7 @@ function ordersEdit(ordersContainer, data) {
     parent.find('#total').text(total);
     parent.find('#completed').text(completed);
     parent.find('#rate').text(`${percent}%`);
-    parent.find('#sum').text(`${sum} €`);
+    parent.find('#sum').text(`€${sum}`);
     let progress = parent
         .find('#rate')
         .closest('.row')

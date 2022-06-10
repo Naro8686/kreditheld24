@@ -163,6 +163,43 @@ class ProposalRequest extends FormRequest
         if ($this['creditAmount']) $this->merge([
             "creditAmount" => Proposal::parse_number($this['creditAmount']),
         ]);
+        if ($this['monthlyPayment']) $this->merge([
+            "monthlyPayment" => Proposal::parse_number($this['monthlyPayment']),
+        ]);
+        if ($this['rentAmount']) $this->merge([
+            "rentAmount" => Proposal::parse_number($this['rentAmount']),
+        ]);
+        if ($this['communalExpenses']) $this->merge([
+            "communalExpenses" => Proposal::parse_number($this['communalExpenses']),
+        ]);
+        if ($this['communalAmount']) $this->merge([
+            "communalAmount" => Proposal::parse_number($this['communalAmount']),
+        ]);
+        $otherCreditCount = $this['otherCreditCount'] ?? 0;
+        if ($otherCreditCount > 0) {
+            $otherCredit = collect($this['otherCredit'])->map(function ($item) {
+                if (isset($item['creditBalance']) && !empty($item['creditBalance'])) {
+                    $item['creditBalance'] = Proposal::parse_number($item['creditBalance']);
+                }
+                if (isset($item['monthlyPayment']) && !empty($item['monthlyPayment'])) {
+                    $item['monthlyPayment'] = Proposal::parse_number($item['monthlyPayment']);
+                }
+                return $item;
+            })->toArray();
+            $this->merge(["otherCredit" => $otherCredit]);
+        }
+
+        if ($this->input('objectData.buildPrice')) {
+            $objectData = $this['objectData'];
+            $objectData['buildPrice'] = Proposal::parse_number($this['objectData']['buildPrice']);
+            $this->merge(["objectData" => $objectData]);
+        }
+        if ($this->input('objectData.accumulation')) {
+            $objectData = $this['objectData'];
+            $objectData['accumulation'] = Proposal::parse_number($this['objectData']['accumulation']);
+            $this->merge(["objectData" => $objectData]);
+        }
+        \Debugbar::info(json_encode($this->all()));
         $this->merge(['deleted_at' => $this->isDraft() ? now() : null]);
         if ($this['phoneNumber']) $this->merge([
             "phoneNumber" => Str::replace('+', '', $this['phoneNumber']),

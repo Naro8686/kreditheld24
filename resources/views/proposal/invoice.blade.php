@@ -59,7 +59,7 @@
             <td>{{$proposal->number}}</td>
             <td>{{"$proposal->firstName $proposal->lastName"}}</td>
             <td>{{$proposal->commission. '%'}}</td>
-            <td>{{$proposal->payoutAmount . ' ' . $proposal::CURRENCY}}</td>
+            <td>{{$proposal::CURRENCY.$proposal->payoutAmount}}</td>
         </tr>
         </tbody>
     </table>

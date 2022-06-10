@@ -103,11 +103,11 @@ class ProposalController extends Controller
             ->withTrashed()
             ->firstOrFail();
 
-        if (!$request->isDraft()) $request->merge([
-            'status' => Status::PENDING,
-            'notice' => null,
-        ]);
-        return $this->defaultFields($proposal, $request, ['status', 'notice']);
+        if (!$request->isDraft()) {
+            $proposal->notices()->update(['status' => Status::APPROVED]);
+            $request->merge(['status' => Status::PENDING]);
+        }
+        return $this->defaultFields($proposal, $request, ['status']);
     }
 
     /**
@@ -208,13 +208,13 @@ class ProposalController extends Controller
                 });
             })
             ->editColumn('creditAmount', function ($proposal) {
-                return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
+                return $proposal::CURRENCY.$proposal->creditAmount;
             })
             ->editColumn('status', function ($proposal) {
                 return trans("status.$proposal->status");
             })
             ->editColumn('payoutAmount', function ($proposal) {
-                return $proposal->payoutAmount . ' ' . $proposal::CURRENCY;
+                return $proposal::CURRENCY.$proposal->payoutAmount;
             })
             ->editColumn('created_at', function ($proposal) {
                 return $proposal->created_at->format('d.m.Y H:i:s');
@@ -295,7 +295,6 @@ class ProposalController extends Controller
         $newProposal->bonus = null;
         $newProposal->commission = null;
         $newProposal->number = null;
-        $newProposal->notice = null;
         $newProposal->status = Status::PENDING;
         $newProposal->deleted_at = now();
         $newProposal->created_at = now();

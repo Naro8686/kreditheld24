@@ -10,6 +10,13 @@
                             x-show="formData.notice" x-text="formData.notice"></h1>
                         <p x-show="formData.revision_at" class="text-yellow-500"
                            x-text="'{{__("Date for revision")}}: ' + formData.revision_at"></p>
+                        <ul class="list-group mb-3 mt-1" id="notice-lists" x-show="formData.notices.length">
+                            <template x-for="notice in formData.notices">
+                                <li class="list-group-item" x-bind:class="(notice.status === '{{\App\Constants\Status::APPROVED}}'?'list-group-item-success':'list-group-item-danger')">
+                                    <b x-text="notice.message"></b>: <span x-text="notice.created_at"></span>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
                 </template>
                 <template x-if="formData.status === '{{\App\Constants\Status::DENIED}}'">

@@ -30,17 +30,16 @@ class SendEmail extends Mailable
         if (!empty($this->data) && isset($this->data['url']) && app()->environment('production')) {
             $this->data['url'] = str_replace('http://', 'https://', $this->data['url']);
         }
-        $mail = $this
-            ->subject(config('app.name'))
-            ->markdown('emails.send', [
-                'message' => $this->message,
-                'data' => $this->data,
-            ]);
-        if (isset($this->data['invoice_pdf'])) {
-            $mail->attach($this->data['invoice_pdf'], [
-                'mime' => 'application/pdf',
-                'as' => 'invoice.pdf',
-            ]);
+        $subject = config('app.name');
+        if (isset($this->data['subject']) && !empty($this->data['subject'])) {
+            $subject = $this->data['subject'];
+        }
+        $mail = $this->subject($subject)->markdown('emails.send', [
+            'message' => $this->message,
+            'data' => $this->data,
+        ]);
+        if (isset($this->data['attachment']) && !empty($this->data['attachment'])) {
+            $mail->attach($this->data['attachment']);
         }
         return $mail;
     }

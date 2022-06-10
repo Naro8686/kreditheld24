@@ -52,14 +52,23 @@
                                       x-transition.scale.origin.bottom
                                       x-transition:leave.scale.origin.top>
                                 <legend>{{__('Notice')}}</legend>
-                                <textarea id="notice"
+                                <ul class="list-group mb-3 mt-1" id="notice-lists" x-show="formData.notices.length">
+                                    <template x-for="notice in formData.notices">
+                                        <li class="list-group-item"
+                                            x-bind:class="(notice.status === '{{\App\Constants\Status::APPROVED}}'?'list-group-item-success':'list-group-item-danger')">
+                                            <b x-text="notice.message"></b>: <span x-text="notice.created_at"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                                <textarea id="notice" rows="7"
                                           class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full"
-                                          type="text" name="notice"
-                                          x-bind:value="formData.notice"
-                                          x-model="formData.notice"></textarea>
+                                          type="text" name="notice"></textarea>
+                                <button @click="sendNotice" type="button"
+                                        class="btn btn-outline-primary mt-3 float-right">{{__('Send')}}</button>
+
                             </fieldset>
                             <template x-if="formData.status === '{{\App\Constants\Status::APPROVED}}'">
-                                <div class="mt-3">
+                                <div class="smt-3">
                                     <x-label class="font-bold text-lg" for="commission"
                                              :value="__('Commission')"/>
                                     <x-input id="commission" class="block mt-1 w-full"

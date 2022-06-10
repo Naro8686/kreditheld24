@@ -12,7 +12,7 @@
                         <h2 class="mb-1 font-bold tracking-tight text-gray-900 dark:text-white">
                             {{__('TOTAL VOLUME (MONTH)')}}
                         </h2>
-                        <p class="font-normal text-gray-700 dark:text-gray-400">{{$monthSum.' '.\App\Models\Proposal::CURRENCY}}</p>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">{{\App\Models\Proposal::CURRENCY.$monthSum}}</p>
                     </div>
                 </div>
                 <div class="sm:w-1/3 w-full px-2 mb-2">
@@ -20,7 +20,7 @@
                         class="p-3 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                         <h2 class="mb-1 font-bold tracking-tight text-gray-900 dark:text-white">
                             {{__('TOTAL VOLUME (YEAR)')}}</h2>
-                        <p class="font-normal text-gray-700 dark:text-gray-400">{{$totalSum.' '.\App\Models\Proposal::CURRENCY}}</p>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">{{\App\Models\Proposal::CURRENCY.$totalSum}}</p>
                     </div>
                 </div>
                 <div class="sm:w-1/3 w-full px-2">

@@ -14,10 +14,12 @@
     <script>
         $('#templates-list > a').on('click', function (e) {
             e.preventDefault();
-            $.get($(this).attr('href'), function (content) {
+            $.get($(this).attr('href'), function (template) {
+                console.log(template);
                 let summernote = $('textarea.summernote');
                 summernote.summernote("code", "");
-                summernote.summernote("pasteHTML", content);
+                summernote.summernote("pasteHTML", template.content);
+                summernote.closest('form').find('input[name=subject]').val(template.subject)
             })
             return false;
         });

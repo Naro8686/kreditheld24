@@ -25,7 +25,7 @@ class ProposalResource extends JsonResource
             'id' => $this->id,
             'number' => $this->number,
             'status' => $this->status ?? Status::PENDING,
-            'notice' => $this->notice,
+            'notices' => $this->notices,
             'commission' => $this->commission,
             'bonus' => $this->bonus,
             'creditType' => $this->credit_type ?? '',

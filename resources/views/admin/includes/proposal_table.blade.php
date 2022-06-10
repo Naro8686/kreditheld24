@@ -366,12 +366,14 @@
                 [].forEach.call(elems, function (el) {
                     el.remove();
                 });
+                let data = new FormData(this);
                 $.ajax({
                     url: $(form).attr('action'),
                     method: $(form).attr('method'),
-                    data: $(form).serialize(),
+                    data: data,
                     cache: false,
-                    dataType: "json",
+                    contentType: false,
+                    processData:false,
                     success: (response) => {
                         let success = response.status === 'success';
                         if (success) {

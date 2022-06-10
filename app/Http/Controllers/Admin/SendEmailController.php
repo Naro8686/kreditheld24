@@ -34,9 +34,17 @@ class SendEmailController extends Controller
             'emails' => 'sometimes|nullable|array',
             'emails.*' => 'sometimes|nullable|email',
             'ids' => 'sometimes|nullable|array',
+            'attachment' => 'sometimes|nullable|file',
+            'subject' => 'sometimes|nullable|string|max:191',
             'ids.*' => 'sometimes|nullable|exists:proposals,id',
         ]);
         $data = [];
+        $attachment = null;
+        $subject = $request->get('subject');
+        if ($file = $request->file('attachment')) {
+            $attachment = storage_path("app/tmp/{$file->storeAs('/',  $file->getClientOriginalName(), 'tmp')}");
+        }
+
         foreach ($request->get('emails', []) as $value) $data[] = [
             'email' => $value,
             'data' => []
@@ -51,11 +59,15 @@ class SendEmailController extends Controller
                 $proposals->groupBy('email', 'firstName', 'lastName')
                     ->orderBy('email')
                     ->select(['email', 'firstName', 'lastName'])
-                    ->chunk(200, function ($clients) use (&$data) {
+                    ->chunk(200, function ($clients) use (&$data, $attachment, $subject) {
                         foreach ($clients as $client) {
                             $data[] = [
                                 'email' => $client->email,
-                                'data' => ['fullName' => trim("{$client->firstName} {$client->lastName}")]
+                                'data' => [
+                                    'fullName' => trim("{$client->firstName} {$client->lastName}"),
+                                    'subject' => $subject,
+                                    'attachment' => $attachment,
+                                ]
                             ];
                         }
                     });
@@ -67,11 +79,15 @@ class SendEmailController extends Controller
                 else $managers->whereHas('roles', function ($query) {
                     $query->whereIn('roles.slug', [Role::MANAGER]);
                 });
-                $managers->select(['email', 'name', 'surname'])->chunk(200, function ($managers) use (&$data) {
+                $managers->select(['email', 'name', 'surname'])->chunk(200, function ($managers) use (&$data, $attachment, $subject) {
                     foreach ($managers as $manager) {
                         $data[] = [
                             'email' => $manager->email,
-                            'data' => ['fullName' => trim("{$manager->name} {$manager->surname}")]
+                            'data' => [
+                                'fullName' => trim("{$manager->name} {$manager->surname}"),
+                                'subject' => $subject,
+                                'attachment' => $attachment
+                            ]
                         ];
                     }
                 });
@@ -82,11 +98,15 @@ class SendEmailController extends Controller
                     ->groupBy('email', 'firstName', 'lastName')
                     ->orderBy('email')
                     ->select(['email', 'firstName', 'lastName'])
-                    ->chunk(200, function ($clients) use (&$data) {
+                    ->chunk(200, function ($clients) use (&$data, $attachment, $subject) {
                         foreach ($clients as $client) {
                             $data[] = [
                                 'email' => $client->email,
-                                'data' => ['fullName' => trim("{$client->firstName} {$client->lastName}")]
+                                'data' => [
+                                    'fullName' => trim("{$client->firstName} {$client->lastName}"),
+                                    'attachment' => $attachment,
+                                    'subject' => $subject,
+                                ]
                             ];
                         }
                     });

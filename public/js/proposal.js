@@ -17,7 +17,6 @@ function render(proposal) {
             if (!this.allFilesName.length) this.addFileField();
             this.showHideComm = this.showHideComment();
             this.addFileField(this.formData.uploads.length);
-            console.log(this.formData);
             window.addEventListener('beforeunload', (e) => {
                 if (!refreshKeyPressed && this.save && (this.formData.isPending || this.formData.draft)) {
                     e.preventDefault();
@@ -190,6 +189,35 @@ function render(proposal) {
                 console.error(e);
             }
             return false
+        },
+        async sendNotice(e) {
+            let textarea = $('textarea#notice');
+            let message = $.trim(textarea.val());
+            if (message.length) {
+                const url = '/admin/proposal-notices';
+                const data = {
+                    message: message,
+                    proposal_id: this.formData.id,
+                };
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': document.head.querySelector('meta[name=csrf-token]').content,
+                        }
+                    });
+                    const json = await response.json();
+                    if (json.success) {
+                        textarea.val('');
+                        this.formData.notices = json.notices;
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
+            }
+
         },
         submitData() {
             clearErrors();

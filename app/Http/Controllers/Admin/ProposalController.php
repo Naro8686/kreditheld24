@@ -61,7 +61,7 @@ class ProposalController extends Controller
                     });
                 })
                 ->editColumn('creditAmount', function ($proposal) {
-                    return $proposal->creditAmount . ' ' . $proposal::CURRENCY;
+                    return $proposal::CURRENCY . $proposal->creditAmount;
                 })
                 ->editColumn('status', function ($proposal) {
                     return trans("status.$proposal->status");
@@ -73,7 +73,7 @@ class ProposalController extends Controller
                     $query->whereRaw("CONCAT(`proposals`.`firstName`,  ' ', `proposals`.`lastName`) LIKE ?", ["%$keyword%"]);
                 })
                 ->editColumn('payoutAmount', function ($proposal) {
-                    return $proposal->payoutAmount . ' ' . $proposal::CURRENCY;
+                    return $proposal::CURRENCY . $proposal->payoutAmount;
                 })
                 ->editColumn('created_at', function ($proposal) {
                     return $proposal->created_at->format('d.m.Y H:i:s');
@@ -150,10 +150,6 @@ class ProposalController extends Controller
         $request->validate([
             "number" => "sometimes|nullable|unique:proposals,number,$id"
         ]);
-        $request->merge([
-            'notice' => $request->get('status') !== Status::REVISION
-                ? null : $request->get('notice')
-        ]);
         $success = $proposal->saveData($request->only([
             "gender",
             "childrenCount",
@@ -164,7 +160,6 @@ class ProposalController extends Controller
             "objectData",
             "number",
             "status",
-            "notice",
             "commission",
             "bonus",
             "category_id",
@@ -216,7 +211,6 @@ class ProposalController extends Controller
     {
         $proposal = Proposal::findOrFail($id);
         $ext = $request->get('ext', 'xlsx');
-
         try {
             if (in_array($ext, ['pdf', 'csv', 'xlsx'])) {
                 $fileName = "proposal_{$proposal->id}.$ext";

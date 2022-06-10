@@ -162,7 +162,7 @@
                     </select>
                 </label>
             </div>
-            <form id="proposals" action="#" method="POST">
+            <form id="proposals" action="#" method="POST" enctype="multipart/form-data">
                 @csrf
                 <table id="proposals_table"
                        class="table table-sm table-bordered display responsive nowrap w-100">
@@ -350,7 +350,7 @@
                 table.columns(7).search(category ? `${category}` : '', true, false);
                 table.draw();
             });
-            proposal_form.on('submit', function (e) {
+            proposal_form.on('submit', async function (e) {
                 let form = this;
                 let rows_selected = table.column(0).checkboxes.selected();
 
@@ -373,24 +373,27 @@
                 [].forEach.call(elems, function (el) {
                     el.remove();
                 });
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: $(form).serialize(),
-                    cache: false,
-                    dataType: "json",
-                    success: (response) => {
-                        let success = response.status === 'success';
-                        if (success) {
-                            form.reset();
-                            $('.summernote', proposal_form).summernote('code', '');
-                        }
-                        $('.modal', proposal_form).modal('hide');
-                        let classNames = 'alert alert-' + (!success ? 'danger' : 'success');
-                        $('#alert').attr('class', classNames).text(response.msg);
-                    },
-                    error: (response) => {
-                        try {
+
+                try {
+                    let data = new FormData(this);
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        method: $(form).attr('method'),
+                        data: data,
+                        cache: false,
+                        contentType: false,
+                        processData:false,
+                        success: (response) => {
+                            let success = response.status === 'success';
+                            if (success) {
+                                form.reset();
+                                $('.summernote', proposal_form).summernote('code', '');
+                            }
+                            $('.modal', proposal_form).modal('hide');
+                            let classNames = 'alert alert-' + (!success ? 'danger' : 'success');
+                            $('#alert').attr('class', classNames).text(response.msg);
+                        },
+                        error: (response) => {
                             let data = response.responseJSON.errors;
                             for (let [name, errors] of Object.entries(data)) {
                                 let field = form.querySelector(`[name="${name}"]`);
@@ -413,13 +416,14 @@
                                     field.classList.add('border-red');
                                 }
                             }
-                        } catch (e) {
-                            console.error(e);
                         }
-                    }
-                });
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
                 // Prevent actual form submission
                 e.preventDefault();
+                return false;
             });
             $('.modal', proposal_form).on('shown.bs.modal', function (event) {
                 let button = $(event.relatedTarget);

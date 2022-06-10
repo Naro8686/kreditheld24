@@ -65,9 +65,9 @@
             <li>
                 {{ __('residence Type').': '.trans("proposal.residenceTypes.{$proposal->residenceType}")}}
                 <ul>
-                    <li>{{ __('Rent').': '. $proposal->rentAmount }}</li>
-                    <li>{{ __('Communal Amount').': '. $proposal->communalAmount }}</li>
-                    <li>{{ __('Communal Expenses').': '. $proposal->communalExpenses }}</li>
+                    <li>{{ __('Rent').': '.$proposal::CURRENCY. $proposal->rentAmount }}</li>
+                    <li>{{ __('Communal Amount').': '.$proposal::CURRENCY. $proposal->communalAmount }}</li>
+                    <li>{{ __('Communal Expenses').': '.$proposal::CURRENCY. $proposal->communalExpenses }}</li>
                     <li>{{ __('residence Date').': '. $proposal->residenceDate?->format('d.m.Y') }}</li>
                 </ul>
             </li>
@@ -93,20 +93,20 @@
             </ul>
         </li>
         <li>
-            {{ __('Desired loan amount ?').': '.$proposal->creditAmount }}
+            {{ __('Desired loan amount ?').': '.$proposal::CURRENCY.$proposal->creditAmount }}
         </li>
         <li>
             {{ __('For what time (month) ?').': '.$proposal->deadline }}
         </li>
         <li>
-            {{ __('Desired amount of payment per month ?').': '.$proposal->monthlyPayment }}
+            {{ __('Desired amount of payment per month ?').': '.$proposal::CURRENCY.$proposal->monthlyPayment }}
         </li>
         <li>
             {{ __('Number of existing loans').': '.count(($proposal->otherCredit ?? [])) }}
             <ul>
                 @foreach(($proposal->otherCredit ?? []) as $credit)
-                    <li>{{ __('Monthly Payment').': '.$credit['monthlyPayment'] }}</li>
-                    <li>{{ __('Credit balance').': '.$credit['creditBalance'] }}</li>
+                    <li>{{ __('Monthly Payment').': '.$proposal::CURRENCY.$credit['monthlyPayment'] }}</li>
+                    <li>{{ __('Credit balance').': '.$proposal::CURRENCY.$credit['creditBalance'] }}</li>
                     <li>{{ __('Repay a credit ?').': '.__(Str::ucfirst($credit['repay'])) }}</li>
                     <li>{{ __('Bank number').': '.$credit['bankNumber'] }}</li>
                 @endforeach
@@ -137,8 +137,8 @@
         <li>{{__('Year of repair').': '.optional($proposal->objectData)['yearRepair']}}</li>
         <li>{!! __('Plot size').' (m<sup>2</sup>):'.optional($proposal->objectData)['plotSize'] !!}</li>
         <li>{!! __('Living space').' (m<sup>2</sup>):'.optional($proposal->objectData)['livingSpace'] !!}</li>
-        <li>{{__('Purchase or build price').': '.optional($proposal->objectData)['buildPrice']}}</li>
-        <li>{{__('Own accumulation').': '.optional($proposal->objectData)['accumulation']}}</li>
+        <li>{{__('Purchase or build price').': '.$proposal::CURRENCY.optional($proposal->objectData)['buildPrice']}}</li>
+        <li>{{__('Own accumulation').': '.$proposal::CURRENCY.optional($proposal->objectData)['accumulation']}}</li>
         <li>{{__('Brokerage fees').'(%): '.optional($proposal->objectData)['brokerageFees']}}</li>
     </ul>
 </div>

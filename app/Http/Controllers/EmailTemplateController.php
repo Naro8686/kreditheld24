@@ -25,9 +25,11 @@ class EmailTemplateController extends Controller
         $request->merge(['user_id' => $user_id]);
         $request->validate([
             'name' => 'required|unique:email_templates,name,NULL,id,user_id,' . $user_id,
-            'content' => 'required'
+            'content' => 'required',
+            'subject' => 'sometimes|nullable|string|max:191'
         ]);
-        EmailTemplate::create($request->only(['user_id', 'name', 'content']));
+
+        EmailTemplate::create($request->only(['user_id', 'name', 'subject', 'content']));
         return redirect()->route('email-templates.index')->with('success', __('Data saved successfully'));
     }
 
@@ -39,8 +41,7 @@ class EmailTemplateController extends Controller
      */
     public function show($id)
     {
-        $template = auth()->user()->emailTemplates()->findOrFail($id);
-        return $template->content;
+        return auth()->user()->emailTemplates()->findOrFail($id);
     }
 
     public function edit($id)
@@ -55,10 +56,12 @@ class EmailTemplateController extends Controller
         $user_id = $template->user_id;
         $request->validate([
             'name' => "required|unique:email_templates,name,$template->id,id,user_id,$user_id",
-            'content' => 'required'
+            'content' => 'required',
+            'subject' => 'sometimes|nullable|string|max:191'
         ]);
         $template->name = $request->get('name', $template->name);
         $template->content = $request->get('content', $template->content);
+        $template->subject = $request->get('subject', $template->subject);
         $template->save();
         return redirect()->route('email-templates.index')->with('success', __('Data saved successfully'));
     }

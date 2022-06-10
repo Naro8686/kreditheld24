@@ -24,7 +24,6 @@ use Throwable;
  * @property int $user_id
  * @property int|null $category_id
  * @property string $status
- * @property string|null $notice
  * @property int|null $deadline
  * @property string|null $monthlyPayment
  * @property string|null $creditAmount
@@ -52,20 +51,24 @@ use Throwable;
  * @property string|null $bonus
  * @property string|null $commission
  * @property |null $objectData
- * @property string $applicantType
+ * @property string|null $applicantType
  * @property string|null $rentAmount
  * @property string|null $communalAmount
  * @property string|null $communalExpenses
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property string|null $pending_at
- * @property string|null $approved_at
- * @property string|null $revision_at
- * @property string|null $denied_at
+ * @property \Illuminate\Support\Carbon|null $pending_at
+ * @property \Illuminate\Support\Carbon|null $approved_at
+ * @property \Illuminate\Support\Carbon|null $revision_at
+ * @property \Illuminate\Support\Carbon|null $denied_at
+ * @property string|null $invoice_file
  * @property-read \App\Models\Category|null $category
+ * @property-read string|null $credit_amount
  * @property-read string|null $credit_type
- * @property-read float|int $payout_amount
+ * @property-read string $payout_amount
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProposalNotice[] $notices
+ * @property-read int|null $notices_count
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal newQuery()
@@ -96,9 +99,9 @@ use Throwable;
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereHouse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereInsurance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereInvoiceFile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereMonthlyPayment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNotice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereObjectData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereOldAddress($value)
@@ -118,8 +121,6 @@ use Throwable;
  * @method static \Illuminate\Database\Query\Builder|Proposal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Proposal withoutTrashed()
  * @mixin \Eloquent
- * @property string|null $invoice_file
- * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereInvoiceFile($value)
  */
 class Proposal extends Model
 {
@@ -194,7 +195,7 @@ class Proposal extends Model
                 switch ($model->status) {
                     case Status::APPROVED:
                         if ($model->invoice_file) {
-                            $data['invoice_pdf'] = public_path("storage/{$model->invoice_file}");
+                            $data['attachment'] = public_path("storage/{$model->invoice_file}");
                         }
                         $message = __("Proposal approved") . ': ' . $model->approved_at->format('d.m.Y');
                         $user = $model->user;
@@ -217,15 +218,21 @@ class Proposal extends Model
                         break;
                 }
                 if (!is_null($message) && !is_null($user)) {
-                    $user->sendEmail('<h1 style="text-align: center">' . $message . '</h1>', $data);
+                    $text = '<h1 style="text-align: center">' . $message . '</h1>';
+                    $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->user->full_name . '</h1>';
+                    if ($model->number) {
+                        $text .= '<h1 style="text-align: center">' . __('Proposal number') . ': ' . $model->number . '</h1>';
+                    }
+                    $user->sendEmail($text, $data);
                 }
             }
         });
         static::created(function (Proposal $model) {
             if (!$model->trashed() && $admin = User::admin()) {
-                $message = '<h1 style="text-align: center">' . __('New Proposal') . ': ' . $model->created_at->format('d.m.Y H:i:s') . '</h1>';
+                $text = '<h1 style="text-align: center">' . __('New Proposal') . ': ' . $model->created_at->format('d.m.Y H:i:s') . '</h1>';
+                $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->user->full_name . '</h1>';
                 $data = ['url' => route('admin.proposals.edit', [$model->id])];
-                $admin->sendEmail($message, $data);
+                $admin->sendEmail($text, $data);
             }
         });
     }
@@ -248,16 +255,17 @@ class Proposal extends Model
 
     public static function moneyFormat($value): string
     {
-        return number_format((float)$value, 2, ',', '.');
+        $value = (float)self::parse_number($value);
+        return number_format($value, 2, '.', ',');
     }
 
-    public static function parse_number($number, $dec_point = ','): float
+    public static function parse_number($number, $dec_point = '.'): float
     {
         if (empty($dec_point)) {
             $locale = localeconv();
             $dec_point = $locale['decimal_point'];
         }
-        return floatval(str_replace($dec_point, '.', preg_replace('/[^\d' . preg_quote($dec_point) . ']/', '', $number)));
+        return floatval(str_replace($dec_point, ',', preg_replace('/[^\d' . preg_quote($dec_point) . ']/', '', $number)));
     }
 
     public function invoiceGenerate(): ?string
@@ -306,6 +314,26 @@ class Proposal extends Model
         return !isset($value) ? null : self::moneyFormat($value);
     }
 
+    public function getMonthlyPaymentAttribute($value): ?string
+    {
+        return !isset($value) ? null : self::moneyFormat($value);
+    }
+
+    public function getRentAmountAttribute($value): ?string
+    {
+        return !isset($value) ? null : self::moneyFormat($value);
+    }
+
+    public function getCommunalExpensesAttribute($value): ?string
+    {
+        return !isset($value) ? null : self::moneyFormat($value);
+    }
+
+    public function getCommunalAmountAttribute($value): ?string
+    {
+        return !isset($value) ? null : self::moneyFormat($value);
+    }
+
     /**
      * @return \Illuminate\Support\Carbon|null
      */
@@ -323,6 +351,12 @@ class Proposal extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function notices()
+    {
+        return $this->hasMany(ProposalNotice::class);
+    }
+
 
     public function deleteAllFiles()
     {

@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Http\Resources\ProposalResource;
 use App\Models\Proposal;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -56,10 +57,10 @@ class ProposalExport implements ShouldAutoSize, FromQuery, WithHeadings, WithMap
             __('Communal Amount'),
             __('Communal Expenses'),
             __('residence Date'),
-            __('Street'). ' (' . __('Old Address') . ')',
-            __('House'). ' (' . __('Old Address') . ')',
-            __('Postcode'). ' (' . __('Old Address') . ')',
-            __('City'). ' (' . __('Old Address') . ')',
+            __('Street') . ' (' . __('Old Address') . ')',
+            __('House') . ' (' . __('Old Address') . ')',
+            __('Postcode') . ' (' . __('Old Address') . ')',
+            __('City') . ' (' . __('Old Address') . ')',
             __('Credit Type'),
             __('Comment'),
             __('Desired loan amount ?'),
@@ -99,12 +100,16 @@ class ProposalExport implements ShouldAutoSize, FromQuery, WithHeadings, WithMap
             $proposal->lastName,
             $proposal->phoneNumber,
             $proposal->email,
-            $proposal->birthday,
+            optional($proposal->birthday)->format('d.m.Y'),
             $proposal->birthplace,
             $proposal->familyStatus,
             optional($proposal->spouse)['firstName'],
             optional($proposal->spouse)['lastName'],
-            optional($proposal->spouse)['birthday'],
+            (
+            optional($proposal->spouse)['birthday']
+                ? Carbon::parse($proposal->spouse['birthday'])->format('d.m.Y')
+                : null
+            ),
             optional($proposal->spouse)['birthplace'],
             $proposal->childrenCount,
             $proposal->street,
@@ -112,19 +117,19 @@ class ProposalExport implements ShouldAutoSize, FromQuery, WithHeadings, WithMap
             $proposal->postcode,
             $proposal->city,
             trans("proposal.residenceTypes.{$proposal->residenceType}"),
-            $proposal->rentAmount,
-            $proposal->communalAmount,
-            $proposal->communalExpenses,
-            $proposal->residenceDate,
+            $proposal::CURRENCY . $proposal->rentAmount,
+            $proposal::CURRENCY . $proposal->communalAmount,
+            $proposal::CURRENCY . $proposal->communalExpenses,
+            optional($proposal->residenceDate)->format('d.m.Y'),
             optional($proposal->oldAddress)['street'],
             optional($proposal->oldAddress)['house'],
             optional($proposal->oldAddress)['postcode'],
             optional($proposal->oldAddress)['city'],
             optional($proposal->category)->name,
             $proposal->creditComment,
-            $proposal->creditAmount,
+            $proposal::CURRENCY . $proposal->creditAmount,
             $proposal->deadline,
-            $proposal->monthlyPayment,
+            $proposal::CURRENCY . $proposal->monthlyPayment,
             count(($proposal->otherCredit ?? [])),
             __('Death') . ':' . (optional($proposal->insurance)['death'] ? __('Yes') : __('No')) . PHP_EOL . __('Disease') . ':' . (optional($proposal->insurance)['disease'] ? __('Yes') : __('No')) . PHP_EOL . __('Unemployment') . ':' . (optional($proposal->insurance)['unemployment'] ? __('Yes') : __('No')),
             trans("proposal.applicantTypes.{$proposal->applicantType}"),
@@ -137,8 +142,8 @@ class ProposalExport implements ShouldAutoSize, FromQuery, WithHeadings, WithMap
             optional($proposal->objectData)['yearRepair'],
             optional($proposal->objectData)['plotSize'],
             optional($proposal->objectData)['livingSpace'],
-            optional($proposal->objectData)['buildPrice'],
-            optional($proposal->objectData)['accumulation'],
+            $proposal::CURRENCY . optional($proposal->objectData)['buildPrice'],
+            $proposal::CURRENCY . optional($proposal->objectData)['accumulation'],
             optional($proposal->objectData)['brokerageFees'],
         ];
     }

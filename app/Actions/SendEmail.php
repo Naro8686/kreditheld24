@@ -9,10 +9,7 @@ use Throwable;
 
 class SendEmail
 {
-    /**
-     * @throws Exception
-     */
-    public function handle($message, $data = [])
+    public function handle($message, $data = []): string
     {
         try {
             if (empty($data)) throw new Exception(__('empty'), 422);

@@ -23,6 +23,13 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="subject">{{__('Theme')}}</label>
+                            <input id="subject" class="form-control" name="subject" value="{{old('subject',$template->subject ?? null)}}">
+                            @error('subject')
+                            <small id="messageHelp" class="form-text text-danger">{{$message}}</small>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="template_content">{{__('Content')}}</label>
                             <textarea rows="7" class="form-control" id="template_content"
                                       name="content">{!! old('content',$template->content ?? null) !!}</textarea>
