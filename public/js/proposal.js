@@ -17,15 +17,15 @@ function render(proposal) {
             if (!this.allFilesName.length) this.addFileField();
             this.showHideComm = this.showHideComment();
             this.addFileField(this.formData.uploads.length);
-            window.addEventListener('beforeunload', (e) => {
-                if (!refreshKeyPressed && this.save && (this.formData.isPending || this.formData.draft)) {
-                    e.preventDefault();
-                    this.formData.draft = 1;
-                    return e.returnValue = this.submitData()?.then(function () {
-                        return '';
-                    });
-                }
-            }, {capture: true});
+            // window.addEventListener('beforeunload', (e) => {
+            //     if (!refreshKeyPressed && this.save && (this.formData.isPending || this.formData.draft)) {
+            //         e.preventDefault();
+            //         this.formData.draft = 1;
+            //         return e.returnValue = this.submitData()?.then(function () {
+            //             return '';
+            //         });
+            //     }
+            // }, {capture: true});
         },
         exportToPdf() {
             this.save = false;
