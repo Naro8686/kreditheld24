@@ -25,7 +25,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email:rfc,dns',
+            'email' => 'required|email:rfc,dns|unique:users,email',
             'name' => 'required|string|min:2|max:191',
             'surname' => 'sometimes|nullable|string|min:2|max:191',
             'phone' => 'sometimes|nullable|numeric|phone_number:6,50',
