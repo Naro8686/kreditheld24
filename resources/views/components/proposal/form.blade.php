@@ -445,10 +445,9 @@
                                     x-on:dragleave.prevent="dropFile = false"
                                     class="overflow-x-hidden relative rounded-md p-3 w-full block cursor-pointer my-2 border">
                                     <input type="file" class="sr-only file"
-                                           x-bind:required="!name && !formData.draft && (i !== allFilesName.length - 1)"
                                            x-on:change="uploadFile($event.target.files[0],i)"
                                     />
-                                    <button type="button" :disabled="allFilesName.length <= 1"
+                                    <button type="button"
                                             class="absolute right-0 top-0 mt-2 mr-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
                                             @click="deleteFile(i)">
                                         -

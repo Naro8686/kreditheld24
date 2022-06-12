@@ -217,7 +217,7 @@ class ProposalController extends Controller
                 return $proposal::CURRENCY.$proposal->payoutAmount;
             })
             ->editColumn('created_at', function ($proposal) {
-                return $proposal->created_at->format('d.m.Y H:i:s');
+                return $proposal->created_at->format('d.m.Y');
             })
             ->filterColumn('created_at', function ($query, $keyword) {
                 $query->whereRaw("DATE_FORMAT(`proposals`.`created_at`,'%d.%m.%Y %H:%i:%s') LIKE ?", ["%$keyword%"]);

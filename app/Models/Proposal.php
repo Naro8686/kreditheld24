@@ -6,6 +6,7 @@ use App\Casts\AsCustomCollection;
 use App\Constants\Status;
 use App\Mail\SendEmail;
 use App\Traits\File;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Dompdf\Dompdf;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use NumberFormatter;
 use Throwable;
 
 /**
@@ -255,12 +257,30 @@ class Proposal extends Model
 
     public static function moneyFormat($value): string
     {
+//        try {
+//            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
+//            $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, '');
+//            $fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+//            $num = $fmt->formatCurrency($value, "EUR");
+//            return $num ?: $value;
+//        } catch (Throwable) {
+//            return $value;
+//        }
+
         $value = (float)self::parse_number($value);
         return number_format($value, 2, '.', ',');
     }
 
-    public static function parse_number($number, $dec_point = '.'): float
+    public static function parse_number($number, $dec_point = '.')
     {
+//        try {
+//            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
+//            $num = $fmt->parse($number);
+//            return $num ?: $number;
+//        } catch (Throwable) {
+//            return $number;
+//        }
+
         if (empty($dec_point)) {
             $locale = localeconv();
             $dec_point = $locale['decimal_point'];

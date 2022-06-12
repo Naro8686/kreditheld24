@@ -62,13 +62,8 @@ class ProposalRequest extends FormRequest
             "familyStatus" => "sometimes|nullable|in:$familyStatuses",
             "otherCreditCount" => "required|int|min:0|max:4",
         ];
-        if (!count($this->get('allFilesName', [])) && !$this->isDraft()) {
-            $validates["uploads"] = "required|array|min:1";
-            $validates["uploads.*"] = "required|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
-        } else {
-            $validates["uploads"] = "sometimes|array|min:1";
-            $validates["uploads.*"] = "sometimes|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
-        }
+        $validates["uploads"] = "sometimes|array|min:1";
+        $validates["uploads.*"] = "sometimes|mimes:$uploadFileTypes|max:$uploadFileMaxSize";
         if ($this['residenceDate']) {
             $date = Carbon::createFromFormat('Y-m-d', $this['residenceDate']);
             if ($date->diff(Carbon::now()->subYears(2))->invert) {
@@ -96,7 +91,7 @@ class ProposalRequest extends FormRequest
         if ($this->get('status')) {
             $validates["status"] = "required|in:$statuses";
             if ($this['status'] === Status::APPROVED) {
-                $validates["bonus"] = "sometimes|nullable|numeric|min:1|max:100";
+                $validates["bonus"] = "sometimes|nullable|numeric|min:0|max:100";
                 $validates["commission"] = "required|numeric|min:1|max:100";
             }
         }
