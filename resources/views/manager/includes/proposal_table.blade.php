@@ -332,7 +332,7 @@
                 return 'form-control form-control-sm';
             });
             table.on('click', 'tbody>tr:not(.group)', function (e) {
-                let link = $(this).find('a.edit-link')[0];
+                let link = $(this).find('.edit-link')[0];
                 if (link && e.target.tagName.toLowerCase() === 'td') {
                     link.click();
                 }

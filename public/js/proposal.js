@@ -289,6 +289,7 @@ function renderError(data) {
             errElement.textContent = errors[0];
             field.closest('div').appendChild(errElement);
             field.classList.add('border-red');
+            $(field.closest('.collapse')).collapse('show');
         }
     }
 }

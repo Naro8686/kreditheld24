@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $user = auth()->user();
-        if ($this->routeIs('admin.managers.update')){
+        if ($this->routeIs('admin.managers.update')) {
             $user = User::findOrFail($this->route()->parameter('id'));
         }
 

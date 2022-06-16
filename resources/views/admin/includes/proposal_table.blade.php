@@ -341,7 +341,7 @@
 
             table.on('click', 'tbody>tr:not(.group)', function (e) {
                 if (e.target.tagName.toLowerCase() === 'td') {
-                    $(this).find('a.edit-link')[0].click();
+                    $(this).find('.edit-link')[0].click();
                 }
             });
             proposal_form.on('submit', function (e) {
