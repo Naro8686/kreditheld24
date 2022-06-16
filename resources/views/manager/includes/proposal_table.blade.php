@@ -181,9 +181,9 @@
                         <th scope="col">{{__('Deadline')}}</th>
                         <th scope="col">{{__('Email')}}</th>
                         <th scope="col">{{__('Payout amount')}}</th>
-                        <th class="not-export-col" scope="col">
-                            <span class="sr-only">{{__('Action')}}</span>
-                        </th>
+{{--                        <th class="not-export-col" scope="col">--}}
+{{--                            <span class="sr-only">{{__('Action')}}</span>--}}
+{{--                        </th>--}}
                     </tr>
                     </thead>
                 </table>
@@ -270,7 +270,7 @@
                     },
                     {data: 'number', name: 'number'},
                     {data: 'fullName', name: 'fullName', orderable: false},
-                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true,visible: false},
                     {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
@@ -278,11 +278,11 @@
                     {data: 'deadline', name: 'deadline'},
                     {data: 'email', name: 'email'},
                     {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {
                     $(row).addClass('cursor-pointer');
                     $('td', row).eq(1).addClass(data['bgColor']);
-                    $('td', row).eq(6).addClass(data['statusBgColor']);
+                    $('td', row).eq(5).addClass(data['statusBgColor']);
                 },
             });
             $('#select-all').on('click', function () {

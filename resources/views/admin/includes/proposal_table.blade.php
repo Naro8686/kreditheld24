@@ -171,9 +171,9 @@
                         <th scope="col">{{__('Deadline')}}</th>
                         <th scope="col">{{__('Birthday')}}</th>
                         <th scope="col">{{__('Email')}}</th>
-                        <th class="not-export-col" scope="col">
-                            <span class="sr-only">{{__('Action')}}</span>
-                        </th>
+{{--                        <th class="not-export-col" scope="col">--}}
+{{--                            <span class="sr-only">{{__('Action')}}</span>--}}
+{{--                        </th>--}}
                     </tr>
                     </thead>
                     <tfoot>
@@ -186,7 +186,7 @@
                                 <i class="fas fa-fw fa-envelope"></i>
                             </button>
                         </th>
-                        <th colspan="14"></th>
+                        <th colspan="13"></th>
                     </tr>
                     </tfoot>
                 </table>
@@ -279,8 +279,8 @@
                         className: 'dt-body-center',
                         checkboxes: true,
                     },
-                    {data: 'id', name: 'id'},
-                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true},
+                    {data: 'id', name: 'id',visible: false},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true,visible: false},
                     {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'number', name: 'number'},
                     {data: 'fullName', name: 'fullName'},
@@ -292,11 +292,11 @@
                     {data: 'deadline', name: 'deadline'},
                     {data: 'birthday', name: 'birthday'},
                     {data: 'email', name: 'email'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {
                     $(row).addClass('cursor-pointer');
                     $('td', row).eq(1).addClass(data['bgColor']);
-                    $('td', row).eq(7).addClass(data['statusBgColor']);
+                    $('td', row).eq(5).addClass(data['statusBgColor']);
                 },
             });
             $("ul li ul li").click(function () {

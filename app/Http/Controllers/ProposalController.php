@@ -223,7 +223,41 @@ class ProposalController extends Controller
                 $query->whereRaw("DATE_FORMAT(`proposals`.`created_at`,'%d.%m.%Y %H:%i:%s') LIKE ?", ["%$keyword%"]);
             })
             ->addColumn('fullName', function ($proposal) {
-                return "$proposal->firstName $proposal->lastName";
+                $linkEdit = route('proposal.edit', [$proposal->id]);
+                $linkDuplicate = route('proposal.duplicate', [$proposal->id]);
+                $linkDelete = route('proposal.delete', [$proposal->id]);
+                $linkInvoice = null;
+
+                if ($proposal->status === Status::APPROVED && !is_null($proposal->invoice_file)) {
+                    $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
+                }
+                $html = "<div class='d-flex align-items-center' role='group'>";
+                $html .= "<span class='text-sm'>ID: $proposal->id</span>";
+                if ($category = optional(optional($proposal->category)->parent)->name) {
+                    $html .= "|<span class='text-sm'>$category</span>";
+                }
+                if ($proposal->trashed() || $proposal->isRevision() || $proposal->isApproved()) {
+                    $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
+                                    " . __('Show') . "
+                                </a>";
+                    if ($proposal->trashed()) {
+                        $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
+                                        data-target='#confirmModal'
+                                        data-url='$linkDelete'>".__('Delete')."
+                                </a>";
+                    }
+                }
+                $html .= "|<a href='$linkDuplicate'
+                                   class='text-sm text-primary'>".__('Duplicate')."
+                         </a>";
+                if (!is_null($linkInvoice)) {
+                    $html .= "|<a href='$linkInvoice' target='_blank'
+                                   class='text-sm text-success'>
+                                   ".__('Invoice')."</a>";
+                }
+
+                $html .= "</div>";
+                return "<span class='d-flex'>$proposal->firstName $proposal->lastName</span>" . $html;
             })
             ->filterColumn('fullName', function ($query, $keyword) {
                 $query->whereRaw("CONCAT(`proposals`.`firstName`,  ' ', `proposals`.`lastName`) LIKE ?", ["%$keyword%"]);
@@ -269,7 +303,7 @@ class ProposalController extends Controller
                 $html .= "</div>";
                 return $html;
             })
-            ->rawColumns(['number', 'email', 'action'])
+            ->rawColumns(['number', 'email', 'action','fullName'])
             ->toJson();
     }
 

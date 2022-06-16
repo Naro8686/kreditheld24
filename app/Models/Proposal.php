@@ -257,35 +257,26 @@ class Proposal extends Model
 
     public static function moneyFormat($value): string
     {
-//        try {
-//            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
-//            $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, '');
-//            $fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
-//            $num = $fmt->formatCurrency($value, "EUR");
-//            return $num ?: $value;
-//        } catch (Throwable) {
-//            return $value;
-//        }
-
-        $value = (float)self::parse_number($value);
-        return number_format($value, 2, '.', ',');
+        try {
+            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
+            $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, '');
+            $fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+            $num = $fmt->formatCurrency($value, "EUR");
+            return $num ?: $value;
+        } catch (Throwable) {
+            return $value;
+        }
     }
 
     public static function parse_number($number, $dec_point = '.')
     {
-//        try {
-//            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
-//            $num = $fmt->parse($number);
-//            return $num ?: $number;
-//        } catch (Throwable) {
-//            return $number;
-//        }
-
-        if (empty($dec_point)) {
-            $locale = localeconv();
-            $dec_point = $locale['decimal_point'];
+        try {
+            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
+            $num = $fmt->parse($number);
+            return $num ?: $number;
+        } catch (Throwable) {
+            return $number;
         }
-        return floatval(str_replace($dec_point, ',', preg_replace('/[^\d' . preg_quote($dec_point) . ']/', '', $number)));
     }
 
     public function invoiceGenerate(): ?string
