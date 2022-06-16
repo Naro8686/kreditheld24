@@ -74,40 +74,40 @@ function render(proposal) {
             if (category_key === 'home') {
                 if (type === 'individual') {
                     documents.push([
-                        'Bei Angestellten und Arbeiter: Kopie der letzten 3 Gehaltsabrechnungen',
-                        'Bei Selbständigen:  drei Einkommensteuerbescheide, aktuell (letzter vorliegender Bescheid) +2 Vorjahre',
-                        'Kopie der Personalausweise',
-                        'Höhe des Eigenkapitals, welches Sie einsetzen wollen',
-                        'Insofern bei Ihnen weitere Verpflichtungen (z.B. Kredite) bestehen, bitte Nachweis einreichen. (Kontoauszüge und Verträge)',
+                        'Kopie der letzten 3 Gehaltsabrechnungen',
+                        'Gültiger Deutscher Personalausweis/Reisepass (Reisepass nur in Verbindung mit einer Meldebescheinigung',
+                        'Bei nicht EU-Bürger: Gültiger Reisepass mit aktuellem Aufenthaltstitel',
+                        'Nachweis Eigenmittel/ Eigenkapital',
+                        'Insofern bei Ihnen weitere Verpflichtungen (z.B. privat Kredite oder Immobilienfinanzierungen) bestehen, bitte Nachweis einreichen. (Kontoauszüge und Verträge)',
                         'Exposé, wenn keine vorhandenen Objektdaten im Portal eintragen.'
                     ]);
                 } else if (type === 'juridical') {
                     documents.push([
-                        'Bei Angestellten und Arbeiter: Kopie der letzten 3 Gehaltsabrechnungen',
-                        'Bei Selbständigen:  drei Einkommensteuerbescheide, aktuell (letzter vorliegender Bescheid) +2 Vorjahre',
-                        'Kopie der Personalausweise',
-                        'Höhe des Eigenkapitals, welches Sie einsetzen wollen',
-                        'Insofern bei Ihnen weitere Verpflichtungen (z.B. Kredite) bestehen, bitte Nachweis einreichen. (Kontoauszüge und Verträge)',
+                        'letzten 3 Einkommenssteuerbescheide +BWA laufendes Jahr',
+                        'Gültiger Deutscher Personalausweis/Reisepass (Reisepass nur in Verbindung mit einer Meldebescheinigung',
+                        'Bei nicht EU-Bürger: Gültiger Reisepass mit aktuellem Aufenthaltstitel',
+                        'Nachweis Eigenmittel/ Eigenkapital',
+                        'Insofern bei Ihnen weitere Verpflichtungen (z.B. privat Kredite oder Immobilienfinanzierungen) bestehen, bitte Nachweis einreichen. (Kontoauszüge und Verträge)',
                         'Exposé, wenn keine vorhandenen Objektdaten im Portal eintragen.'
                     ]);
                 }
             } else if (category_key === 'private_credit') {
                 if (type === 'individual') {
                     documents.push([
-                        'Kopie Vorder- und Rückseite der Ausweispapiere (Personalausweis oder Reisepass mit Meldebestätigung)',
-                        'Lohn-/Gehaltsabrechnungen der letzten drei Monate Abrechnung in Kopie.',
-                        'lückenlose Kontoauszüge der Hauptbankverbindung(en) der letzten 5 Wochen in Kopie',
-                        'Kopien die bestehenden Kreditverträge und Ablösebescheinigungen',
-                        'Kopien die bestehenden Immobilienkreditverträge',
+                        'Kopie der letzten 3 Gehaltsabrechnungen',
+                        'Gültiger Deutscher Personalausweis/Reisepass(Reisepass nur in Verbindung mit einer Meldebescheinigung',
+                        'Bei nicht EU-Bürger: Gültiger Reisepass mit aktuellem Aufenthaltstitel',
+                        'Kontoauszüge: die letzten 5 Wochen',
+                        'Insofern bei Ihnen weitere Verpflichtungen (z.B. Kredite) bestehen, bitte Nachweis einreichen. (Kontoauszüge und Verträge)',
                         'Bei verheirateten immer auch Unterlagen für Ehepartner miteinreichen'
                     ]);
                 } else if (type === 'juridical') {
                     documents.push([
-                        'Kopie Vorder- und Rückseite der Ausweispapiere (Personalausweis oder Reisepass mit Meldebestätigung)',
-                        'Bei Selbstständigen/Freiberuflern: die letzten drei aktuellen Steuerbescheide',
-                        'lückenlose Kontoauszüge der Hauptbankverbindung(en) der letzten 5 Wochen in Kopie',
-                        'Kopien den bestehenden Kreditverträge und Ablösebescheinigungen',
-                        'Kopien den bestehenden Immobilienkreditverträge',
+                        'letzten 3 Einkommenssteuerbescheide',
+                        'Gültiger Deutscher Personalausweis/Reisepass(Reisepass nur in Verbindung mit einer Meldebescheinigung',
+                        'Bei nicht EU-Bürger: Gültiger Reisepass mit aktuellem Aufenthaltstitel',
+                        'Kontoauszüge: die letzten 5 Wochen',
+                        'Insofern bei Ihnen weitere Verpflichtungen (z.B. Kredite) bestehen, bitte Nachweis einreichen. (Kontoauszüge und Verträge)',
                         'Bei verheirateten immer auch Unterlagen für Ehepartner miteinreichen'
                     ]);
                 }
