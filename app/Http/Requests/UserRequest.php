@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -24,13 +25,18 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $user = auth()->user();
+        if ($this->routeIs('admin.managers.update')){
+            $user = User::findOrFail($this->route()->parameter('id'));
+        }
+
         return [
-            'email' => 'required|email:rfc,dns|unique:users,email,'.auth()->user()->id,
+            'email' => 'required|email:rfc,dns|unique:users,email,' . $user->id,
             'name' => 'required|string|min:2|max:191',
             'surname' => 'sometimes|nullable|string|min:2|max:191',
             'phone' => 'sometimes|nullable|numeric|phone_number:6,50',
             "street" => "sometimes|nullable|string|min:2",
-            "house" => "sometimes|nullable|string|min:2",
+            "house" => "sometimes|nullable",
             "city" => "sometimes|nullable|string|min:2",
             "postcode" => "sometimes|nullable|regex:/\b\d{4,10}\b/",
             'card_number' => 'sometimes|nullable|string|min:22|max:22',
