@@ -153,7 +153,7 @@
                         @endforeach
                     </select>
                 </label>
-                <label class="float-left ml-2">{{__('Credit Type')}}
+                <label class="float-left ml-2">{{__('Search Type')}}
                     :<select id="creditType" class="form-control form-control-sm">
                         <option value="">{{__('no selected')}}</option>
                         @foreach(\App\Models\Category::whereNull('parent_id')->get() as $category)
@@ -179,7 +179,7 @@
                         <th scope="col">{{__('Date')}}</th>
                         <th scope="col">{{__('Status')}}</th>
                         <th scope="col">{{__('Deadline')}}</th>
-                        <th scope="col">{{__('Email')}}</th>
+                        <th scope="col">{{__('Email Manager')}}</th>
                         <th scope="col">{{__('Payout amount')}}</th>
 {{--                        <th class="not-export-col" scope="col">--}}
 {{--                            <span class="sr-only">{{__('Action')}}</span>--}}

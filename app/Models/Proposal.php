@@ -221,7 +221,8 @@ class Proposal extends Model
                 }
                 if (!is_null($message) && !is_null($user)) {
                     $text = '<h1 style="text-align: center">' . $message . '</h1>';
-                    $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->user->full_name . '</h1>';
+                    $text .= '<h1 style="text-align: center">' . __('Full name Manager') . ': ' . $model->user->full_name . '</h1>';
+					$text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
                     if ($model->number) {
                         $text .= '<h1 style="text-align: center">' . __('Proposal number') . ': ' . $model->number . '</h1>';
                     }
@@ -232,7 +233,8 @@ class Proposal extends Model
         static::created(function (Proposal $model) {
             if (!$model->trashed() && $admin = User::admin()) {
                 $text = '<h1 style="text-align: center">' . __('New Proposal') . ': ' . $model->created_at->format('d.m.Y H:i:s') . '</h1>';
-                $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->user->full_name . '</h1>';
+                $text .= '<h1 style="text-align: center">' . __('Full name Manager') . ': ' . $model->user->full_name . '</h1>';
+				$text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
                 $data = ['url' => route('admin.proposals.edit', [$model->id])];
                 $admin->sendEmail($text, $data);
             }

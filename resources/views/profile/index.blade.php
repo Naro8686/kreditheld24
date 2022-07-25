@@ -123,9 +123,9 @@
                             <p class="text-sm text-danger">{{$message}}</p>
                             @enderror
                         </div>
-                        <button type="submit"
+                        <!-- <button type="submit"
                                 x-text="'{{__("Save")}}'"
-                                class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>
+                                class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>-->
                     </form>
                 </div>
             </div>

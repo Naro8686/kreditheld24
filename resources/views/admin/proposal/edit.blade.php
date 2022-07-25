@@ -64,7 +64,7 @@
                                           class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full"
                                           type="text" name="notice"></textarea>
                                 <button @click="sendNotice" type="button"
-                                        class="btn btn-outline-primary mt-3 float-right">{{__('Send')}}</button>
+                                        class="btn btn-outline-primary mt-3 float-right">{{__('Send Revision')}}</button>
 
                             </fieldset>
                             <template x-if="formData.status === '{{\App\Constants\Status::APPROVED}}'">
@@ -146,7 +146,7 @@
                 <h2 class="h4 text-gray-800 mt-4">{{__("View file")}}</h2>
                 <div class="iframe-container mt-1 border-2 border-gray-300 rounded">
                     <iframe class="responsive-iframe" name="file_view">
-                        <p>iframes are not supported by your browser.</p>
+                        <p>iframes werden von Ihrem Browser nicht unterstützt.</p>
                     </iframe>
                 </div>
             </div>

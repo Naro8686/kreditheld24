@@ -1,11 +1,11 @@
 <?php return [
     'applicantTypes' => [
-        'individual' => 'Individuell',
-        'juridical' => 'Juristische',
+        'individual' => 'Privatperson',
+        'juridical' => 'Gewerbliche',
     ],
     'creditTypes' => [
-        'home' => 'Baufinanzierung',
-        'private_credit' => 'Kredit',
+        'home' => 'BaFi',
+        'private_credit' => 'PK',
         'car' => 'Fahrzeugkauf',
         'repair' => 'Modernisiereng',
         'vacation' => 'Umschuldung',
@@ -25,16 +25,16 @@
         'married' => 'Verheiratet',
         'unmarried' => 'Ledig',
         'widower' => 'verwitwet',
-        'cohabitation' => 'Zusammenleben',
-        'separately' => 'Wir leben getrennt'
+        'cohabitation' => 'eheähnliche Gemeinschaft',
+        'separately' => 'getrennt leben'
     ],
     'objectTypes' => [
-        'penthouse' => 'Villa',
-        'own_apartment' => 'eigene Wohnung',
-        'townhouse' => 'Stadthaus',
+        'penthouse' => 'Einfamilienhaus',
+        'own_apartment' => 'Eigentumswohnungen',
+        'townhouse' => 'Reihenhaus',
         'semi-detached_house' => 'Doppelhaushälfte',
-        'house' => 'Wohnhaus',
-        'estate' => 'die Habe',
-        'house_for_two_families' => 'Haus für zwei Familien',
+        'house' => 'Mehrfamilienhaus',
+        'estate' => 'Grundstück',
+        'house_for_two_families' => 'Zweifamilienhaus',
     ]
 ];

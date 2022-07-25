@@ -18,15 +18,15 @@
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                                    {{__('Email')}}
+                                    {{__('Contact Email')}}
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                                    {{__('Name')}}
+                                    {{__('Contact Vorname')}}
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                                    {{__('Surname')}}
+                                    {{__('Contact Name')}}
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
@@ -34,7 +34,7 @@
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                                    {{__('Phone')}}
+                                    {{__('Contact Telefonnummer')}}
                                 </th>
 
                                 <th scope="col"
@@ -47,7 +47,7 @@
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
-                                    {{__('Birthday')}}
+                                    {{__('Birthday 2 Person')}}
                                 </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">

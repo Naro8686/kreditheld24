@@ -12,19 +12,19 @@
                                 <tr>
                                     <th scope="col"
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Name')}}
+                                        {{__('Contact Vorname')}}
                                     </th>
                                     <th scope="col"
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Surname')}}
+                                        {{__('Contact Name')}}
                                     </th>
                                     <th scope="col"
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Email')}}
+                                        {{__('Contact Email')}}
                                     </th>
                                     <th scope="col"
                                         class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
-                                        {{__('Phone Number')}}
+                                        {{__('Contact Telefonnummer')}}
                                     </th>
                                 </tr>
                                 </thead>

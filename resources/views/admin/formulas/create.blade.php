@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">{{__('Create')}}</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{__('Create Formular')}}</h1>
     <form action="{{route('admin.formulas.store')}}" id="formula"
           method="POST" enctype="multipart/form-data">
         @csrf
         <div>
-            <x-label class="font-bold text-lg " for="name" :value="__('Name')"/>
+            <x-label class="font-bold text-lg " for="name" :value="__('Name Formular')"/>
             <x-input id="name" class="block mt-1 w-full"
                      type="text" name="name" required
                      :value="old('name')"

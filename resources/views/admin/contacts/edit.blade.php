@@ -7,7 +7,7 @@
         @csrf
         @method('PUT')
         <div>
-            <x-label class="font-bold text-lg " for="firstName" :value="__('Name')"/>
+            <x-label class="font-bold text-lg " for="firstName" :value="__('Contact Vorname')"/>
             <x-input id="firstName" class="block mt-1 w-full"
                      type="text" name="firstName" required
                      :value="old('firstName',$contact->firstName)"
@@ -17,7 +17,7 @@
             @enderror
         </div>
         <div class="mt-3">
-            <x-label class="font-bold text-lg " for="lastName" :value="__('Surname')"/>
+            <x-label class="font-bold text-lg " for="lastName" :value="__('Contact Name')"/>
             <x-input id="lastName" class="block mt-1 w-full"
                      type="text" name="lastName" required
                      :value="old('lastName',$contact->lastName)"
@@ -27,7 +27,7 @@
             @enderror
         </div>
         <div class="mt-3">
-            <x-label class="font-bold text-lg " for="email" :value="__('Email')"/>
+            <x-label class="font-bold text-lg " for="email" :value="__('Contact Email')"/>
             <x-input id="email" class="block mt-1 w-full"
                      type="email" name="email" required
                      :value="old('email',$contact->email)"
@@ -38,7 +38,7 @@
         </div>
 
         <div class="mt-3">
-            <x-label class="font-bold text-lg " for="tel" :value="__('Phone Number')"/>
+            <x-label class="font-bold text-lg " for="tel" :value="__('Contact Telefonnummer')"/>
             <x-input id="phone" class="block mt-1 w-full"
                      type="tel" name="phone"
                      :value="old('phone',$contact->phone)"

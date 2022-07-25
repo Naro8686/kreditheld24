@@ -50,7 +50,7 @@ class ProposalRequest extends FormRequest
             "firstName" => "required|string|min:2",
             "lastName" => "required|string|min:2",
             "street" => "sometimes|nullable|string|min:2",
-            "house" => "sometimes|nullable|string|min:2",
+            "house" => "sometimes|nullable|string|min:1",
             "city" => "sometimes|nullable|string|min:2",
             "postcode" => "sometimes|nullable|regex:/\b\d{4,10}\b/",
             "birthday" => "sometimes|nullable|date|before:today|date_format:Y-m-d",
@@ -92,14 +92,14 @@ class ProposalRequest extends FormRequest
             $validates["status"] = "required|in:$statuses";
             if ($this['status'] === Status::APPROVED) {
                 $validates["bonus"] = "sometimes|nullable|numeric|min:0|max:100";
-                $validates["commission"] = "required|numeric|min:1|max:100";
+                $validates["commission"] = "required|numeric|min:0|max:100";
             }
         }
         if ($this['objectData']) {
             $objectTypes = implode(',', Proposal::$objectTypes);
             $validates["objectData"] = "required|array";
             $validates["objectData.street"] = "sometimes|nullable|string|min:2";
-            $validates["objectData.house"] = "sometimes|nullable|string|min:2";
+            $validates["objectData.house"] = "sometimes|nullable|string|min:1";
             $validates["objectData.city"] = "sometimes|nullable|string|min:2";
             $validates["objectData.postcode"] = "sometimes|nullable|regex:/\b\d{4,10}\b/";
             $validates["objectData.objectType"] = "sometimes|nullable|in:$objectTypes";

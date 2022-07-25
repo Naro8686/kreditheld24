@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
 
         $admin = new User();
         $admin->name = 'SuperAdmin';
-        $admin->email = 'admin@panel.com';
+        $admin->email = 'denis.gomer@online.de';
         $admin->email_verified_at = now();
         $admin->password = '$2y$10$pMSfQw29K5Iz80lLhL2GbOCrJ30oAjwjXSkpZKShmufi6fwscDFiu';
         $admin->save();

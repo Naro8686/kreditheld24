@@ -231,7 +231,7 @@ class ProposalController extends Controller
                 if ($proposal->status === Status::APPROVED && !is_null($proposal->invoice_file)) {
                     $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
                 }
-                $html = "<div class='d-flex align-items-center' role='group'>";
+                $html = "<div class='row-actions d-flex align-items-center' role='group'>";
                 $html .= "<span class='text-sm'>ID: $proposal->id</span>";
                 if ($category = optional(optional($proposal->category)->parent)->name) {
                     $html .= "|<span class='text-sm'>$category</span>";
@@ -257,7 +257,7 @@ class ProposalController extends Controller
                 }
 
                 $html .= "</div>";
-                return "<span class='d-flex'>$proposal->firstName $proposal->lastName</span>" . $html;
+                return "<span class='row-title d-flex'>$proposal->firstName $proposal->lastName</span>" . $html;
             })
             ->filterColumn('fullName', function ($query, $keyword) {
                 $query->whereRaw("CONCAT(`proposals`.`firstName`,  ' ', `proposals`.`lastName`) LIKE ?", ["%$keyword%"]);

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">{{__('Send')}}</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{__('Send Email')}}</h1>
     <div class="py-6">
         <div class="max-w-7xl mx-auto">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -16,21 +16,21 @@
                         @endif
 
                         <div class="form-group">
-                            <label for="name">{{__('Name')}}</label>
+                            <label for="name">{{__('Name Email')}}</label>
                             <input id="name" class="form-control" name="name" value="{{old('name',$template->name ?? null)}}">
                             @error('name')
                             <small id="messageHelp" class="form-text text-danger">{{$message}}</small>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="subject">{{__('Theme')}}</label>
+                            <label for="subject">{{__('Theme Email')}}</label>
                             <input id="subject" class="form-control" name="subject" value="{{old('subject',$template->subject ?? null)}}">
                             @error('subject')
                             <small id="messageHelp" class="form-text text-danger">{{$message}}</small>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="template_content">{{__('Content')}}</label>
+                            <label for="template_content">{{__('Content Email')}}</label>
                             <textarea rows="7" class="form-control" id="template_content"
                                       name="content">{!! old('content',$template->content ?? null) !!}</textarea>
                             @error('content')

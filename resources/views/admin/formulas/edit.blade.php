@@ -7,7 +7,7 @@
         @csrf
         @method('PUT')
         <div>
-            <x-label class="font-bold text-lg " for="name" :value="__('Name')"/>
+            <x-label class="font-bold text-lg " for="name" :value="__('Name Formular')"/>
             <x-input id="name" class="block mt-1 w-full"
                      type="text" name="name" required
                      :value="old('name',$formula->name)"

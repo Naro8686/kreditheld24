@@ -1,5 +1,5 @@
 <div style="padding: 10px">
-    <h6 class="font-weight-bold text-primary">{{__("Templates")}}</h6>
+    <h6 class="font-weight-bold text-primary">{{__("Templates Email")}}</h6>
     <div id="templates-list" class="list-group" style="max-height: 100px;overflow-y: scroll">
         @foreach($templates as $template)
             <a href="{{route('email-templates.show',[$template->id])}}"

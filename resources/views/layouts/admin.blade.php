@@ -48,6 +48,12 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
+		
+		<li @class(['nav-item','active' => request()->routeIs('dashboard')])>
+            <a class="nav-link" href="{{route('dashboard')}}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>{{__('Dashboard')}}</span></a>
+        </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
             @class(['nav-item','active' => request()->routeIs('proposal.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('proposal.*')])
@@ -62,7 +68,7 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.index')]) href="{{route('proposal.index')}}">{{__('All')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.draft')]) href="{{route('proposal.draft')}}">{{__('Draft')}}</a>
-                    <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) href="{{route('proposal.create')}}">{{__('Create')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) target="_blank" href="{{route('proposal.create')}}">{{__('Create')}}</a>
                 </div>
             </div>
         </li>
@@ -76,11 +82,6 @@
                 <i class="fas fa-fw fa-book-reader"></i>
                 <span>{{__('Formulas')}}</span></a>
         </li>
-        <li @class(['nav-item','active' => request()->routeIs('dashboard')])>
-            <a class="nav-link" href="{{route('dashboard')}}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{__('Dashboard')}}</span></a>
-        </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
             @class(['nav-item','active' => request()->routeIs('email-templates.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('email-templates.*')])
@@ -88,13 +89,13 @@
                x-bind:data-target="'#' + collapse_id"
                x-bind:aria-controls="collapse_id">
                 <i class="fas fa-fw fa-mail-bulk"></i>
-                <span>{{__('Email Templates')}}</span>
+                <span>{{__('Templates Email')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
                 @class(['collapse','show' => request()->routeIs('email-templates.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->routeIs('email-templates.index')]) href="{{route('email-templates.index')}}">{{__('All')}}</a>
-                    <a @class(['collapse-item','active' => request()->routeIs('email-templates.create')]) href="{{route('email-templates.create')}}">{{__('Create')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('email-templates.create')]) href="{{route('email-templates.create')}}">{{__('Create Email')}}</a>
                 </div>
             </div>
         </li>

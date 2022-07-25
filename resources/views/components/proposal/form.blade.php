@@ -148,26 +148,26 @@
                                           x-transition:leave.scale.origin.top>
                                     <legend>{{__('Spouse details')}}</legend>
                                     <div class="mt-3">
-                                        <x-label class="text-sm" for="spouse-firstName" :value="__('Name')"/>
+                                        <x-label class="text-sm" for="spouse-firstName" :value="__('Name 2 Person')"/>
                                         <x-input id="spouse-firstName" class="block mt-1 w-full"
                                                  type="text" name="spouse[firstName]"
                                                  :value="old('spouse.firstName')" x-model="formData.spouse.firstName"/>
                                     </div>
                                     <div class="mt-3">
-                                        <x-label class="text-sm" for="spouse-lastName" :value="__('Surname')"/>
+                                        <x-label class="text-sm" for="spouse-lastName" :value="__('Surname 2 Person')"/>
                                         <x-input id="spouse-lastName" class="block mt-1 w-full"
                                                  type="text" name="spouse[lastName]"
                                                  :value="old('spouse.lastName')" x-model="formData.spouse.lastName"/>
                                     </div>
                                     <div class="mt-3">
-                                        <x-label class="text-sm" for="spouse-birthday" :value="__('Birthday')"/>
+                                        <x-label class="text-sm" for="spouse-birthday" :value="__('Birthday 2 Person')"/>
                                         <x-input id="spouse-birthday" class="block mt-1 w-full"
                                                  type="date" name="spouse[birthday]"
                                                  :value="old('spouse.birthday')" x-model="formData.spouse.birthday"/>
                                     </div>
                                     <div class="mt-3">
                                         <x-label class="text-sm" for="spouse-birthplace"
-                                                 :value="__('Birthplace')"/>
+                                                 :value="__('Birthplace 2 Person')"/>
                                         <x-input id="spouse-birthplace" class="block mt-1 w-full"
                                                  type="text" name="spouse[birthplace]"
                                                  :value="old('spouse.birthplace')" x-model="formData.spouse.birthplace"/>
@@ -191,25 +191,25 @@
                                 <x-label class="text-sm" for="street" :value="__('Street')"/>
                                 <x-input id="street" class="block mt-1 w-full"
                                          type="text" name="street"
-                                         :value="old('street')" x-model="formData.street"/>
+                                         :value="old('street')" required x-model="formData.street"/>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <x-label class="text-sm" for="house" :value="__('House')"/>
                                 <x-input id="house" class="block mt-1 w-full"
                                          type="text" name="house"
-                                         :value="old('house')" x-model="formData.house"/>
+                                         :value="old('house')" required x-model="formData.house"/>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <x-label class="text-sm" for="postcode" :value="__('Postcode')"/>
                                 <x-input id="postcode" class="block mt-1 w-full"
                                          type="text" name="postcode"
-                                         :value="old('postcode')" x-model="formData.postcode"/>
+                                         :value="old('postcode')" required x-model="formData.postcode"/>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <x-label class="text-sm" for="city" :value="__('City')"/>
                                 <x-input id="city" class="block mt-1 w-full"
                                          type="text" name="city"
-                                         :value="old('city')" x-model="formData.city"/>
+                                         :value="old('city')" required x-model="formData.city"/>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <x-label class="text-sm" for="residenceType" :value="__('residence Type')"/>
@@ -490,28 +490,28 @@
                         <template x-if="getCategory()?.category_key === 'home'">
                             <div class="grid grid-cols-2 gap-2">
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_street" :value="__('Street')"/>
+                                    <x-label class="text-sm" for="object_data_street" :value="__('Street Expose')"/>
                                     <x-input id="object_data_street" class="block mt-1 w-full"
                                              type="text" name="objectData[street]"
                                              :value="old('objectData.street')"
                                              x-model="formData.objectData.street"/>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_house" :value="__('House')"/>
+                                    <x-label class="text-sm" for="object_data_house" :value="__('House Expose')"/>
                                     <x-input id="object_data_house" class="block mt-1 w-full"
                                              type="text" name="objectData[house]"
                                              :value="old('objectData.house')"
                                              x-model="formData.objectData.house"/>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_postcode" :value="__('Postcode')"/>
+                                    <x-label class="text-sm" for="object_data_postcode" :value="__('Postcode Expose')"/>
                                     <x-input id="object_data_postcode" class="block mt-1 w-full"
                                              type="text" name="objectData[postcode]"
                                              :value="old('objectData.postcode')"
                                              x-model="formData.objectData.postcode"/>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_city" :value="__('City')"/>
+                                    <x-label class="text-sm" for="object_data_city" :value="__('City Expose')"/>
                                     <x-input id="object_data_city" class="block mt-1 w-full"
                                              type="text" name="objectData[city]"
                                              :value="old('objectData.city')" x-model="formData.objectData.city"/>

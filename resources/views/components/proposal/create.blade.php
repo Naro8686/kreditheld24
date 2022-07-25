@@ -17,7 +17,7 @@
                                      x-model="agree.personal_data"
                                      type="checkbox" required
                                      name="agree[personal_data]"/>
-                            <x-label class="mr-2" for="personal_data" :value="__('personal data')"/>
+                            <x-label class="mr-2" for="personal_data" :value="__('personal data AGB')"/>
                         </div>
                     </div>
                 </x-slot>
