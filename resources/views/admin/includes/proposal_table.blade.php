@@ -1,5 +1,5 @@
 @push('css')
-    <link href="{{asset('adminPanel/vendor/datatables/datatables.min.css')}}" rel="stylesheet">
+    <link class="bg-red-400 bg-amber-400" href="{{asset('adminPanel/vendor/datatables/datatables.min.css')}}" rel="stylesheet">
     <link href="{{asset('adminPanel/vendor/datatables/dataTables.checkboxes.css')}}" rel="stylesheet"/>
     <style>
         .dt-buttons {

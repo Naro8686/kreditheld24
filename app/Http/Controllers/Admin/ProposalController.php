@@ -30,15 +30,11 @@ class ProposalController extends Controller
             if (request()->ajax()) return datatables()
                 ->of(Proposal::with(['user', 'category', 'category.parent'])->select('proposals.*'))
                 ->addColumn('bgColor', function ($proposal) {
-                    $bgColor = 'bg-white';
-                    $diff = null;
-                    if ($proposal->deadlineDateFormat()) $diff
-                        = now()->diff($proposal->deadlineDateFormat());
-                    if (!is_null($diff)) {
-                        if ($diff->invert) $bgColor = 'bg-red-400';
-                        else if ($diff->y <= 1) $bgColor = 'bg-amber-400';
-                    }
-                    return $bgColor;
+                    return match ($proposal->deadlineStatus()) {
+                        Status::DEADLINE_ENDS => 'bg-amber-400',
+                        Status::DEADLINE_EXPIRED => 'bg-red-400',
+                        default => 'bg-white',
+                    };
                 })
                 ->addColumn('statusBgColor', function ($proposal) {
                     return $proposal->statusBgColor();

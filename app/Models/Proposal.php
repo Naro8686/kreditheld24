@@ -123,6 +123,14 @@ use Throwable;
  * @method static \Illuminate\Database\Query\Builder|Proposal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Proposal withoutTrashed()
  * @mixin \Eloquent
+ * @property bool $notified_to_admin
+ * @property-read string|null $communal_amount
+ * @property-read string|null $communal_expenses
+ * @property-read string|null $monthly_payment
+ * @property-read string|null $rent_amount
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNotifiedToAdmin($value)
+ * @property string|null $notice
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNotice($value)
  */
 class Proposal extends Model
 {
@@ -153,6 +161,7 @@ class Proposal extends Model
         'approved_at' => 'datetime',
         'pending_at' => 'datetime',
         'denied_at' => 'datetime',
+        'notified_to_admin' => 'boolean',
     ];
 
 
@@ -222,7 +231,7 @@ class Proposal extends Model
                 if (!is_null($message) && !is_null($user)) {
                     $text = '<h1 style="text-align: center">' . $message . '</h1>';
                     $text .= '<h1 style="text-align: center">' . __('Full name Manager') . ': ' . $model->user->full_name . '</h1>';
-					$text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
+                    $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
                     if ($model->number) {
                         $text .= '<h1 style="text-align: center">' . __('Proposal number') . ': ' . $model->number . '</h1>';
                     }
@@ -234,11 +243,26 @@ class Proposal extends Model
             if (!$model->trashed() && $admin = User::admin()) {
                 $text = '<h1 style="text-align: center">' . __('New Proposal') . ': ' . $model->created_at->format('d.m.Y H:i:s') . '</h1>';
                 $text .= '<h1 style="text-align: center">' . __('Full name Manager') . ': ' . $model->user->full_name . '</h1>';
-				$text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
+                $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
                 $data = ['url' => route('admin.proposals.edit', [$model->id])];
                 $admin->sendEmail($text, $data);
             }
         });
+    }
+
+    public function deadlineStatus(): string
+    {
+        $status = Status::DEADLINE_NOT_EXPIRED;
+        $diff = null;
+        if ($deadlineDate = $this->deadlineDateFormat()) {
+            $diff = now()->diff($deadlineDate);
+        }
+
+        if (!is_null($diff)) {
+            if ($diff->invert) $status = Status::DEADLINE_EXPIRED;
+            else if ($diff->y <= 1) $status = Status::DEADLINE_ENDS;
+        }
+        return $status;
     }
 
     public function isRevision(): bool

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
 use App\Models\ProposalNotice;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProposalNoticeController extends Controller
@@ -36,8 +37,14 @@ class ProposalNoticeController extends Controller
             'proposal_id' => ['required', 'exists:proposals,id'],
             'message' => ['required', 'string'],
         ]);
+        $user = auth()->user();
+        if (!$user->isAdmin()) $user->proposals()
+            ->where('proposals.id', $request['proposal_id'])
+            ->firstOrFail();
+
         $notice = new ProposalNotice();
         $notice->proposal_id = $request['proposal_id'];
+        $notice->user_id = $user->id;
         $notice->message = $request['message'];
         $notice->status = Status::PENDING;
         $notice->save();

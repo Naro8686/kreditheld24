@@ -13,6 +13,18 @@
         @endif
         {{ $slot }}
         <h2 class="text-danger text-center" x-show="message" x-text="message"></h2>
+        <div class="col-span-1 mb-3">
+            <x-label class="text-sm" for="notice" :value="__('Application Notes')"/>
+            <template x-if="formData.myProposal">
+                <textarea
+                    class="block mt-1 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full"
+                    type="text" name="notice" id="notice" x-text="formData.notice"></textarea>
+            </template>
+            <template x-if="!formData.myProposal">
+                <h4 class="block mt-1 w-full"
+                   x-text="formData.notice"></h4>
+            </template>
+        </div>
         <div class="grid grid-cols-3 gap-3">
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-sm" for="parent_category" :value="__('Category')"/>
@@ -64,7 +76,8 @@
         <div id="accordionProposal" class="accordion mt-3">
             <div class="card" x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
                 <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id" class="card-link capitalize" aria-expanded="true">
+                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
+                       class="card-link capitalize" aria-expanded="true">
                         {{__('personal data')}}
                     </a>
                 </div>
@@ -142,7 +155,8 @@
                                          type="text" min="0" name="childrenCount"
                                          required x-model="formData.childrenCount"/>
                             </div>
-                            <template x-if="formData.familyStatus === 'married' || formData.familyStatus === 'cohabitation'">
+                            <template
+                                x-if="formData.familyStatus === 'married' || formData.familyStatus === 'cohabitation'">
                                 <fieldset class="col-span-2"
                                           x-transition.scale.origin.bottom
                                           x-transition:leave.scale.origin.top>
@@ -160,7 +174,8 @@
                                                  :value="old('spouse.lastName')" x-model="formData.spouse.lastName"/>
                                     </div>
                                     <div class="mt-3">
-                                        <x-label class="text-sm" for="spouse-birthday" :value="__('Birthday 2 Person')"/>
+                                        <x-label class="text-sm" for="spouse-birthday"
+                                                 :value="__('Birthday 2 Person')"/>
                                         <x-input id="spouse-birthday" class="block mt-1 w-full"
                                                  type="date" name="spouse[birthday]"
                                                  :value="old('spouse.birthday')" x-model="formData.spouse.birthday"/>
@@ -170,7 +185,8 @@
                                                  :value="__('Birthplace 2 Person')"/>
                                         <x-input id="spouse-birthplace" class="block mt-1 w-full"
                                                  type="text" name="spouse[birthplace]"
-                                                 :value="old('spouse.birthplace')" x-model="formData.spouse.birthplace"/>
+                                                 :value="old('spouse.birthplace')"
+                                                 x-model="formData.spouse.birthplace"/>
                                     </div>
                                 </fieldset>
                             </template>
@@ -180,7 +196,8 @@
             </div>
             <div class="card" x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
                 <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id" class="card-link collapsed capitalize" aria-expanded="false">
+                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
+                       class="card-link collapsed capitalize" aria-expanded="false">
                         {{__('Life situation')}}
                     </a>
                 </div>
@@ -227,7 +244,8 @@
                                           x-transition:leave.scale.origin.top>
                                     <legend>{{__('Rent')}}</legend>
                                     <x-input id="rentAmount" class="block mt-1 w-full"
-                                             type="text" name="rentAmount" x-bind:required="formData.residenceType === 'rent'"
+                                             type="text" name="rentAmount"
+                                             x-bind:required="formData.residenceType === 'rent'"
                                              step=".01"
                                              :value="old('rentAmount')" min="0" x-bind:placeholder="currency"
                                              x-model.number="formData.rentAmount"/>
@@ -269,13 +287,15 @@
                                             <x-label class="text-sm" for="old-street" :value="__('Street')"/>
                                             <x-input id="old-street" class="block mt-1 w-full"
                                                      type="text" name="oldAddress[street]"
-                                                     :value="old('oldAddress.street')" x-model="formData.oldAddress.street"/>
+                                                     :value="old('oldAddress.street')"
+                                                     x-model="formData.oldAddress.street"/>
                                         </div>
                                         <div class="mt-3">
                                             <x-label class="text-sm" for="old-house" :value="__('House')"/>
                                             <x-input id="old-house" class="block mt-1 w-full"
                                                      type="text" name="oldAddress[house]" required
-                                                     :value="old('oldAddress.house')" x-model="formData.oldAddress.house"/>
+                                                     :value="old('oldAddress.house')"
+                                                     x-model="formData.oldAddress.house"/>
                                         </div>
                                         <div class="mt-3">
                                             <x-label class="text-sm" for="old-postcode" :value="__('Postcode')"/>
@@ -288,7 +308,8 @@
                                             <x-label class="text-sm" for="old-city" :value="__('City')"/>
                                             <x-input id="old-city" class="block mt-1 w-full"
                                                      type="text" name="oldAddress[city]" required
-                                                     :value="old('oldAddress.city')" x-model="formData.oldAddress.city"/>
+                                                     :value="old('oldAddress.city')"
+                                                     x-model="formData.oldAddress.city"/>
                                         </div>
                                     </fieldset>
                                 </template>
@@ -299,7 +320,8 @@
             </div>
             <div class="card" x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
                 <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id" class="card-link collapsed capitalize" aria-expanded="false">
+                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
+                       class="card-link collapsed capitalize" aria-expanded="false">
                         {{__('Funding request')}}
                     </a>
                 </div>
@@ -337,7 +359,8 @@
                             <div class="col-span-3">
                                 <x-label class="text-sm" for="otherCreditCount"
                                          :value="__('Number of existing loans')"/>
-                                <x-input id="otherCreditCount" class="block mt-1 w-full" placeholder="{{__('quantity')}}"
+                                <x-input id="otherCreditCount" class="block mt-1 w-full"
+                                         placeholder="{{__('quantity')}}"
                                          type="text" required min="0" max="4"
                                          name="otherCreditCount"
                                          x-model.number="otherCreditCount"
@@ -368,7 +391,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-3">
-                                                    <x-label class="font-bold text-base" :value="__('Repay a credit ?')"/>
+                                                    <x-label class="font-bold text-base"
+                                                             :value="__('Repay a credit ?')"/>
                                                     <div class="flex flex-wrap">
                                                         <div
                                                             class="flex basis-full sm:basis-1/2 items-center justify-center sm:justify-start mt-3 mb-3">
@@ -402,7 +426,8 @@
                                                              x-transition>
                                                             <x-label :value="__('Bank number')"/>
                                                             <x-input class="block mt-1 w-full"
-                                                                     type="text" x-bind:required="otherCredit.repay === 'yes'"
+                                                                     type="text"
+                                                                     x-bind:required="otherCredit.repay === 'yes'"
                                                                      x-bind:name="'otherCredit['+i+'][bankNumber]'"
                                                                      x-model="otherCredit.bankNumber"
                                                             />
@@ -427,7 +452,8 @@
                                              type="checkbox"/>
                                     <x-label class="mr-2" for="disease" :value="__('Disease')"/>
 
-                                    <x-input class="mr-2" id="death" name="insurance[death]" x-model="formData.insurance.death"
+                                    <x-input class="mr-2" id="death" name="insurance[death]"
+                                             x-model="formData.insurance.death"
                                              type="checkbox"/>
                                     <x-label class="mr-2" for="death" :value="__('Death')"/>
                                 </div>
@@ -479,9 +505,11 @@
                     </div>
                 </div>
             </div>
-            <div x-show="getCategory()?.category_key === 'home'" class="card" x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
+            <div x-show="getCategory()?.category_key === 'home'" class="card"
+                 x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
                 <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id" class="card-link collapsed capitalize" aria-expanded="false">
+                    <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
+                       class="card-link collapsed capitalize" aria-expanded="false">
                         {{__('Object Data')}}
                     </a>
                 </div>
@@ -529,7 +557,8 @@
                                     </x-select>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_yearConstruction" :value="__('Year of construction')"/>
+                                    <x-label class="text-sm" for="object_data_yearConstruction"
+                                             :value="__('Year of construction')"/>
                                     <x-input id="object_data_yearConstruction" class="block mt-1 w-full"
                                              type="text" name="objectData[yearConstruction]"
                                              min="1900" max="2099" step="1"
@@ -537,7 +566,8 @@
                                              x-model="formData.objectData.yearConstruction"/>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_yearRepair" :value="__('Year of repair')"/>
+                                    <x-label class="text-sm" for="object_data_yearRepair"
+                                             :value="__('Year of repair')"/>
                                     <x-input id="object_data_yearRepair" class="block mt-1 w-full"
                                              type="text" name="objectData[yearRepair]"
                                              min="1900" max="2099" step="1"
@@ -545,7 +575,8 @@
                                              x-model="formData.objectData.yearRepair"/>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_plotSize" :value="__('Plot size').' (m<sup>2</sup>)'"/>
+                                    <x-label class="text-sm" for="object_data_plotSize"
+                                             :value="__('Plot size').' (m<sup>2</sup>)'"/>
                                     <x-input id="object_data_plotSize" class="block mt-1 w-full"
                                              type="text" name="objectData[plotSize]"
                                              step=".01"
@@ -563,7 +594,8 @@
                                 </div>
 
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_buildPrice" :value="__('Purchase or build price')"/>
+                                    <x-label class="text-sm" for="object_data_buildPrice"
+                                             :value="__('Purchase or build price')"/>
                                     <x-input id="object_data_buildPrice" class="block mt-1 w-full"
                                              type="text" name="objectData[buildPrice]"
                                              step=".01"
@@ -572,7 +604,8 @@
                                              x-model="formData.objectData.buildPrice"/>
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <x-label class="text-sm" for="object_data_accumulation" :value="__('Own accumulation')"/>
+                                    <x-label class="text-sm" for="object_data_accumulation"
+                                             :value="__('Own accumulation')"/>
                                     <x-input id="object_data_accumulation" class="block mt-1 w-full"
                                              type="text" name="objectData[accumulation]"
                                              x-bind:placeholder="currency"
@@ -581,7 +614,8 @@
                                              x-model="formData.objectData.accumulation"/>
                                 </div>
                                 <div class="col-span-2">
-                                    <x-label class="text-sm" for="object_data_brokerageFees" :value="__('Brokerage fees').' (%)'"/>
+                                    <x-label class="text-sm" for="object_data_brokerageFees"
+                                             :value="__('Brokerage fees').' (%)'"/>
                                     <x-input id="object_data_brokerageFees" class="block mt-1 w-full"
                                              type="text" name="objectData[brokerageFees]"
                                              placeholder="%"
@@ -629,6 +663,7 @@
             content: '\f105';
             font-family: 'Font Awesome 5 Free', sans-serif;
         }
+
         .accordion [data-toggle=collapse].collapsed:after {
             content: "\f107";
         }

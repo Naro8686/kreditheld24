@@ -51,22 +51,6 @@ class ProposalController extends Controller
         return response('Error', 500);
     }
 
-    public function old_index()
-    {
-        try {
-            $successful = auth()->user()->proposals()->where('proposals.status', Status::APPROVED);
-            $totalSum = $successful->sum('proposals.creditAmount');
-            $targetPercent = $successful->count('proposals.id') === 0 || auth()->user()->proposals()->count() === 0 ? 0
-                : (int)(($successful->count('proposals.id') / auth()->user()->proposals()->count()) * 100);
-            $monthSum = $successful->where('proposals.created_at', '>=', now()->subMonth())->sum('proposals.creditAmount');
-        } catch (\Exception $exception) {
-            $totalSum = $monthSum = $targetPercent = 0;
-        }
-
-        $proposals = auth()->user()->proposals()->orderByDesc('proposals.id')->paginate();
-        return view('proposal.index', compact('proposals', 'totalSum', 'monthSum', 'targetPercent'));
-    }
-
     public function draft()
     {
         if (request()->ajax()) return $this->ajaxDataTable(auth()
@@ -80,10 +64,6 @@ class ProposalController extends Controller
     {
         $proposal = auth()->user()->proposals()
             ->where('proposals.id', $id)
-            ->where(function ($q) {
-                return $q->whereIn('proposals.status', [Status::REVISION, Status::APPROVED])
-                    ->orWhere('proposals.deleted_at', '!=', null);
-            })
             ->withTrashed()->firstOrFail();
         return view('proposal.edit', compact('proposal'));
     }
@@ -92,14 +72,6 @@ class ProposalController extends Controller
     {
         $proposal = auth()->user()->proposals()
             ->where('proposals.id', $id)
-            ->where(function ($query) {
-                return $query->where([
-                    ['proposals.status', Status::REVISION],
-                    ['proposals.deleted_at', null]
-                ])->orWhere([
-                    ['proposals.deleted_at', '!=', null]
-                ]);
-            })
             ->withTrashed()
             ->firstOrFail();
 
@@ -150,6 +122,7 @@ class ProposalController extends Controller
             "spouse",
             "uploads",
             "deleted_at",
+            "notice",
         ], $merge);
         $isDraft = $request->isDraft();
         $success = $proposal->saveData($request->only($default), $request->get('allFilesName', []));
@@ -180,15 +153,11 @@ class ProposalController extends Controller
     {
         return DataTables::eloquent($proposalsBuilder)
             ->addColumn('bgColor', function ($proposal) {
-                $bgColor = 'bg-white';
-                $diff = null;
-                if ($proposal->deadlineDateFormat()) $diff
-                    = now()->diff($proposal->deadlineDateFormat());
-                if (!is_null($diff)) {
-                    if ($diff->invert) $bgColor = 'bg-red-400';
-                    else if ($diff->y <= 1) $bgColor = 'bg-amber-400';
-                }
-                return $bgColor;
+                return match ($proposal->deadlineStatus()) {
+                    Status::DEADLINE_ENDS => 'bg-amber-400',
+                    Status::DEADLINE_EXPIRED => 'bg-red-400',
+                    default => 'bg-white',
+                };
             })
             ->addColumn('statusBgColor', function ($proposal) {
                 return $proposal->statusBgColor();
@@ -208,13 +177,13 @@ class ProposalController extends Controller
                 });
             })
             ->editColumn('creditAmount', function ($proposal) {
-                return $proposal::CURRENCY.$proposal->creditAmount;
+                return $proposal::CURRENCY . $proposal->creditAmount;
             })
             ->editColumn('status', function ($proposal) {
                 return trans("status.$proposal->status");
             })
             ->editColumn('payoutAmount', function ($proposal) {
-                return $proposal::CURRENCY.$proposal->payoutAmount;
+                return $proposal::CURRENCY . $proposal->payoutAmount;
             })
             ->editColumn('created_at', function ($proposal) {
                 return $proposal->created_at->format('d.m.Y');
@@ -222,7 +191,7 @@ class ProposalController extends Controller
             ->filterColumn('created_at', function ($query, $keyword) {
                 $query->whereRaw("DATE_FORMAT(`proposals`.`created_at`,'%d.%m.%Y %H:%i:%s') LIKE ?", ["%$keyword%"]);
             })
-            ->addColumn('fullName', function ($proposal) {
+            ->addColumn('fullName', function (Proposal $proposal) {
                 $linkEdit = route('proposal.edit', [$proposal->id]);
                 $linkDuplicate = route('proposal.duplicate', [$proposal->id]);
                 $linkDelete = route('proposal.delete', [$proposal->id]);
@@ -236,24 +205,22 @@ class ProposalController extends Controller
                 if ($category = optional(optional($proposal->category)->parent)->name) {
                     $html .= "|<span class='text-sm'>$category</span>";
                 }
-                if ($proposal->trashed() || $proposal->isRevision() || $proposal->isApproved()) {
-                    $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
+                $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
                                     " . __('Show') . "
                                 </a>";
-                    if ($proposal->trashed()) {
-                        $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
+                if ($proposal->trashed()) {
+                    $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
                                         data-target='#confirmModal'
-                                        data-url='$linkDelete'>".__('Delete')."
+                                        data-url='$linkDelete'>" . __('Delete') . "
                                 </a>";
-                    }
                 }
                 $html .= "|<a href='$linkDuplicate'
-                                   class='text-sm text-primary'>".__('Duplicate')."
+                                   class='text-sm text-primary'>" . __('Duplicate') . "
                          </a>";
                 if (!is_null($linkInvoice)) {
                     $html .= "|<a href='$linkInvoice' target='_blank'
                                    class='text-sm text-success'>
-                                   ".__('Invoice')."</a>";
+                                   " . __('Invoice') . "</a>";
                 }
 
                 $html .= "</div>";
@@ -303,7 +270,7 @@ class ProposalController extends Controller
                 $html .= "</div>";
                 return $html;
             })
-            ->rawColumns(['number', 'email', 'action','fullName'])
+            ->rawColumns(['number', 'email', 'action', 'fullName'])
             ->toJson();
     }
 

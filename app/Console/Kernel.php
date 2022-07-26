@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('tmp:clean')->everyFiveMinutes();
+         $schedule->command('proposal:check_ends')->withoutOverlapping()->cron("0 0 * * *");
     }
 
     /**

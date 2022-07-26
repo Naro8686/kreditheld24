@@ -108,9 +108,9 @@ class User extends Authenticatable implements HasLocalePreference
     }
 
     /**
-     * @return User|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return User|null
      */
-    public static function admin()
+    public static function admin(): ?User
     {
         return User::whereHas('roles', function ($query) {
             $query->whereIn('roles.slug', [Role::ADMIN]);

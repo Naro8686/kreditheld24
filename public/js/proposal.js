@@ -191,7 +191,7 @@ function render(proposal) {
             return false
         },
         async sendNotice(e) {
-            let textarea = $('textarea#notice');
+            let textarea = $('textarea#notices-message');
             let message = $.trim(textarea.val());
             if (message.length) {
                 const url = '/admin/proposal-notices';

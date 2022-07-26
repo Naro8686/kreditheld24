@@ -10,6 +10,9 @@ class Status
     const DENIED = 'denied';
     const APPROVED = 'approved';
     const REVISION = 'revision';
+    const DEADLINE_ENDS = 'ends';
+    const DEADLINE_EXPIRED = 'expired';
+    const DEADLINE_NOT_EXPIRED = 'expired';
 
     /**
      * @param bool $trans

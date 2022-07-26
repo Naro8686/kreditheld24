@@ -23,8 +23,10 @@ class ProposalResource extends JsonResource
             ->get()->groupBy('parent_id');
         return [
             'id' => $this->id,
+            'auth_id' => auth()->user()->id ?? null,
             'number' => $this->number,
             'status' => $this->status ?? Status::PENDING,
+            'notice' => $this->notice,
             'notices' => $this->notices,
             'commission' => $this->commission,
             'bonus' => $this->bonus,
