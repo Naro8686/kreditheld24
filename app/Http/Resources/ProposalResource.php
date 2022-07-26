@@ -64,6 +64,7 @@ class ProposalResource extends JsonResource
                     'postcode' => '',
                     'city' => '',
                 ],
+            'hasObjectData' => $this->hasObjectData(),
             'objectData' => $this->objectData ?? [
                     'street' => '',
                     'house' => '',

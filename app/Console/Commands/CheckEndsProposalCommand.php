@@ -52,7 +52,7 @@ class CheckEndsProposalCommand extends Command
                         if ($admin = User::admin()) {
                             $text = 'Заявка заканчивается';
                             $data['url'] = route('admin.proposals.edit', [$proposal->id]);
-                            if ($admin->email) $admin->sendEmail($text, $data);
+                            if ($admin->email) $admin->sendEmail('<h1 style="text-align: center">' . $text . '</h1>', $data);
                             $proposal->update(['notified_to_admin' => 1]);
                         }
                     }

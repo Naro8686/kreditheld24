@@ -297,12 +297,24 @@ class Proposal extends Model
     public static function parse_number($number, $dec_point = '.')
     {
         try {
-            $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
-            $num = $fmt->parse($number);
-            return $num ?: $number;
+            if (!is_null($number)) {
+                $fmt = new NumberFormatter('de_DE', NumberFormatter::DECIMAL);
+                $num = $fmt->parse($number);
+                return $num ?: $number;
+            }
         } catch (Throwable) {
-            return $number;
+
         }
+        return $number;
+    }
+
+    public function hasObjectData(): bool
+    {
+        $hasObjectData = false;
+        if ($objectData = $this->objectData) {
+            $hasObjectData = !empty($objectData->filter()->toArray());
+        }
+        return $hasObjectData;
     }
 
     public function invoiceGenerate(): ?string

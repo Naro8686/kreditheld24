@@ -38,6 +38,20 @@
                                 :value="parent_category.id" x-text="parent_category.name"/>
                     </template>
                 </x-select>
+                <fieldset x-show="getCategory()?.category_key === 'home'" class="col-span-2 text-center flex justify-content-around mt-1"
+                          x-transition.scale.origin.bottom
+                          x-transition:leave.scale.origin.top>
+                    <div class="inline-flex flex-column items-center">
+                        <label>{{__('Expose')}}</label>
+                        <x-input id="expose" class="mt-1" :value="0" type="radio" name="hasObjectData"
+                                 x-model.number="formData.hasObjectData"/>
+                    </div>
+                    <div class="inline-flex flex-column items-center">
+                        <label>{{__('Object Data')}}</label>
+                        <x-input id="object-data" class="mt-1" :value="1" type="radio" name="hasObjectData"
+                                 x-model.number="formData.hasObjectData"/>
+                    </div>
+                </fieldset>
             </div>
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-sm" for="applicantType" :value="__('Type')"/>
@@ -505,7 +519,7 @@
                     </div>
                 </div>
             </div>
-            <div x-show="getCategory()?.category_key === 'home'" class="card"
+            <div x-show="getCategory()?.category_key === 'home' && formData.hasObjectData" class="card"
                  x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
                 <div class="card-header">
                     <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
@@ -515,7 +529,7 @@
                 </div>
                 <div x-bind:id="collapse_id" class="collapse">
                     <div class="card-body">
-                        <template x-if="getCategory()?.category_key === 'home'">
+                        <template x-if="getCategory()?.category_key === 'home' && formData.hasObjectData">
                             <div class="grid grid-cols-2 gap-2">
                                 <div class="col-span-2 md:col-span-1">
                                     <x-label class="text-sm" for="object_data_street" :value="__('Street Expose')"/>
