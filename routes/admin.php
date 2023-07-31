@@ -12,9 +12,11 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])->prefix('admin')->name('admin
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/download-file', 'downloadFile')->name('downloadFile');
         Route::get('/download-zip/{proposal_id}', 'downloadZip')->name('downloadZip');
+        Route::get('/download-files-zip', 'downloadFilesZip')->name('downloadFilesZip');
     });
     Route::controller(AdminProposalController::class)->name('proposals.')->group(function () {
         Route::get('/proposals', 'index')->name('index');
+        Route::get('/proposals/archive', 'archive')->name('archive');
         Route::get('/proposals/{id}', 'edit')->name('edit');
         Route::put('/proposals/{id}', 'update')->name('update');
         Route::delete('/proposals/{id}', 'delete')->name('delete');
@@ -24,6 +26,7 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])->prefix('admin')->name('admin
         Route::get('/managers', 'index')->name('index');
         Route::get('/managers/create', 'create')->name('create');
         Route::post('/managers/store', 'store')->name('store');
+        Route::get('/managers/show/{id}', 'show')->name('show');
         Route::get('/managers/edit/{id}', 'edit')->name('edit');
         Route::put('/managers/update/{id}', 'update')->name('update');
         Route::delete('/managers/{id}', 'delete')->name('delete');

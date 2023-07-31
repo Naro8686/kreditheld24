@@ -107,6 +107,11 @@
         .dataTables_filter {
             width: 100%;
         }
+
+        .dt-more-container {
+            text-align: center;
+            margin: 2em 0;
+        }
     </style>
 @endpush
 <div class="card shadow mb-4">
@@ -181,12 +186,16 @@
                         <th scope="col">{{__('Deadline')}}</th>
                         <th scope="col">{{__('Email Manager')}}</th>
                         <th scope="col">{{__('Payout amount')}}</th>
-{{--                        <th class="not-export-col" scope="col">--}}
-{{--                            <span class="sr-only">{{__('Action')}}</span>--}}
-{{--                        </th>--}}
+                        {{--                        <th class="not-export-col" scope="col">--}}
+                        {{--                            <span class="sr-only">{{__('Action')}}</span>--}}
+                        {{--                        </th>--}}
                     </tr>
                     </thead>
                 </table>
+                <div class="dt-more-container">
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="btn-load-more"
+                            style="display:none">{{__('Show more')}}</button>
+                </div>
                 @include('manager.includes.modals.sendEmail')
             </form>
         </div>
@@ -202,6 +211,8 @@
     <script src="{{asset('adminPanel/vendor/datatables/vfs_fonts.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.html5.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('adminPanel/vendor/datatables/buttons.print.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('adminPanel/vendor/datatables/dataTables.pageLoadMore.min.js')}}"
+            type="text/javascript"></script>
     <script>
 
         $(document).ready(function () {
@@ -209,7 +220,19 @@
             let creditType = $("#creditType");
             let status = $("#status");
             let table = $('#proposals_table').DataTable({
-                dom: 'Bfrtip',
+                drawCallback: function () {
+                    let btnLoadMore = $('#btn-load-more');
+                    // If there is some more data
+                    if (btnLoadMore.is(':visible')) {
+                        // Scroll to the "Load more" button
+                        $('html, body').animate({
+                            scrollTop: btnLoadMore.offset().top
+                        }, 1000);
+                    }
+                    // Show or hide "Load more" button based on whether there is more data available
+                    btnLoadMore.toggle(this.api().page.hasMore());
+                },
+                dom: 'frt',
                 buttons: [
                     {
                         text: 'csv',
@@ -250,7 +273,7 @@
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
-                lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']],
+                lengthMenu: [[20, 50, 100, -1], [20, 50, 100, 'All']],
                 order: [[6, 'desc']],
                 ajax: '{!! request()->routeIs('proposal.draft') ? route('proposal.draft') : route('proposal.index') !!}',
                 rowCallback: function (row, data) {
@@ -270,7 +293,7 @@
                     },
                     {data: 'number', name: 'number'},
                     {data: 'fullName', name: 'fullName', orderable: false},
-                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true,visible: false},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true, visible: false},
                     {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
@@ -284,6 +307,10 @@
                     $('td', row).eq(1).addClass(data['bgColor']);
                     $('td', row).eq(5).addClass(data['statusBgColor']);
                 },
+            });
+            $('#btn-load-more').on('click', function (e) {
+                e.stopPropagation();
+                table.page.loadMore();
             });
             $('#select-all').on('click', function () {
                 let rows = table.rows({'search': 'applied'}).nodes();
@@ -382,7 +409,7 @@
                         data: data,
                         cache: false,
                         contentType: false,
-                        processData:false,
+                        processData: false,
                         success: (response) => {
                             let success = response.status === 'success';
                             if (success) {

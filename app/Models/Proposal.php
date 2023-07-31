@@ -4,19 +4,17 @@ namespace App\Models;
 
 use App\Casts\AsCustomCollection;
 use App\Constants\Status;
-use App\Mail\SendEmail;
 use App\Traits\File;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Dompdf\Dompdf;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 use Throwable;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * App\Models\Proposal
@@ -131,6 +129,9 @@ use Throwable;
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNotifiedToAdmin($value)
  * @property string|null $notice
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereNotice($value)
+ * @property \Illuminate\Support\Carbon|null $archived_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereArchivedAt($value)
+ * @method static Builder|Proposal archived()
  */
 class Proposal extends Model
 {
@@ -161,6 +162,7 @@ class Proposal extends Model
         'approved_at' => 'datetime',
         'pending_at' => 'datetime',
         'denied_at' => 'datetime',
+        'archived_at' => 'datetime',
         'notified_to_admin' => 'boolean',
     ];
 
@@ -179,16 +181,19 @@ class Proposal extends Model
                     switch ($model->status) {
                         case Status::APPROVED:
                             $model->approved_at = $date;
+                            $model->archived_at = $date;
                             $model->invoiceGenerate();
                             break;
                         case Status::DENIED:
                             $model->denied_at = $date;
+                            $model->archived_at = $date;
                             break;
                         case Status::PENDING:
                             $model->pending_at = $date;
                             break;
                         case Status::REVISION:
                             $model->revision_at = $date;
+                            $model->archived_at = null;
                             break;
                     }
                 }
@@ -208,21 +213,21 @@ class Proposal extends Model
                         if ($model->invoice_file) {
                             $data['attachment'] = public_path("storage/{$model->invoice_file}");
                         }
-                        $message = __("Proposal approved") . ': ' . $model->approved_at->format('d.m.Y');
+                        $message = __("Proposal approved") . ': ' . $model->approved_at->format('d.m.Y H:i');
                         $user = $model->user;
                         break;
                     case Status::DENIED:
-                        $message = __("Proposal denied") . ': ' . $model->denied_at->format('d.m.Y');
+                        $message = __("Proposal denied") . ': ' . $model->denied_at->format('d.m.Y H:i');
                         $user = $model->user;
                         break;
                     case Status::REVISION:
-                        $message = __("Proposal for revision") . ': ' . $model->revision_at->format('d.m.Y');
+                        $message = __("Proposal for revision") . ': ' . $model->revision_at->format('d.m.Y H:i');
                         $user = $model->user;
                         $data['url'] = route('proposal.edit', [$model->id]);
                         break;
                     case Status::PENDING:
                         if (auth()->check() && auth()->user()->id === $model->user_id) {
-                            $message = __("Proposal for confirmation") . ': ' . $model->pending_at->format('d.m.Y');
+                            $message = __("Proposal for confirmation") . ': ' . $model->pending_at->format('d.m.Y H:i');
                             $user = User::admin();
                             $data['url'] = route('admin.proposals.edit', [$model->id]);
                         }
@@ -235,15 +240,21 @@ class Proposal extends Model
                     if ($model->number) {
                         $text .= '<h1 style="text-align: center">' . __('Proposal number') . ': ' . $model->number . '</h1>';
                     }
+                    if ($model->creditAmount) {
+                        $text .= '<h1 style="text-align: center">' . __('Sum') . ': ' . $model->creditAmount . ' €</h1>';
+                    }
                     $user->sendEmail($text, $data);
                 }
             }
         });
         static::created(function (Proposal $model) {
             if (!$model->trashed() && $admin = User::admin()) {
-                $text = '<h1 style="text-align: center">' . __('New Proposal') . ': ' . $model->created_at->format('d.m.Y H:i:s') . '</h1>';
+                $text = '<h1 style="text-align: center">' . __('New Proposal') . ': ' . $model->created_at->format('d.m.Y H:i') . '</h1>';
                 $text .= '<h1 style="text-align: center">' . __('Full name Manager') . ': ' . $model->user->full_name . '</h1>';
                 $text .= '<h1 style="text-align: center">' . __('Full name') . ': ' . $model->lastName . '</h1>';
+                if ($model->creditAmount) {
+                    $text .= '<h1 style="text-align: center">' . __('Sum') . ': ' . $model->creditAmount . ' €</h1>';
+                }
                 $data = ['url' => route('admin.proposals.edit', [$model->id])];
                 $admin->sendEmail($text, $data);
             }
@@ -468,5 +479,10 @@ class Proposal extends Model
             Status::PENDING => 'bg-yellow-300',
             default => '',
         };
+    }
+
+    public function scopeArchived(Builder $query): void
+    {
+        $query->withTrashed()->whereNotNull('archived_at');
     }
 }

@@ -165,7 +165,7 @@ class User extends Authenticatable implements HasLocalePreference
         Mail::to($this->email)->later(now()->addSecond(), new SendEmail($message, $data));
     }
 
-    public function emailTemplates()
+    public function emailTemplates(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(EmailTemplate::class);
     }

@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProposalController::class)->prefix('proposals')->name('proposal.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/draft', 'draft')->name('draft');
+        Route::get('/archive', 'archive')->name('archive');
+        Route::put('/archive/{id}', 'sendToArchive')->name('sendToArchive');
         Route::get('/duplicate/{id}', 'duplicate')->name('duplicate');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');

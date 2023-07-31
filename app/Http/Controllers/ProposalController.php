@@ -39,7 +39,7 @@ class ProposalController extends Controller
     public function index()
     {
         try {
-            if (request()->ajax()) return $this->ajaxDataTable(auth()->user()->proposals()->with(['user', 'category', 'category.parent'])->select('proposals.*'));
+            if (request()->ajax()) return $this->ajaxDataTable(auth()->user()->proposals()->whereNull('archived_at')->with(['user', 'category', 'category.parent'])->select('proposals.*'));
             $user = auth()->user();
             $successful = $user->proposals()->where('proposals.status', Status::APPROVED);
             $totalSum = Proposal::moneyFormat($successful->sum('proposals.creditAmount'));
@@ -58,6 +58,30 @@ class ProposalController extends Controller
             ->onlyTrashed()->with(['user', 'category', 'category.parent'])
             ->select('proposals.*'));
         return view('proposal.draft');
+    }
+
+    public function archive()
+    {
+        if (request()->ajax()) return $this->ajaxDataTable(auth()
+            ->user()->proposals()
+            ->archived()->with(['user', 'category', 'category.parent'])
+            ->select('proposals.*'));
+        return view('proposal.archive');
+    }
+
+    public function sendToArchive($id)
+    {
+        $proposal = auth()->user()->proposals()
+            ->whereNull('proposals.archived_at')
+            ->withTrashed()
+            ->findOrFail($id);
+        $proposal->archived_at = now();
+        $success = $proposal->save();
+        return redirect()->route('proposal.archive')
+            ->with(
+                $success ? 'success' : 'error',
+                $success ? __("Archived") : __("Whoops! Something went wrong.")
+            );
     }
 
     public function edit($id)
@@ -196,7 +220,8 @@ class ProposalController extends Controller
                 $linkDuplicate = route('proposal.duplicate', [$proposal->id]);
                 $linkDelete = route('proposal.delete', [$proposal->id]);
                 $linkInvoice = null;
-
+                $sendToArchive = route('proposal.sendToArchive', [$proposal->id]);
+                $archived = !is_null($proposal->archived_at);
                 if ($proposal->status === Status::APPROVED && !is_null($proposal->invoice_file)) {
                     $linkInvoice = route('readFile', ['path' => $proposal->invoice_file]);
                 }
@@ -208,19 +233,30 @@ class ProposalController extends Controller
                 $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
                                     " . __('Show') . "
                                 </a>";
+
+                if (!$archived) {
+                    $html .= "|<a href='$linkDuplicate'
+                                   class='text-sm text-primary'>" . __('Duplicate') . "
+                         </a>";
+                    $html .= "|<a href='#' type='button' class='text-sm text-primary' data-toggle='modal'
+                                        data-method='PUT'
+                                        data-title='" . __('Send to archive') . "'
+                                        data-target='#confirmModal'
+                                        data-url='$sendToArchive'>" . __('Archive the project') . "
+                                </a>";
+                }
+
+                if (!is_null($linkInvoice)) {
+                    $html .= "|<a href='$linkInvoice' target='_blank'
+                                   class='text-sm text-success'>
+                                   " . __('Invoice') . "</a>";
+                }
+
                 if ($proposal->trashed()) {
                     $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
                                         data-target='#confirmModal'
                                         data-url='$linkDelete'>" . __('Delete') . "
                                 </a>";
-                }
-                $html .= "|<a href='$linkDuplicate'
-                                   class='text-sm text-primary'>" . __('Duplicate') . "
-                         </a>";
-                if (!is_null($linkInvoice)) {
-                    $html .= "|<a href='$linkInvoice' target='_blank'
-                                   class='text-sm text-success'>
-                                   " . __('Invoice') . "</a>";
                 }
 
                 $html .= "</div>";

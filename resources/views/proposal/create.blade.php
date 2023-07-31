@@ -11,4 +11,5 @@
         {{ __('Create') }}
     </h2>
     <x-proposal.create/>
+    @include('manager.includes.modals.after_send_proposal')
 @endsection

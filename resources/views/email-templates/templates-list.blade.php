@@ -15,7 +15,6 @@
         $('#templates-list > a').on('click', function (e) {
             e.preventDefault();
             $.get($(this).attr('href'), function (template) {
-                console.log(template);
                 let summernote = $('textarea.summernote');
                 summernote.summernote("code", "");
                 summernote.summernote("pasteHTML", template.content);

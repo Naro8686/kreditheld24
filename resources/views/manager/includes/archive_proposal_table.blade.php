@@ -1,6 +1,5 @@
 @push('css')
-    <link class="bg-red-400 bg-amber-400" href="{{asset('adminPanel/vendor/datatables/datatables.min.css')}}"
-          rel="stylesheet">
+    <link href="{{asset('adminPanel/vendor/datatables/datatables.min.css')}}" rel="stylesheet">
     <link href="{{asset('adminPanel/vendor/datatables/dataTables.checkboxes.css')}}" rel="stylesheet"/>
     <style>
         .dt-buttons {
@@ -108,7 +107,6 @@
         .dataTables_filter {
             width: 100%;
         }
-
         .dt-more-container {
             text-align: center;
             margin: 2em 0;
@@ -136,10 +134,21 @@
             </div>
         </div>
     </div>
-
     <div class="card-body">
         <div class="table-responsive">
             <div id="category-filters">
+                @if(!request()->routeIs('proposal.draft') && !request()->routeIs('proposal.archive'))
+                    <label class="float-left ml-2">
+                        <a href="#"
+                           data-toggle="modal"
+                           data-target="#sendEmailModal"
+                           data-url="{{route('email.send')}}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-fw fa-envelope"></i>
+                            <span>{{__("Send message")}}</span>
+                        </a>
+                    </label>
+                @endif
                 <label class="float-left ml-2">{{__('Status')}}
                     :<select id="status" class="form-control form-control-sm">
                         <option value="">{{__('no selected')}}</option>
@@ -157,50 +166,36 @@
                     </select>
                 </label>
             </div>
-            <form id="proposals" action="#" method="POST">
+            <form id="proposals" action="#" method="POST" enctype="multipart/form-data">
                 @csrf
                 <table id="proposals_table"
                        class="table table-sm table-bordered display responsive nowrap w-100">
                     <thead>
                     <tr>
-                        <th class="not-export-col" scope="col"></th>
-                        <th scope="col">{{__('Id')}}</th>
-                        <th scope="col">{{__('Category')}}</th>
-                        <th scope="col">{{__('Credit Type')}}</th>
+                        <th class="not-export-col" scope="col">
+                            <input name="select_all" value="1" id="select-all" type="checkbox"/>
+                        </th>
                         <th scope="col">{{__('Proposal number')}}</th>
                         <th scope="col">{{__('Full Name')}}</th>
-                        <th scope="col">{{__('Manager')}}</th>
+                        <th scope="col">{{__('Category')}}</th>
+                        <th scope="col">{{__('Credit Type')}}</th>
                         <th scope="col">{{__('Sum')}}</th>
                         <th scope="col">{{__('Date')}}</th>
                         <th scope="col">{{__('Status')}}</th>
-                        <th scope="col">{{__('Payout amount')}}</th>
                         <th scope="col">{{__('Deadline')}}</th>
-                        <th scope="col">{{__('Birthday Dashboard')}}</th>
                         <th scope="col">{{__('Email Manager')}}</th>
-                        {{--                        <th class="not-export-col" scope="col">--}}
-                        {{--                            <span class="sr-only">{{__('Action')}}</span>--}}
-                        {{--                        </th>--}}
+                        <th scope="col">{{__('Payout amount')}}</th>
+{{--                        <th class="not-export-col" scope="col">--}}
+{{--                            <span class="sr-only">{{__('Action')}}</span>--}}
+{{--                        </th>--}}
                     </tr>
                     </thead>
-                    <tfoot>
-                    <tr>
-                        <th colspan="1">
-                            <button type="button" class="btn btn-sm btn-primary"
-                                    data-toggle="modal"
-                                    data-target="#sendEmailModal"
-                                    data-url="{{route('admin.email.send',['type' => 'proposal_clients'])}}">
-                                <i class="fas fa-fw fa-envelope"></i>
-                            </button>
-                        </th>
-                        <th colspan="13"></th>
-                    </tr>
-                    </tfoot>
                 </table>
                 <div class="dt-more-container">
                     <button type="button" class="btn btn-sm btn-outline-primary" id="btn-load-more"
                             style="display:none">{{__('Show more')}}</button>
                 </div>
-                @include('admin.includes.modals.sendEmail')
+                @include('manager.includes.modals.sendEmail')
             </form>
         </div>
     </div>
@@ -218,11 +213,11 @@
     <script src="{{asset('adminPanel/vendor/datatables/dataTables.pageLoadMore.min.js')}}"
             type="text/javascript"></script>
     <script>
+
         $(document).ready(function () {
             let proposal_form = $('form#proposals');
             let creditType = $("#creditType");
             let status = $("#status");
-            let groupColumn = 6;
             let table = $('#proposals_table').DataTable({
                 drawCallback: function () {
                     let btnLoadMore = $('#btn-load-more');
@@ -236,23 +231,6 @@
                     // Show or hide "Load more" button based on whether there is more data available
                     btnLoadMore.toggle(this.api().page.hasMore());
                 },
-                orderFixed: [groupColumn, 'asc'],
-                rowGroup: {
-                    dataSrc: 'user.email',
-                    startRender: function (rows, group) {
-                        let user_id = $(group).find('.user_id').val()
-                        let groupName = 'group-' + user_id;
-                        let rowNodes = rows.nodes();
-                        rowNodes.to$().addClass(groupName);
-                        let checkboxesSelected = $('.dt-checkboxes:checked', rowNodes);
-                        let isSelected = (checkboxesSelected.length === rowNodes.length);
-                        return '<label style="margin: 0 18px;width: 45px;border-right: 1px solid">' +
-                            '<input type="checkbox" class="group-checkbox"' +
-                            ' data-group-name="' + groupName + '"' + (isSelected ? ' checked' : '') + '> ' +
-                            '</label>' + group + ' (' + rows.count() + ')';
-                    },
-                },
-                //dom: 'Bfrtip',
                 dom: 'frt',
                 buttons: [
                     {
@@ -290,33 +268,38 @@
                         }
                     },
                 ],
-                responsive: false,
+                responsive: true,
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
                 lengthMenu: [[20, 50, 100, -1], [20, 50, 100, 'All']],
-                order: [[1, 'desc'], [groupColumn, 'asc']],
-                ajax: '{!! route('admin.proposals.index') !!}',
+                order: [[6, 'desc']],
+                ajax: '{!! request()->routeIs('proposal.draft') ? route('proposal.draft') : (request()->routeIs('proposal.archive') ? route('proposal.archive') : route('proposal.index')) !!}',
+                rowCallback: function (row, data) {
+                    let select_all = $('input#select-all');
+                    let input = $(`#select_proposal_${data.id}`);
+                    let checked = ((select_all.prop('checked') && !select_all.prop('indeterminate')) || input.length);
+                    $('input.select-one[type="checkbox"]', row).prop('checked', checked).trigger('change');
+                },
                 columns: [
                     {
-                        data: 'id',
+                        data: 'id', name: 'id',
                         searchable: false, orderable: false,
-                        className: 'dt-body-center',
-                        checkboxes: true,
+                        className: 'dt-body-center dt-checkboxes-cell',
+                        render: function (data, type, full, meta) {
+                            return '<input type="checkbox" class="select-one" value="' + data + '">';
+                        }
                     },
-                    {data: 'id', name: 'id', visible: false},
-                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true, visible: false},
-                    {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'number', name: 'number'},
-                    {data: 'fullName', name: 'fullName'},
-                    {data: 'user.email', name: 'user.email', visible: false},
+                    {data: 'fullName', name: 'fullName', orderable: false},
+                    {data: 'category.parent.name', name: 'category.parent.name', searchable: true,visible: false},
+                    {data: 'category.name', name: 'category.name', visible: false},
                     {data: 'creditAmount', name: 'creditAmount'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'status', name: 'status'},
-                    {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
                     {data: 'deadline', name: 'deadline'},
-                    {data: 'birthday', name: 'birthday'},
                     {data: 'email', name: 'email'},
+                    {data: 'payoutAmount', name: 'payoutAmount', orderable: false, searchable: false},
                     // {data: 'action', name: 'action', orderable: false, searchable: false},
                 ], createdRow: function (row, data, index) {
                     $(row).addClass('cursor-pointer');
@@ -327,6 +310,36 @@
             $('#btn-load-more').on('click', function (e) {
                 e.stopPropagation();
                 table.page.loadMore();
+            });
+            $('#select-all').on('click', function () {
+                let rows = table.rows({'search': 'applied'}).nodes();
+                $('input.select-one[type="checkbox"]', rows).prop('checked', this.checked).trigger('change');
+            });
+            proposal_form.on('change', 'input#select-all,input.select-one', function () {
+                if ($(this).attr('class') === 'select-one') {
+                    let id = $(this).val();
+                    let elem_id = `select_proposal_${id}`
+                    if (this.checked) {
+                        if (!$(`#${elem_id}`).length) $(proposal_form)
+                            .prepend($('<input>')
+                                .attr('type', 'hidden')
+                                .attr('id', elem_id)
+                                .attr('class', 'select_proposal')
+                                .attr('name', 'ids[]')
+                                .val(id));
+                    } else $(`#${elem_id}`).remove();
+                }
+                // If checkbox is not checked
+                if (!this.checked) {
+                    $('.select_proposal').remove();
+                    var el = $('#select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
             });
             $("ul li ul li").click(function () {
                 let i = $(this).index() + 1
@@ -344,42 +357,33 @@
                 $(this).parent().addClass('inline-flex align-items-center');
                 return 'form-control form-control-sm';
             });
-            table.on('click', '.group-checkbox', function (e) {
-                let groupName = $(this).data('group-name');
-                table.cells('tr.' + groupName, 0).checkboxes.select(this.checked);
-            });
-            table.on('change', 'input.dt-checkboxes', function (e) {
-                let groupName = $(this).closest('tr').attr('class')
-                    .replace("even", "")
-                    .replace("odd", "")
-                    .replace(" ", "")
-                    .split(/\s+/)[0];
-                let group = $(`input[data-group-name="${groupName}"]`);
-                if (group.length) {
-                    let checkbox = $(`tr.${groupName} input.dt-checkboxes`);
-                    let checked = checkbox.length === checkbox.filter(':checked').length;
-                    group.prop('checked', checked);
-                }
-            });
-            table.on('click', 'thead .dt-checkboxes-select-all', function (e) {
-                let selectAll = $('input[type="checkbox"]', this);
-                setTimeout(function () {
-                    $('.group-checkbox').prop('checked', selectAll.prop('checked'));
-                }, 0);
-            });
-
             table.on('click', 'tbody>tr:not(.group)', function (e) {
-                if (e.target.tagName.toLowerCase() === 'td') {
-                    $(this).find('.edit-link')[0].click();
+                let link = $(this).find('.edit-link')[0];
+                if (link && e.target.tagName.toLowerCase() === 'td') {
+                    link.click();
                 }
             });
-            proposal_form.on('submit', function (e) {
+            $("#category-filters > label").each(function (i, el) {
+                $("#proposals_table_filter.dataTables_filter").prepend(el);
+            });
+            creditType.on('change', function () {
+                let category = this.value;
+                table.columns(3).search(category ? category : '', true, false);
+                table.draw();
+            });
+            status.on('change', function () {
+                let category = this.value;
+                table.columns(7).search(category ? `${category}` : '', true, false);
+                table.draw();
+            });
+            proposal_form.on('submit', async function (e) {
                 let form = this;
                 let rows_selected = table.column(0).checkboxes.selected();
+
                 // Iterate over all selected checkboxes
                 $.each(rows_selected, function (index, rowId) {
                     // Create a hidden element
-                    let proposal_id = parseInt($(rowId).text())
+                    let proposal_id = parseInt($(rowId).text());
                     $(form).append(
                         $('<input>')
                             .attr('type', 'hidden')
@@ -395,26 +399,27 @@
                 [].forEach.call(elems, function (el) {
                     el.remove();
                 });
-                let data = new FormData(this);
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: (response) => {
-                        let success = response.status === 'success';
-                        if (success) {
-                            form.reset();
-                            $('.summernote', proposal_form).summernote('code', '');
-                        }
-                        $('.modal', proposal_form).modal('hide');
-                        let classNames = 'alert alert-' + (!success ? 'danger' : 'success');
-                        $('#alert').attr('class', classNames).text(response.msg);
-                    },
-                    error: (response) => {
-                        try {
+
+                try {
+                    let data = new FormData(this);
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        method: $(form).attr('method'),
+                        data: data,
+                        cache: false,
+                        contentType: false,
+                        processData:false,
+                        success: (response) => {
+                            let success = response.status === 'success';
+                            if (success) {
+                                form.reset();
+                                $('.summernote', proposal_form).summernote('code', '');
+                            }
+                            $('.modal', proposal_form).modal('hide');
+                            let classNames = 'alert alert-' + (!success ? 'danger' : 'success');
+                            $('#alert').attr('class', classNames).text(response.msg);
+                        },
+                        error: (response) => {
                             let data = response.responseJSON.errors;
                             for (let [name, errors] of Object.entries(data)) {
                                 let field = form.querySelector(`[name="${name}"]`);
@@ -437,30 +442,14 @@
                                     field.classList.add('border-red');
                                 }
                             }
-                        } catch (e) {
-                            console.error(e);
                         }
-                    }
-                });
-                // Remove added elements
-                $('input[name="ids\[\]"]', form).remove();
-
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
                 // Prevent actual form submission
                 e.preventDefault();
-            });
-            $("#category-filters > label").each(function (i, el) {
-                $("#proposals_table_filter.dataTables_filter").prepend(el);
-            });
-            creditType.on('change', function () {
-                let category = this.value;
-                table.columns(2).search(category ? `${category}` : '', true, false);
-                //table.columns(3).search(this.value ? '^' + this.value + '$' : '', true, false);
-                table.draw();
-            });
-            status.on('change', function () {
-                let category = this.value;
-                table.columns(9).search(category ? `${category}` : '', true, false);
-                table.draw();
+                return false;
             });
             $('.modal', proposal_form).on('shown.bs.modal', function (event) {
                 let button = $(event.relatedTarget);

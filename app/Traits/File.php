@@ -15,7 +15,7 @@ trait File
     public static $locale = 'public';
     public static $path = 'uploads';
 
-    public function fileUpload(UploadedFile $file, $path = null)
+    public function fileUpload(UploadedFile $file, $path = null): bool|string
     {
         if (is_null($path)) $path = self::$path;
         $fileName = time() . '_' . $file->getClientOriginalName();
@@ -65,7 +65,7 @@ trait File
                     'binary' => $storage->read($file),
                 ]);
             } catch (FileNotFoundException|\League\Flysystem\FileNotFoundException $e) {
-                Log::error($e->getMessage());
+                Log::error(__METHOD__ . ' - ' . $e->getMessage());
             }
         }
         return null;

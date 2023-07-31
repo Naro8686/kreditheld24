@@ -241,9 +241,16 @@ function render(proposal) {
                     this.btnText = data.message;
                     if (data.hasOwnProperty("errors")) renderError(data.errors)
                     else if (data.success) {
-                        if (!is_draft && data.hasOwnProperty("redirectUrl")) setTimeout(function () {
-                            location.href = data.redirectUrl;
-                        }, 1000);
+                        if (!is_draft) {
+                            let modal_after_send_proposal = $('#after_send_proposal');
+                            if (modal_after_send_proposal.length) {
+                                modal_after_send_proposal.modal({backdrop: 'static', keyboard: false}, 'show');
+                            } else if (data.hasOwnProperty("redirectUrl")) {
+                                setTimeout(function () {
+                                    location.href = data.redirectUrl;
+                                }, 1000);
+                            }
+                        }
                     } else throw 'error';
                 }).catch((e) => {
                     throw e;

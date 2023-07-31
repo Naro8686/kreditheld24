@@ -324,5 +324,13 @@
     "Purchase or build price": "Цена покупки или постройки",
     "Own accumulation": "Собственное накопление",
     "Brokerage fees": "Брокерские сборы",
-    "Count children": "Количество детей"
+    "Count children": "Количество детей",
+    "Archive": "Архив",
+    "Archived": "В архиве",
+    "Archive the project": "Архивировать проект",
+    "Send to archive": "Отправить в архив",
+    "Manager statistics": "Статистика менеджера",
+    "Show more": "Показать еще",
+    "Go to home page": "Перейти на главную страницу",
+    "Add new proposal": "Добавить новую заявку"
 }

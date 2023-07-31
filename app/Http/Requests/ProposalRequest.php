@@ -194,7 +194,6 @@ class ProposalRequest extends FormRequest
             $objectData['accumulation'] = Proposal::parse_number($this['objectData']['accumulation']);
             $this->merge(["objectData" => $objectData]);
         }
-        \Debugbar::info(json_encode($this->all()));
         $this->merge(['deleted_at' => $this->isDraft() ? now() : null]);
         if ($this['phoneNumber']) $this->merge([
             "phoneNumber" => Str::replace('+', '', $this['phoneNumber']),

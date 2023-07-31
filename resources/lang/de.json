@@ -1,7 +1,6 @@
 {
     "Client": "Klient",
     "Full Name": "Name",
-	"Name Formular": "Name",
     "I agree": "Ich stimme zu",
 	"personal data AGB": "Ich habe die <strong>mündliche</strong> Einverständniserklärung des Kunden zur Verarbeitung seiner Daten im Rahmen der Beratung eingeholt",
     "privacy policy": "Der Kunde hat die <a href='https://kreditheld24.com/Datenschutzhinweise.pdf'>Datenschutzhinweise</a> zur Kenntnis genommen",
@@ -323,5 +322,13 @@
 	"Show": "Anschauen",
 	"Duplicate": "Duplizieren",
 	"The given data was Invalid": "Duplizieren",
-    "Count children": "Anzahl Kinder"
+    "Count children": "Anzahl Kinder",
+    "Archive": "Archiv",
+    "Archived": "Archiviert",
+    "Archive the project": "Archivieren Sie das Projekt",
+    "Send to archive": "An Archiv senden",
+    "Manager statistics": "Managerstatistiken",
+    "Show more": "Zeig mehr",
+    "Go to home page": "Gehen Sie zur Startseite",
+    "Add new proposal": "Neues Angebot hinzufügen"
 }

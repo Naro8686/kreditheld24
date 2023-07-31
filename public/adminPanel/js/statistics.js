@@ -124,6 +124,9 @@ var purchases = chart(purchasesChart, purchasesChartConfig);
 
 
 function ajax_charts(data = {}) {
+    let src = document.getElementById("statistics")?.src;
+    let manager_id = src?.split("manager_id=")[1] ?? null;
+    if (manager_id) data.manager_id = manager_id;
     const request = $.ajax({
         url: "/statistics",
         method: "GET",
@@ -176,11 +179,13 @@ function ordersEdit(ordersContainer, data) {
     let parent = $(ordersContainer);
     let total = parseInt(data.total);
     let completed = parseInt(data.completed);
+    let denied = parseInt(data.denied);
     let sum = number_format(data.sum, 2);
     let percent = data.targetPercent ? data.targetPercent : (((completed / total) * 100));
     percent = isNaN(percent) ? 0 : number_format(percent, 2);
     parent.find('#total').text(total);
     parent.find('#completed').text(completed);
+    parent.find('#denied').text(denied);
     parent.find('#rate').text(`${percent}%`);
     parent.find('#sum').text(`€${sum}`);
     let progress = parent

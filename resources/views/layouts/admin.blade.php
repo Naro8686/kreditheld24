@@ -48,8 +48,8 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-		
-		<li @class(['nav-item','active' => request()->routeIs('dashboard')])>
+
+        <li @class(['nav-item','active' => request()->routeIs('dashboard')])>
             <a class="nav-link" href="{{route('dashboard')}}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>{{__('Dashboard')}}</span></a>
@@ -68,7 +68,9 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.index')]) href="{{route('proposal.index')}}">{{__('All')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.draft')]) href="{{route('proposal.draft')}}">{{__('Draft')}}</a>
-                    <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) target="_blank" href="{{route('proposal.create')}}">{{__('Create')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.archive')]) href="{{route('proposal.archive')}}">{{__('Archive')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) target="_blank"
+                       href="{{route('proposal.create')}}">{{__('Create')}}</a>
                 </div>
             </div>
         </li>
@@ -103,15 +105,27 @@
 
         @role('admin')
         <div class="sidebar-heading">{{__('Admin')}}</div>
-        <li @class(['nav-item','active' => request()->routeIs('admin.proposals.*')])>
-            <a class="nav-link" href="{{route('admin.proposals.index')}}">
-                <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                <span>{{__('All proposal')}}</span></a>
-        </li>
         <li @class(['nav-item','active' => request()->routeIs('admin.managers.*')])>
             <a class="nav-link" href="{{route('admin.managers.index')}}">
                 <i class="fas fa-fw fa-users"></i>
                 <span>{{__('Managers')}}</span></a>
+        </li>
+        <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
+            @class(['nav-item','active' => request()->routeIs('admin.proposals.*')])>
+            <a @class(['nav-link','collapsed' => !request()->routeIs('admin.proposals.*')])
+               href="#" data-toggle="collapse" aria-expanded="true"
+               x-bind:data-target="'#' + collapse_id"
+               x-bind:aria-controls="collapse_id">
+                <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                <span>{{__('All proposal')}}</span>
+            </a>
+            <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
+                @class(['collapse','show' => request()->routeIs('admin.proposals.*')])>
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a @class(['collapse-item','active' => request()->is('admin/proposals')]) href="{{route('admin.proposals.index')}}">{{__('Proposal')}}</a>
+                    <a @class(['collapse-item','active' => request()->is('admin/proposals/archive')]) href="{{route('admin.proposals.archive')}}">{{__('Archive')}}</a>
+                </div>
+            </div>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
             @class(['nav-item','active' => request()->routeIs('admin.email.*')])>
@@ -383,10 +397,18 @@
             e.preventDefault();
         });
         $('#confirmModal').on('shown.bs.modal', function (event) {
+            let modal = $(this);
+            let form = modal.find('form');
             let button = $(event.relatedTarget);
             let url = button.data('url');
-            let modal = $(this);
-            modal.find('form').attr('action', url);
+            let title = button.data('title') ?? '{{__('Delete')}}';
+            let method = button.data('method') ?? 'DELETE';
+            let method_inp = form.find('input[name="_method"]');
+            form.attr('action', url);
+            modal.find('#modalLabel').text(title);
+            if (method_inp.length) {
+                method_inp.val(method.toUpperCase());
+            }
         });
         $('textarea.summernote').summernote({
             height: 300,

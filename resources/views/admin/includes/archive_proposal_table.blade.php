@@ -117,7 +117,7 @@
 @endpush
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">{{__('Credits')}}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{__('Archive')}}</h6>
         <div class="pull-right">
             <div class="pull-left">
                 <nav role="navigation">
@@ -296,7 +296,7 @@
                 serverSide: true,
                 lengthMenu: [[20, 50, 100, -1], [20, 50, 100, 'All']],
                 order: [[1, 'desc'], [groupColumn, 'asc']],
-                ajax: '{!! route('admin.proposals.index') !!}',
+                ajax: '{!! route('admin.proposals.archive') !!}',
                 columns: [
                     {
                         data: 'id',

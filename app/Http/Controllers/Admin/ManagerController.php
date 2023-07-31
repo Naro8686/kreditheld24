@@ -25,7 +25,7 @@ class ManagerController extends Controller
     {
         $managers = User::whereHas('roles', function ($query) {
             $query->whereIn('roles.slug', [Role::MANAGER]);
-        })->withCount(['proposals'])->orderByDesc('users.id')->paginate();
+        })->withCount(['proposals'])->orderByDesc('users.id')->paginate(20);
         return view('admin.managers.index', compact('managers'));
     }
 
@@ -64,6 +64,13 @@ class ManagerController extends Controller
             Log::error("ManagerController::store {$exception->getMessage()}");
         }
         return redirect()->back()->with('error', __("Whoops! Something went wrong."));
+    }
+
+    public function show($id)
+    {
+        $manager = User::findOrFail($id);
+        $invoices = $manager->proposals()->whereNotNull('invoice_file')->get();
+        return view('admin.managers.show', compact('manager', 'invoices'));
     }
 
     public function edit($id)

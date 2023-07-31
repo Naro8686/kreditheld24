@@ -96,10 +96,12 @@ class ProposalResource extends JsonResource
             'isPending' => $this->isPending(),
             'isApproved' => $this->isApproved(),
             'draft' => $this->trashed(),
+            'archived' => !is_null($this->archived_at),
             'revision_at' => optional($this->revision_at)->format('d.m.Y'),
             'approved_at' => optional($this->approved_at)->format('d.m.Y'),
             'pending_at' => optional($this->pending_at)->format('d.m.Y'),
             'denied_at' => optional($this->denied_at)->format('d.m.Y'),
+            'archived_at' => optional($this->denied_at)->format('d.m.Y'),
         ];
     }
 }
