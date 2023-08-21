@@ -12,6 +12,9 @@
                         <table class="min-w-full">
                             <thead class="bg-gray-50">
                             <tr>
+                                <th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    {{__('Action')}}
+                                </th>
                                 <th scope="col"
                                     class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                     {{__('Id')}}
@@ -54,17 +57,24 @@
                                     {{__('Date')}}
                                 </th>
                                 <th scope="col"
-                                    class="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
+                                    class="relative py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase">
                                     {{__('Number of applications')}}
-                                </th>
-                                <th scope="col" class="relative py-3 px-6">
-                                    <span class="sr-only">{{__('Action')}}</span>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($managers as $manager)
                                 <tr class="bg-white border-b">
+                                    <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
+                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.show',[$manager->id])}}"><i class="fas fa-eye"></i></a>
+                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.edit',[$manager->id])}}"><i class="fas fa-user-edit"></i></a>
+                                        <button type='button' class='btn btn-sm btn-danger'
+                                                data-toggle='modal'
+                                                data-target='#confirmModal'
+                                                data-url='{{route('admin.managers.delete',[$manager->id])}}'>
+                                            <i class='fa fa-trash'></i>
+                                        </button>
+                                    </td>
                                     <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
                                         {{$manager->id}}
                                     </td>
@@ -100,16 +110,6 @@
                                     </td>
                                     <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
                                         {{$manager->proposals_count}}
-                                    </td>
-                                    <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.show',[$manager->id])}}"><i class="fas fa-eye"></i></a>
-                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.edit',[$manager->id])}}"><i class="fas fa-user-edit"></i></a>
-                                        <button type='button' class='btn btn-sm btn-danger'
-                                                data-toggle='modal'
-                                                data-target='#confirmModal'
-                                                data-url='{{route('admin.managers.delete',[$manager->id])}}'>
-                                            <i class='fa fa-trash'></i>
-                                        </button>
                                     </td>
                                 </tr>
                             @endforeach

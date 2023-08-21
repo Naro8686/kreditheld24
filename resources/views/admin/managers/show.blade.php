@@ -131,7 +131,8 @@
     </div>
     <ul class="list-group">
         @php
-            $files = $invoices->pluck('invoice_file')->map(function ($file) {
+            $files = [];
+            if (isset($invoices)) $files = $invoices->pluck('invoice_file')->map(function ($file) {
                 $file = trim($file, '/');
                 return public_path("storage/$file");
             })->toArray()
