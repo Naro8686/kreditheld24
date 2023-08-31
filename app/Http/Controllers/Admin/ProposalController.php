@@ -386,11 +386,11 @@ class ProposalController extends Controller
         $ext = $request->get('ext', 'xlsx');
         try {
             if (in_array($ext, ['pdf', 'csv', 'xlsx'])) {
-                $fileName = "proposal_{$proposal->id}.$ext";
+                $fileName = "Selbstauskunft_{$proposal->id}.$ext";
                 if ($ext === 'pdf') {
                     $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
                     $dompdf->loadHtml(view('proposal.pdf', compact('proposal'))->render());
-                    $dompdf->setPaper('A4');
+                    $dompdf->setPaper('legal');
                     $dompdf->render();
                     $dompdf->stream($fileName);
                     return null;

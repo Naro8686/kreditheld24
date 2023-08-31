@@ -159,17 +159,22 @@ class ProposalController extends Controller
 
     public function exportToPdf(Request $request)
     {
-        $key = "print_{$request->user()->id}";
-        if ($request->method() === "POST") {
-            return session([$key => $request->all()]);
+        try {
+            $key = "print_{$request->user()->id}";
+            if ($request->method() === "POST") {
+                return session([$key => $request->all()]);
+            }
+            $proposal = new Proposal(session($key, []));
+            $fileName = 'Selbstauskunft.pdf';
+            $html = view('proposal.pdf', compact('proposal'))->render();
+            $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('legal');
+            $dompdf->render();
+            $dompdf->stream($fileName);
+        } catch (Throwable $throwable) {
+            Log::error(__METHOD__ . ' - ' . $throwable->getMessage());
         }
-        $proposal = new Proposal(session($key, []));
-        $fileName = 'proposal';
-        $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
-        $dompdf->loadHtml(view('proposal.pdf', compact('proposal'))->render());
-        $dompdf->setPaper('A4');
-        $dompdf->render();
-        $dompdf->stream($fileName);
         return null;
     }
 

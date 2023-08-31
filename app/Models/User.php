@@ -48,7 +48,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $surname
  * @property string|null $phone
  * @property string|null $address
@@ -70,6 +69,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTaxNumber($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\EmailTemplate[] $emailTemplates
  * @property-read int|null $email_templates_count
+ * @property int $target
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTarget($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -141,12 +143,12 @@ class User extends Authenticatable implements HasLocalePreference
      * @param $sum
      * @return int|float
      */
-    public function targetPercent($sum = null): int
+    public function targetPercent($sum = null): float|int
     {
         $totalSum = is_null($sum) ? $this->proposals()
             ->where('proposals.status', Status::APPROVED)
             ->sum('proposals.creditAmount') : $sum;
-        foreach ([500000, 750000, 1000000] as $targetSum) {
+        foreach ([$this->target] as $targetSum) {
             if ($totalSum <= $targetSum) {
                 break;
             }

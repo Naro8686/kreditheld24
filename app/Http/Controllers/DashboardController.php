@@ -27,13 +27,15 @@ class DashboardController extends Controller
 
     public function index()
     {
+        $invoices = collect([]);
         $user = auth()->user();
         $proposals = Proposal::orderByDesc('id');
         if ($user->isManager()) {
             $proposals = $proposals->where('user_id', $user->id);
+            $invoices = $user->proposals()->whereNotNull('invoice_file')->get();
         }
         $proposals = $proposals->whereNull('archived_at')->paginate(20);
-        return view('dashboard', compact('proposals'));
+        return view('dashboard', compact('proposals', 'invoices'));
     }
 
     public function statistics(Request $request)

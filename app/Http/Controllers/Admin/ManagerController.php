@@ -38,19 +38,22 @@ class ManagerController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:users,email',
+            'target' => 'sometimes|nullable|numeric|min:0',
             'password' => 'required|min:5',
         ]);
         try {
             $email = $request['email'];
+            $target = $request->get('target', 1000000);
             $name = $request->get('name') ?: explode('@', $email)[0];
             $password = $request['password'];
-            DB::transaction(function () use ($email, $password, $name) {
+            DB::transaction(function () use ($email, $password, $name, $target) {
                 /** @var User $manager */
                 $managerRole = Role::whereSlug(Role::MANAGER)->first();
                 $createProposalsPermission = Permission::whereSlug(Permission::CREATE_PROPOSALS)->first();
                 $manager = new User();
                 $manager->name = $name;
                 $manager->email = $email;
+                $manager->target = $target;
                 $manager->email_verified_at = now();
                 $manager->password = bcrypt($password);
                 $manager->save();
@@ -59,7 +62,7 @@ class ManagerController extends Controller
                 $manager->notify((new CreateAccount($email, $password)));
             });
             return redirect()->route('admin.managers.index')->with('success', __('Account created'));
-        } catch (Throwable|Exception $exception) {
+        } catch (Throwable $exception) {
             DB::rollBack();
             Log::error("ManagerController::store {$exception->getMessage()}");
         }
@@ -93,6 +96,7 @@ class ManagerController extends Controller
         $manager->birthday = $request->get('birthday', $manager->birthday);
         $manager->card_number = $request->get('card_number', $manager->card_number);
         $manager->tax_number = $request->get('tax_number', $manager->tax_number);
+        $manager->target = $request->get('target', $manager->target);
         $manager->save();
         return redirect()->route('admin.managers.index')->with('success', __('Data saved successfully'));
     }

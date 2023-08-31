@@ -41,6 +41,7 @@ class UserRequest extends FormRequest
             "postcode" => "sometimes|nullable|regex:/\b\d{4,10}\b/",
             'card_number' => 'sometimes|nullable|string|min:22|max:22',
             'tax_number' => 'sometimes|nullable|string',
+            'target' => 'sometimes|nullable|numeric|min:0',
             'birthday' => 'sometimes|nullable|date|before:today|date_format:Y-m-d',
         ];
     }

@@ -34,6 +34,15 @@
                             <small class="form-text text-danger">{{$message}}</small>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label for="target">{{__('Target')}}</label>
+                            <input type="number" class="form-control" name="target"
+                                   id="target" placeholder="{{__('Target')}}" required
+                                   autocomplete="off" value="{{old('target',1000000)}}">
+                            @error('target')
+                            <small class="form-text text-danger">{{$message}}</small>
+                            @enderror
+                        </div>
                         <input type="submit" class="btn btn-primary">
                     </form>
                 </div>

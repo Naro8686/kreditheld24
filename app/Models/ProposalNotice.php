@@ -23,9 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ProposalNotice whereProposalId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProposalNotice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProposalNotice whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property int|null $user_id
  * @method static \Illuminate\Database\Eloquent\Builder|ProposalNotice whereUserId($value)
+ * @mixin \Eloquent
  */
 class ProposalNotice extends Model
 {

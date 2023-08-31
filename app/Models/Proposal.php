@@ -120,7 +120,6 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|Proposal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Proposal withoutTrashed()
- * @mixin \Eloquent
  * @property bool $notified_to_admin
  * @property-read string|null $communal_amount
  * @property-read string|null $communal_expenses
@@ -132,6 +131,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property \Illuminate\Support\Carbon|null $archived_at
  * @method static \Illuminate\Database\Eloquent\Builder|Proposal whereArchivedAt($value)
  * @method static Builder|Proposal archived()
+ * @mixin \Eloquent
  */
 class Proposal extends Model
 {

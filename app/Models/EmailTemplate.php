@@ -24,9 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|EmailTemplate whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EmailTemplate whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EmailTemplate whereUserId($value)
- * @mixin \Eloquent
  * @property string|null $subject
  * @method static \Illuminate\Database\Eloquent\Builder|EmailTemplate whereSubject($value)
+ * @mixin \Eloquent
  */
 class EmailTemplate extends Model
 {
