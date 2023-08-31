@@ -275,7 +275,7 @@
     {{--            </div>--}}
     {{--        </div>--}}
     {{--    </div>--}}
-    <a class="btn btn-lg btn-success btn-block" href="{{ route('proposal.create') }}">{{ __('Create') }}</a>
+    <a class="btn btn-lg btn-success btn-block" href="{{ route('proposal.create') }}" target="_blank">{{ __('Create') }}</a>
     <div class="py-6">
         @includeWhen(auth()->user()->isAdmin(), "admin.includes.proposal_table")
         @includeWhen(auth()->user()->isManager(), "manager.includes.proposal_table")
