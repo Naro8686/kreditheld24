@@ -22,6 +22,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'index')->name('dashboard');
         Route::get('/statistics', 'statistics')->name('statistics');
         Route::get('/read-file', 'readFile')->name('readFile');
+        Route::prefix('manager')->name('manager.')->group(function () {
+            Route::get('/download-file', 'downloadFile')->name('downloadFile');
+            Route::get('/download-files-zip', 'downloadFilesZip')->name('downloadFilesZip');
+        });
     });
     Route::resource('email-templates', EmailTemplateController::class);
     Route::controller(ProposalController::class)->prefix('proposals')->name('proposal.')->group(function () {

@@ -587,7 +587,7 @@
         </tr>
         </tbody>
     </table>
-    <table style="clear: both;">
+    <table>
         <thead>
         <tr>
             <th colspan="2">{{ __('Erklärungen der Darlehensnehmer') }}</th>
@@ -607,6 +607,12 @@
                     und sämtlichen mit der Finanzierung zusammenhängenden Schriftverkehr
                     für mich entgegenzunehmen.
                 </p>
+                <p>
+                    Der Darlehensgeber wird vor Herauslage des Darlehens bei der SCHUFA
+                    Holding AG eine Auskunft einholen. Soweit nach Herauslage des Darlehens
+                    solche Daten aus anderen Vertragsverhältnissen bei der SCHUFA anfallen,
+                    kann der Darlehensgeber hierüber ebenfalls Auskünfte erhalten.
+                </p>
             </td>
             <td>
                 <p>
@@ -618,25 +624,20 @@
                     jederzeit widerrufen werden können, insbesondere wenn sich
                     Abweichungen zu den von mir gemachten Angaben herausstellen.
                 </p>
+                <p>
+                    Insoweit befreie/n ich/wir den Darlehensgeber zugleich vom Bankgeheimnis.
+                    Die SCHUFA speichert und nutzt die erhaltenen Daten. Die Nutzung
+                    umfasst auch die Errechnung eines Wahrscheinlichkeitswertes auf
+                    Grundlage des SCHUFA-Datenbestandes zur Beurteilung des Kreditrisikos
+                    (Score). Die erhaltenen Daten übermittelt sie an ihre Vertragspartner im
+                    Europäischen Wirtschaftsraum und der Schweiz, um diesen Informationen
+                    zur Beurteilung der Kreditwürdigkeit von natürlichen Personen zu
+                    geben.
+                </p>
             </td>
         </tr>
-        </tbody>
-    </table>
-    <table style="clear: both;">
-        <thead>
-        <tr>
-            <th colspan="2">{{ __('Erklärungen der Darlehensnehmer') }}</th>
-        </tr>
-        </thead>
-        <tbody>
         <tr>
             <td>
-                <p>
-                    Der Darlehensgeber wird vor Herauslage des Darlehens bei der SCHUFA
-                    Holding AG eine Auskunft einholen. Soweit nach Herauslage des Darlehens
-                    solche Daten aus anderen Vertragsverhältnissen bei der SCHUFA anfallen,
-                    kann der Darlehensgeber hierüber ebenfalls Auskünfte erhalten.
-                </p>
                 <p>
                     Ich/Wir willige/n ein, dass der Darlehensgeber, der SCHUFA Holding AG,
                     Kormoranweg 5, 65201 Wiesbaden, Daten über die Beantragung, die
@@ -686,14 +687,7 @@
             </td>
             <td>
                 <p>
-                    Insoweit befreie/n ich/wir den Darlehensgeber zugleich vom Bankgeheimnis.
-                    Die SCHUFA speichert und nutzt die erhaltenen Daten. Die Nutzung
-                    umfasst auch die Errechnung eines Wahrscheinlichkeitswertes auf
-                    Grundlage des SCHUFA-Datenbestandes zur Beurteilung des Kreditrisikos
-                    (Score). Die erhaltenen Daten übermittelt sie an ihre Vertragspartner im
-                    Europäischen Wirtschaftsraum und der Schweiz, um diesen Informationen
-                    zur Beurteilung der Kreditwürdigkeit von natürlichen Personen zu
-                    geben. Vertragspartner der SCHUFA sind Unternehmen, die aufgrund von
+                    Vertragspartner der SCHUFA sind Unternehmen, die aufgrund von
                     Leistungen oder Lieferung finanzielle Ausfallrisiken tragen (insbesondere
                     Kreditinstitute sowie Kreditkarten- und Leasinggesellschaften, aber auch
                     etwa Vermietungs-, Handels-, Telekommunikations-, Energieversorgungs-,
@@ -724,6 +718,8 @@
                 <p>
                     Für die Übermittlung meiner/unserer Daten zwecks Bonitätsprüfung an die
                     Creditreform befreie ich/befreien wir den Darlehensgeber vom Bankgeheimnis.
+                </p>
+                <p>
                     Ich kann/Wir können Auskunft bei der Creditreform über die
                     mich/uns betreffenden gespeicherten Daten erhalten. Weitere Informationen
                     über das Creditreform-Auskunftsverfahren enthält die Homepage der
@@ -754,7 +750,7 @@
         </tr>
         </tbody>
     </table>
-    <table style="clear: both;">
+    <table>
         <thead>
         <tr>
             <th>Datenschutzrechtliche Einwilligungserklärung</th>
@@ -823,7 +819,7 @@
         </tr>
         </tbody>
     </table>
-    <table style="clear: both;">
+    <table>
         <thead>
         <tr>
             <th>{{__('Date')}}/{{now()->format('d.m.Y')}}</th>

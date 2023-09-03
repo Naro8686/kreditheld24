@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['role:' . Role::ADMIN])->only(['downloadFile', 'downloadZip', 'downloadZipInvoice']);
+        $this->middleware(['role:' . Role::ADMIN])->only(['downloadZip', 'downloadZipInvoice']);
     }
 
     public function index()
