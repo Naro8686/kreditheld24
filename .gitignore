@@ -18,3 +18,4 @@ _ide_helper.php
 /storage/app/tmp/*
 .DS_Store
 public/.DS_Store
+resources/lang/de.json
