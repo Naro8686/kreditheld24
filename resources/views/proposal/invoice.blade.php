@@ -51,6 +51,7 @@
             <th>Vorgang</th>
             <th>Kunde</th>
             <th>Nettoprovision</th>
+            <th>{{__('Bonus')}}</th>
             <th>Gesamtbetrag</th>
         </tr>
         </thead>
@@ -59,7 +60,8 @@
             <td>{{$proposal->number}}</td>
             <td>{{"$proposal->firstName $proposal->lastName"}}</td>
             <td>{{$proposal->commission. '%'}}</td>
-            <td>{{$proposal::CURRENCY.$proposal->payoutAmount}}</td>
+            <td>{{($proposal->bonus ?? 0). '%'}}</td>
+            <td>{{$proposal::CURRENCY.$proposal->payout_amount}}</td>
         </tr>
         </tbody>
     </table>

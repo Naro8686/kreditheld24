@@ -10,6 +10,7 @@ use Dompdf\Dompdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Throwable;
 use DataTables;
 
@@ -181,7 +182,7 @@ class ProposalController extends Controller
     private function ajaxDataTable($proposalsBuilder)
     {
         return DataTables::eloquent($proposalsBuilder)
-            ->addColumn('bgColor', function ($proposal) {
+            ->addColumn('bgColor', function (Proposal $proposal) {
                 return match ($proposal->deadlineStatus()) {
                     Status::DEADLINE_ENDS => 'bg-amber-400',
                     Status::DEADLINE_EXPIRED => 'bg-red-400',
@@ -238,11 +239,11 @@ class ProposalController extends Controller
                 $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
                                     " . __('Show') . "
                                 </a>";
-
-                if (!$archived) {
-                    $html .= "|<a href='$linkDuplicate'
+                $html .= "|<a href='$linkDuplicate'
                                    class='text-sm text-primary'>" . __('Duplicate') . "
                          </a>";
+                if (!$archived) {
+
                     $html .= "|<a href='#' type='button' class='text-sm text-primary' data-toggle='modal'
                                         data-method='PUT'
                                         data-title='" . __('Send to archive') . "'
@@ -332,13 +333,20 @@ class ProposalController extends Controller
     {
         /** @var Proposal $proposal */
         $proposal = auth()->user()->proposals()->withTrashed()->findOrfail($id);
+        $archiveRouteName = 'proposal.archive';
+        $draftRouteName = 'proposal.draft';
+        $isArchived = app('router')->getRoutes()->match(app('request')->create(url()->previous()))->getName() === $archiveRouteName;
         $newProposal = $proposal->replicate();
         $newProposal->copyFiles();
         $newProposal->bonus = null;
         $newProposal->commission = null;
         $newProposal->number = null;
         $newProposal->status = Status::PENDING;
-        $newProposal->deleted_at = now();
+        if (!$isArchived) {
+            $newProposal->deleted_at = now();
+        } else {
+            $newProposal->archived_at = $proposal->archived_at;
+        }
         $newProposal->created_at = now();
         $newProposal->updated_at = now();
         $newProposal->pending_at = null;
@@ -346,6 +354,7 @@ class ProposalController extends Controller
         $newProposal->revision_at = null;
         $newProposal->denied_at = null;
         $newProposal->save();
-        return redirect()->route('proposal.draft')->with('success', __('Duplicate created'));
+        $currentRouteName = $isArchived ? $archiveRouteName : $draftRouteName;
+        return redirect()->route($currentRouteName)->with('success', __('Duplicate created'));
     }
 }

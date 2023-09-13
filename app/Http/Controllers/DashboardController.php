@@ -54,27 +54,17 @@ class DashboardController extends Controller
             if (!in_array($unit, ['hour', 'day', 'week', 'month', 'year'])) {
                 throw new Exception('Wrong unit format');
             }
-            switch ($unit) {
-                case 'day':
-                    $sqlFormat = '%Y-%m-%d';
-                    break;
-                case 'week':
-                    $sqlFormat = '%x-%v';
-                    break;
-                case 'month':
-                    $sqlFormat = '%Y-%m';
-                    break;
-                case 'year':
-                    $sqlFormat = '%Y';
-                    break;
-                case 'hour':
-                default:
-                    $sqlFormat = '%Y-%m-%d %H';
-                    break;
-            }
+            $sqlFormat = match ($unit) {
+                'day' => '%Y-%m-%d',
+                'week' => '%x-%v',
+                'month' => '%Y-%m',
+                'year' => '%Y',
+                default => '%Y-%m-%d %H',
+            };
             $auth_user = $request->user();
             $approved = Status::APPROVED;
             $denied = Status::DENIED;
+            $year = now()->subYear()->toDateString();
             if ($auth_user->isAdmin()) {
                 $purchases = Proposal::when($manager_id, function (Builder $query, $manager_id) {
                     $query->where('user_id', $manager_id);
@@ -82,9 +72,27 @@ class DashboardController extends Controller
                 $orders = Proposal::when($manager_id, function (Builder $query, $manager_id) {
                     $query->where('user_id', $manager_id);
                 });
+                $other = Proposal::when($manager_id, function (Builder $query, $manager_id) {
+                    $query->where('user_id', $manager_id);
+                })->select([
+                    DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum_approved_all'"),
+                    DB::raw("IFNULL(SUM(`proposals`.`creditAmount`),0) AS 'sum_all'"),
+                    !is_null($manager_id)
+                        ? DB::raw("(SELECT IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) FROM `proposals` WHERE `proposals`.`created_at` >= '$year' AND `proposals`.`user_id` = '$manager_id' AND `proposals`.`deleted_at` is null) as 'sum_approved_year'")
+                        : DB::raw("(SELECT IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) FROM `proposals` WHERE `proposals`.`created_at` >= '$year' AND `proposals`.`deleted_at` is null) as 'sum_approved_year'"),
+                    !is_null($manager_id)
+                        ? DB::raw("(SELECT IFNULL(SUM(`proposals`.`creditAmount`),0) FROM `proposals` WHERE `proposals`.`created_at` >= '$year' AND `proposals`.`user_id` = '$manager_id' AND `proposals`.`deleted_at` is null) as 'sum_year'")
+                        : DB::raw("(SELECT IFNULL(SUM(`proposals`.`creditAmount`),0) FROM `proposals` WHERE `proposals`.`created_at` >= '$year' AND `proposals`.`deleted_at` is null) as 'sum_year'"),
+                ])->limit(1)->first();
             } else {
                 $purchases = $auth_user->proposals();
                 $orders = $auth_user->proposals();
+                $other = $auth_user->proposals()->select([
+                    DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum_approved_all'"),
+                    DB::raw("(SELECT IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) FROM `proposals` WHERE `proposals`.`created_at` >= '$year' AND `proposals`.`user_id` = {$auth_user->id} AND `proposals`.`deleted_at` is null) as 'sum_approved_year'"),
+                    DB::raw("IFNULL(SUM(`proposals`.`creditAmount`),0) AS 'sum_all'"),
+                    DB::raw("(SELECT IFNULL(SUM(`proposals`.`creditAmount`),0) FROM `proposals` WHERE `proposals`.`created_at` >= '$year' AND `proposals`.`user_id` = '{$auth_user->id}' AND `proposals`.`deleted_at` is null) as 'sum_year'"),
+                ])->limit(1)->first();
             }
             $purchases = $purchases->select([
                 DB::raw("IFNULL(SUM(`proposals`.`creditAmount`),0) AS 'sum'"),
@@ -97,9 +105,9 @@ class DashboardController extends Controller
 
             $orders = $orders->select([
                 DB::raw("COUNT(id) AS 'total'"),
-                DB::raw("IFNULL(SUM(CASE WHEN status = '{$approved}' THEN 1 ELSE 0 END),0) AS 'completed'"),
-                DB::raw("IFNULL(SUM(CASE WHEN status = '{$denied}' THEN 1 ELSE 0 END),0) AS 'denied'"),
-                DB::raw("IFNULL(SUM(CASE WHEN status = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum'")
+                DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN 1 ELSE 0 END),0) AS 'completed'"),
+                DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$denied}' THEN 1 ELSE 0 END),0) AS 'denied'"),
+                DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum'")
             ])->where(function ($query) use ($from, $to) {
                 return $query
                     ->whereDate('created_at', '>=', $from)
@@ -118,9 +126,12 @@ class DashboardController extends Controller
             return response()->json([
                 'purchases' => StatisticResource::collection($purchases->get()),
                 'populars' => [],
-                'orders' => $orders
+                'orders' => $orders,
+                'other' => $other->only([
+                    'sum_all', 'sum_approved_all', 'sum_year', 'sum_approved_year'
+                ]),
             ]);
-        } catch (Exception|Throwable $exception) {
+        } catch (Throwable $exception) {
             return response()->json([
                 'errors' => [
                     'msg' => $exception->getMessage(),

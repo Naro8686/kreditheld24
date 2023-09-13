@@ -12,7 +12,7 @@ class Status
     const REVISION = 'revision';
     const DEADLINE_ENDS = 'ends';
     const DEADLINE_EXPIRED = 'expired';
-    const DEADLINE_NOT_EXPIRED = 'expired';
+    const DEADLINE_NOT_EXPIRED = 'not_expired';
 
     /**
      * @param bool $trans

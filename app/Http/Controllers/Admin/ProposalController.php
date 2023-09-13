@@ -29,7 +29,7 @@ class ProposalController extends Controller
         try {
             if (request()->ajax()) return datatables()
                 ->of(Proposal::with(['user', 'category', 'category.parent'])->whereNull('archived_at')->select('proposals.*'))
-                ->addColumn('bgColor', function ($proposal) {
+                ->addColumn('bgColor', function (Proposal $proposal) {
                     return match ($proposal->deadlineStatus()) {
                         Status::DEADLINE_ENDS => 'bg-amber-400',
                         Status::DEADLINE_EXPIRED => 'bg-red-400',
@@ -172,7 +172,7 @@ class ProposalController extends Controller
         try {
             if (request()->ajax()) return datatables()
                 ->of(Proposal::archived()->with(['user', 'category', 'category.parent'])->select('proposals.*'))
-                ->addColumn('bgColor', function ($proposal) {
+                ->addColumn('bgColor', function (Proposal $proposal) {
                     return match ($proposal->deadlineStatus()) {
                         Status::DEADLINE_ENDS => 'bg-amber-400',
                         Status::DEADLINE_EXPIRED => 'bg-red-400',

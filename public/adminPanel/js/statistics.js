@@ -144,6 +144,9 @@ function ajax_charts(data = {}) {
                     case "orders":
                         ordersEdit(ordersContainer, data);
                         break;
+                    case "other":
+                        otherEdit(ordersContainer, data);
+                        break;
                 }
             }
         }
@@ -196,6 +199,17 @@ function ordersEdit(ordersContainer, data) {
         "style": `width: ${percent}%`,
         "aria-valuenow": percent
     });
+}
+function otherEdit(ordersContainer, data) {
+    let parent = $(ordersContainer);
+    let sum_all = number_format(data.sum_all, 2,',','.');
+    let sum_approved_all = number_format(data.sum_approved_all, 2,',','.');
+    let sum_approved_year = number_format(data.sum_approved_year, 2,',','.');
+    let sum_year = number_format(data.sum_year, 2,',','.');
+    parent.find('#sum_all').text(`€${sum_all}`);
+    parent.find('#sum_approved_all').text(`€${sum_approved_all}`);
+    parent.find('#sum_approved_year').text(`€${sum_approved_year}`);
+    parent.find('#sum_year').text(`€${sum_year}`);
 }
 
 $(function () {

@@ -15,7 +15,6 @@
             }
         </style>
     @endpush
-    <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{__('Dashboard')}}</h1>
         <div class="no-arrow d-flex flex-row flex-wrap">
@@ -25,7 +24,6 @@
             </label>
         </div>
     </div>
-    <!-- Content Row -->
     @if(auth()->user()->isManager())
         <div id="orders" class="row">
             <div class="col-xl-6 col-md-6 mb-4">
@@ -125,11 +123,87 @@
                     </div>
                 </div>
             </div>
-
+            <div class="col-xl-6 col-md-12 mb-4">
+                <div class="row">
+                    <h6 class="col-md-12 mb-3">{{__('Amount of approved applications')}}</h6>
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            {{__('For all time')}}
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_all">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            {{__('In a year')}}
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_year">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-12 mb-4">
+                <div class="row">
+                    <h6 class="col-md-12 mb-3">{{__('Sum of all applications')}}</h6>
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            {{__('For all time')}}
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_all">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            {{__('In a year')}}
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_year">0</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     @elseif(auth()->user()->isAdmin())
         <div id="orders" class="row">
-
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -147,25 +221,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Earnings (Monthly) Card Example -->
-            {{--        <div class="col-xl-3 col-md-6 mb-4">--}}
-            {{--            <div class="card border-left-primary shadow h-100 py-2">--}}
-            {{--                <div class="card-body">--}}
-            {{--                    <div class="row no-gutters align-items-center">--}}
-            {{--                        <div class="col mr-2">--}}
-            {{--                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">--}}
-            {{--                                {{__('Total')}}--}}
-            {{--                            </div>--}}
-            {{--                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total">0</div>--}}
-            {{--                        </div>--}}
-            {{--                        <div class="col-auto">--}}
-            {{--                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>--}}
-            {{--                        </div>--}}
-            {{--                    </div>--}}
-            {{--                </div>--}}
-            {{--            </div>--}}
-            {{--        </div>--}}
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -183,7 +238,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
@@ -230,7 +284,7 @@
                 <span class="badge badge-primary badge-pill">
                     <a class='btn btn-sm text-white'
                        href='{{route('manager.downloadFile', ['path' => $invoice->invoice_file])}}'><i
-                                class="fas fa-download"></i></a>
+                            class="fas fa-download"></i></a>
                 </span>
             </li>
         @endforeach
@@ -238,11 +292,12 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <a class='btn btn-block btn-primary'
                    href='{{route('manager.downloadFilesZip', ['files' => $files])}}'><i
-                            class="fas fa-download"></i></a>
+                        class="fas fa-download"></i></a>
             </li>
         @endif
     </ul>
-    <a class="btn btn-lg btn-success btn-block" href="{{ route('proposal.create') }}" target="_blank">{{ __('Create') }}</a>
+    <a class="btn btn-lg btn-success btn-block" href="{{ route('proposal.create') }}"
+       target="_blank">{{ __('Create') }}</a>
     <div class="py-6">
         @includeWhen(auth()->user()->isAdmin(), "admin.includes.proposal_table")
         @includeWhen(auth()->user()->isManager(), "manager.includes.proposal_table")

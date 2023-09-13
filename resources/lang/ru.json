@@ -332,5 +332,9 @@
     "Manager statistics": "Статистика менеджера",
     "Show more": "Показать еще",
     "Go to home page": "Перейти на главную страницу",
-    "Add new proposal": "Добавить новую заявку"
+    "Add new proposal": "Добавить новую заявку",
+    "Amount of approved applications": "Сумма одобренных заявок",
+    "Sum of all applications": "Сумма всех заявок",
+    "For all time": "За все время",
+    "In a year": "За год"
 }

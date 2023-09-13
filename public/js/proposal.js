@@ -191,10 +191,10 @@ function render(proposal) {
             return false
         },
         async sendNotice(e) {
-            let textarea = $('textarea#notices-message');
-            let message = $.trim(textarea.val());
+            let input = $('#notices-message');
+            let message = $.trim(input.val());
             if (message.length) {
-                const url = '/admin/proposal-notices';
+                const url = '/proposal-notices';
                 const data = {
                     message: message,
                     proposal_id: this.formData.id,
@@ -210,7 +210,7 @@ function render(proposal) {
                     });
                     const json = await response.json();
                     if (json.success) {
-                        textarea.val('');
+                        input.val('');
                         this.formData.notices = json.notices;
                     }
                 } catch (error) {

@@ -11,10 +11,10 @@
 */
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\SendEmailController;
-use App\Http\Controllers\EmailTemplateController;
 
 
 Route::middleware(['auth'])->group(function () {
@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('contacts', [\App\Http\Controllers\ContactController::class, 'index'])->name('contacts');
     Route::get('formulas', [\App\Http\Controllers\FormulaController::class, 'index'])->name('formulas');
     Route::match(['GET', 'POST'], '/export-to-pdf', [\App\Http\Controllers\ProposalController::class, 'exportToPdf'])->name('exportToPdf');
+    Route::resource('proposal-notices', \App\Http\Controllers\ProposalNoticeController::class);
 });
 
 require __DIR__ . '/auth.php';

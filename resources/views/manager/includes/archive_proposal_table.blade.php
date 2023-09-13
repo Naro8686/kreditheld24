@@ -137,7 +137,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <div id="category-filters">
-                @if(!request()->routeIs('proposal.draft') && !request()->routeIs('proposal.archive'))
+                @if(!request()->routeIs('proposal.draft'))
                     <label class="float-left ml-2">
                         <a href="#"
                            data-toggle="modal"

@@ -22,7 +22,7 @@
             </template>
             <template x-if="!formData.myProposal">
                 <h4 class="block mt-1 w-full"
-                   x-text="formData.notice"></h4>
+                    x-text="formData.notice"></h4>
             </template>
         </div>
         <div class="grid grid-cols-3 gap-3">
@@ -38,7 +38,8 @@
                                 :value="parent_category.id" x-text="parent_category.name"/>
                     </template>
                 </x-select>
-                <fieldset x-show="getCategory()?.category_key === 'home'" class="col-span-2 text-center flex justify-content-around mt-1"
+                <fieldset x-show="getCategory()?.category_key === 'home'"
+                          class="col-span-2 text-center flex justify-content-around mt-1"
                           x-transition.scale.origin.bottom
                           x-transition:leave.scale.origin.top>
                     <div class="inline-flex flex-column items-center">
@@ -88,15 +89,18 @@
             </fieldset>
         </div>
         <div id="accordionProposal" class="accordion mt-3">
+            @isset($card)
+                {{ $card }}
+            @endisset
             <div class="card" x-data="{ collapse_id: $id('collapseProposal'),heading_id:$id('headingProposal') }">
                 <div class="card-header">
                     <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
-                       class="card-link capitalize" aria-expanded="true">
+                       class="card-link @isset($card) collapsed @endisset capitalize" @if(!isset($card)) aria-expanded="true" @else aria-expanded="false" @endif>
                         {{__('personal data')}}
                     </a>
                 </div>
 
-                <div x-bind:id="collapse_id" class="collapse show">
+                <div x-bind:id="collapse_id" class="collapse @if(!isset($card)) show @endif">
                     <div class="card-body">
                         <div class="grid grid-cols-2 gap-2">
                             <div class="col-span-2 md:text-left text-center">

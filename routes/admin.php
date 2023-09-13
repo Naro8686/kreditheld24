@@ -41,5 +41,4 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])->prefix('admin')->name('admin
     });
     Route::resource('contacts', ContactController::class);
     Route::resource('formulas', \App\Http\Controllers\Admin\FormulaController::class);
-    Route::resource('proposal-notices', \App\Http\Controllers\Admin\ProposalNoticeController::class);
 });
