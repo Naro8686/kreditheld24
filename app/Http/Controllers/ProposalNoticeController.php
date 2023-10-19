@@ -37,6 +37,7 @@ class ProposalNoticeController extends Controller
         ]);
         $user = auth()->user();
         if (!$user->isAdmin()) $user->proposals()
+            ->withTrashed()
             ->where('proposals.id', $request['proposal_id'])
             ->firstOrFail();
 

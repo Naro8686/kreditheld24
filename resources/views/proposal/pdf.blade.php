@@ -189,7 +189,7 @@
         <tr>
             <td>
                 <label>
-                    <input type="text" value="{{$proposal->familyStatus}}">
+                    <input type="text" value="{{trans("proposal.familyStatuses.$proposal->familyStatus")}}">
                     <i>{{__('Family status')}}</i>
                 </label>
             </td>

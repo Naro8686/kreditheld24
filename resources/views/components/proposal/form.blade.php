@@ -38,21 +38,6 @@
                                 :value="parent_category.id" x-text="parent_category.name"/>
                     </template>
                 </x-select>
-                <fieldset x-show="getCategory()?.category_key === 'home'"
-                          class="col-span-2 text-center flex justify-content-around mt-1"
-                          x-transition.scale.origin.bottom
-                          x-transition:leave.scale.origin.top>
-                    <div class="inline-flex flex-column items-center">
-                        <label>{{__('Expose')}}</label>
-                        <x-input id="expose" class="mt-1" :value="0" type="radio" name="hasObjectData"
-                                 x-model.number="formData.hasObjectData"/>
-                    </div>
-                    <div class="inline-flex flex-column items-center">
-                        <label>{{__('Object Data')}}</label>
-                        <x-input id="object-data" class="mt-1" :value="1" type="radio" name="hasObjectData"
-                                 x-model.number="formData.hasObjectData"/>
-                    </div>
-                </fieldset>
             </div>
             <div class="col-span-3 md:col-span-1">
                 <x-label class="text-sm" for="applicantType" :value="__('Type')"/>
@@ -476,6 +461,21 @@
                                     <x-label class="mr-2" for="death" :value="__('Death')"/>
                                 </div>
                             </div>
+                            <fieldset x-show="getCategory()?.category_key === 'home'"
+                                      class="col-span-3 text-center flex justify-content-around mt-3 mb-3"
+                                      x-transition.scale.origin.bottom
+                                      x-transition:leave.scale.origin.top>
+                                <div class="inline-flex flex-column items-center">
+                                    <label>{{__('Expose')}}</label>
+                                    <x-input id="expose" class="mt-1" :value="0" type="radio" name="hasObjectData"
+                                             x-model.number="formData.hasObjectData"/>
+                                </div>
+                                <div class="inline-flex flex-column items-center">
+                                    <label>{{__('Object Data')}}</label>
+                                    <x-input id="object-data" class="mt-1" :value="1" type="radio" name="hasObjectData"
+                                             x-model.number="formData.hasObjectData"/>
+                                </div>
+                            </fieldset>
                         </div>
                         <div class="mt-3">
                             <x-label class="text-sm" :value="__('Upload file')"/>

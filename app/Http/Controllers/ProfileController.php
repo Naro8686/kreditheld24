@@ -21,7 +21,9 @@ class ProfileController extends Controller
 
     public function index()
     {
-        return view('profile.index');
+        $user = auth()->user();
+        $invoices = $user->proposals()->whereNotNull('invoice_file')->get();
+        return view('profile.index', compact('invoices'));
     }
 
     public function update(UserRequest $request)

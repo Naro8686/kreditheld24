@@ -335,18 +335,20 @@ class ProposalController extends Controller
         $proposal = auth()->user()->proposals()->withTrashed()->findOrfail($id);
         $archiveRouteName = 'proposal.archive';
         $draftRouteName = 'proposal.draft';
-        $isArchived = app('router')->getRoutes()->match(app('request')->create(url()->previous()))->getName() === $archiveRouteName;
+        $isArchived = app('router')
+                ->getRoutes()
+                ->match(app('request')->create(url()->previous()))
+                ->getName() === $archiveRouteName;
         $newProposal = $proposal->replicate();
         $newProposal->copyFiles();
         $newProposal->bonus = null;
         $newProposal->commission = null;
         $newProposal->number = null;
         $newProposal->status = Status::PENDING;
-        if (!$isArchived) {
-            $newProposal->deleted_at = now();
-        } else {
-            $newProposal->archived_at = $proposal->archived_at;
-        }
+
+        $newProposal->deleted_at = now();
+        $newProposal->archived_at = null;
+
         $newProposal->created_at = now();
         $newProposal->updated_at = now();
         $newProposal->pending_at = null;
@@ -354,7 +356,7 @@ class ProposalController extends Controller
         $newProposal->revision_at = null;
         $newProposal->denied_at = null;
         $newProposal->save();
-        $currentRouteName = $isArchived ? $archiveRouteName : $draftRouteName;
+        $currentRouteName = is_null($newProposal->deleted_at) ? $archiveRouteName : $draftRouteName;
         return redirect()->route($currentRouteName)->with('success', __('Duplicate created'));
     }
 }
