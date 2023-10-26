@@ -3,9 +3,9 @@
 <div class="p-6 bg-gray-300 border-b border-gray-200">
     <form {!! $attributes !!}
           action="{{$action}}" id="proposal" method="{{Str::lower($method) === 'put' ? 'POST': $method}}"
-          enctype="multipart/form-data"
+          enctype="multipart/form-data" novalidate
           x-data="render({{$formData}}).setOtherName('{{trans("proposal.creditTypes.other")}}')"
-          @submit.prevent="submitData()">
+          @submit.prevent="submitData();">
         <span></span>
         @csrf
         @if(Str::lower($method) === 'put')
@@ -654,7 +654,7 @@
         <div class="btn-group-sm mt-3" role="group"
              x-init="save = parseInt('{{(int)!(isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0')}}') && (formData.myProposal && (formData.isPending || formData.draft))">
             <input x-show="formData.myProposal && formData.isPending" type="submit" :disabled="loading"
-                   @click="document.forms['proposal'].setAttribute('novalidate', true);formData.draft = 1"
+                   @click="formData.draft = 1"
                    id="draft" name="draft" class="btn btn-secondary"
                    value="{{__("Save")}}"
             >
@@ -662,7 +662,7 @@
                     class="btn btn-primary"></button>
             <button x-show="!formData.isApproved || parseInt('{{(int)request()->routeIs('admin.proposals.edit')}}')"
                     type="submit" :disabled="loading"
-                    @click="document.forms['proposal'].removeAttribute('novalidate');formData.draft = 0"
+                    @click="formData.draft = 0"
                     x-text="btnText || '{{__("Send")}}'"
                     class="btn btn-success"></button>
         </div>

@@ -66,7 +66,7 @@
                             @foreach($managers as $manager)
                                 <tr class="bg-white border-b">
                                     <td class="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.show',[$manager->id])}}"><i class="fas fa-eye"></i></a>
+{{--                                        <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.show',[$manager->id])}}"><i class="fas fa-eye"></i></a>--}}
                                         <a class="btn btn-sm btn-info mr-1" href="{{route('admin.managers.edit',[$manager->id])}}"><i class="fas fa-user-edit"></i></a>
                                         <button type='button' class='btn btn-sm btn-danger'
                                                 data-toggle='modal'

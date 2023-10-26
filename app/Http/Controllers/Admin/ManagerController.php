@@ -71,15 +71,14 @@ class ManagerController extends Controller
 
     public function show($id)
     {
-        $manager = User::findOrFail($id);
-        $invoices = $manager->proposals()->whereNotNull('invoice_file')->get();
-        return view('admin.managers.show', compact('manager', 'invoices'));
+        return redirect()->route('admin.managers.edit', ['id' => $id]);
     }
 
     public function edit($id)
     {
         $manager = User::findOrFail($id);
-        return view('admin.managers.edit', compact('manager'));
+        $invoices = $manager->proposals()->whereNotNull('invoice_file')->get();
+        return view('admin.managers.edit', compact('manager', 'invoices'));
     }
 
     public function update(UserRequest $request, $id)

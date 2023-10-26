@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">{{__('Edit')}}</h1>
+    @include('admin.managers.statistics')
+    <h1 class="h3 mt-4 mb-4 text-gray-800">{{__('Edit')}}</h1>
     <form action="{{route('admin.managers.update',[$manager->id])}}" id="profile"
           method="POST" enctype="multipart/form-data"
           x-data="{user:{{ Illuminate\Support\Js::from($manager) }}}">
