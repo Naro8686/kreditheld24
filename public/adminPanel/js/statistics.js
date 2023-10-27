@@ -15,7 +15,7 @@ let loader = $(`<div style="
                 "></div>`);
 
 const MAX_DATE = formatDate(new Date());
-const MIN_DATE = formatDate(subtractYears(new Date(),1));
+const MIN_DATE = formatDate(subtractYears(new Date(), 1));
 // canvas
 var purchasesChart = document.getElementById("purchasesChart");
 var ordersContainer = document.getElementById("orders");
@@ -125,6 +125,7 @@ var purchases = chart(purchasesChart, purchasesChartConfig);
 function ajax_charts(data = {}) {
     let src = document.getElementById("statistics")?.src;
     let manager_id = src?.split("manager_id=")[1] ?? null;
+    data.calendar = !!$(".flatpickr-input").length;
     if (manager_id) data.manager_id = manager_id;
     const request = $.ajax({
         url: "/statistics",
