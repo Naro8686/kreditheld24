@@ -153,7 +153,7 @@ class User extends Authenticatable implements HasLocalePreference
                 break;
             }
         }
-        return min($totalSum / $targetSum * 100, 100);
+        return round($totalSum / $targetSum * 100, 2);
     }
 
     /**
