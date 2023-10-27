@@ -45,7 +45,7 @@ class DashboardController extends Controller
             $unit = $request->get('unit', 'hour');
             $manager_id = $request->get('manager_id');
             list($min, $max) = array_pad($request->get('dates',
-                [Carbon::now()->subDay()->format($format), Carbon::now()->format($format)]),
+                [Carbon::now()->subYear()->format($format), Carbon::now()->format($format)]),
                 2,
                 Carbon::now()->format($format));
             $from = Carbon::createFromFormat($format, $min)->toDateString();
@@ -121,7 +121,7 @@ class DashboardController extends Controller
             }
 
             if (optional($user)->isManager()) {
-                $orders->targetPercent = $user->targetPercent($orders->sum);
+                $orders->targetPercent = $user->targetPercent();
             }
             return response()->json([
                 'purchases' => StatisticResource::collection($purchases->get()),
