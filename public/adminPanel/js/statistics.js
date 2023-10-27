@@ -183,8 +183,8 @@ function ordersEdit(ordersContainer, data) {
     let total = parseInt(data.total);
     let completed = parseInt(data.completed);
     let denied = parseInt(data.denied);
-    let sum = number_format(data.sum, 2,',','.');
-    let percent = data.targetPercent ? data.targetPercent : (((completed / total) * 100));
+    let sum = number_format(data.sum, 2, ',', '.');
+    let percent = data.targetPercent ? data.targetPercent : ((completed / total) * 100);
     percent = isNaN(percent) ? 0 : number_format(percent, 2);
     parent.find('#total').text(total);
     parent.find('#completed').text(completed);
@@ -200,12 +200,13 @@ function ordersEdit(ordersContainer, data) {
         "aria-valuenow": percent
     });
 }
+
 function otherEdit(ordersContainer, data) {
     let parent = $(ordersContainer);
-    let sum_all = number_format(data.sum_all, 2,',','.');
-    let sum_approved_all = number_format(data.sum_approved_all, 2,',','.');
-    let sum_approved_year = number_format(data.sum_approved_year, 2,',','.');
-    let sum_year = number_format(data.sum_year, 2,',','.');
+    let sum_all = number_format(data.sum_all, 2, ',', '.');
+    let sum_approved_all = number_format(data.sum_approved_all, 2, ',', '.');
+    let sum_approved_year = number_format(data.sum_approved_year, 2, ',', '.');
+    let sum_year = number_format(data.sum_year, 2, ',', '.');
     parent.find('#sum_all').text(`€${sum_all}`);
     parent.find('#sum_approved_all').text(`€${sum_approved_all}`);
     parent.find('#sum_approved_year').text(`€${sum_approved_year}`);
@@ -214,25 +215,29 @@ function otherEdit(ordersContainer, data) {
 
 $(function () {
     ajax_charts();
-    let dateRange = $(".flatpickr-input").flatpickr({
-        mode: "range",
-        dateFormat: "Y-m-d",
-        defaultDate: [MIN_DATE, MAX_DATE],
-        maxDate: "today",
-        allowInput: true,
-        onChange: function (selectedDates) {
-            if (selectedDates.length === 2) {
-                dateRange.selectedDates[0] = selectedDates[0];
-                dateRange.selectedDates[1] = selectedDates[1];
-                let selectUnit = $('select#unit');
-                let unit = selectUnit.length ? selectUnit.val().split(":")[0] : 'hour';
-                ajax_charts({
-                    dates: [formatDate(selectedDates[0]), formatDate(selectedDates[1])],
-                    unit: unit
-                });
+    let flatpickrInput = $(".flatpickr-input");
+    if (flatpickrInput.length) {
+        let dateRange = flatpickrInput.flatpickr({
+            mode: "range",
+            dateFormat: "Y-m-d",
+            defaultDate: [MIN_DATE, MAX_DATE],
+            maxDate: "today",
+            allowInput: true,
+            onChange: function (selectedDates) {
+                if (selectedDates.length === 2) {
+                    dateRange.selectedDates[0] = selectedDates[0];
+                    dateRange.selectedDates[1] = selectedDates[1];
+                    let selectUnit = $('select#unit');
+                    let unit = selectUnit.length ? selectUnit.val().split(":")[0] : 'hour';
+                    ajax_charts({
+                        dates: [formatDate(selectedDates[0]), formatDate(selectedDates[1])],
+                        unit: unit
+                    });
+                }
             }
-        }
-    });
+        });
+    }
+
     $('select#unit').on('change', function (e) {
         let unit = $(this).val().split(":")[0];
         let format = (purchases.options.scales.xAxes[0].time.tooltipFormats

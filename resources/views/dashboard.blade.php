@@ -1,5 +1,18 @@
 @extends('layouts.admin')
+@push('css')
+    <link href="{{asset('adminPanel/css/flatpickr.min.css')}}" rel="stylesheet">
+    <style>
+        .flatpickr-input {
+            min-width: 195px;
+        }
 
+        @media (max-width: 375px) {
+            .flatpickr-input {
+                min-width: 100%;
+            }
+        }
+    </style>
+@endpush
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{__('Dashboard')}}</h1>
@@ -80,5 +93,6 @@
     </div>
 @endsection
 @push('js')
+    <script src="{{asset('adminPanel/js/flatpickr.js')}}"></script>
     <script src="{{asset('adminPanel/js/statistics.js')}}"></script>
 @endpush
