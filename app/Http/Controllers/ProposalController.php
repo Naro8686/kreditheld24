@@ -6,6 +6,7 @@ use App\Constants\Status;
 use App\Http\Requests\ProposalRequest;
 use App\Models\Proposal;
 use App\Models\Role;
+use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,11 +41,17 @@ class ProposalController extends Controller
     {
         try {
             if (request()->ajax()) return $this->ajaxDataTable(auth()->user()->proposals()->whereNull('archived_at')->with(['user', 'category', 'category.parent'])->select('proposals.*'));
+            $startOfYear = now()->startOfYear();
             $user = auth()->user();
-            $successful = $user->proposals()->where('proposals.status', Status::APPROVED);
+            $successful = $user
+                ->proposals()
+                ->where([
+                    ['proposals.status', Status::APPROVED],
+                    ['proposals.created_at', '>=', $startOfYear]
+                ]);
             $totalSum = Proposal::moneyFormat($successful->sum('proposals.creditAmount'));
-            $targetPercent = $user->targetPercent();
-            $monthSum = Proposal::moneyFormat($successful->where('proposals.created_at', '>=', now()->subMonth())->sum('proposals.creditAmount'));
+            $targetPercent = $user->targetPercent($startOfYear->toDateString());
+            $monthSum = Proposal::moneyFormat($successful->where('proposals.created_at', '>=', $startOfYear > now()->subMonth() ? $startOfYear : now()->subMonth())->sum('proposals.creditAmount'));
             return view('proposal.index', compact('totalSum', 'monthSum', 'targetPercent'));
         } catch (Throwable $e) {
         }

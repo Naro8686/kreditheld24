@@ -47,8 +47,8 @@ class DashboardController extends Controller
             $manager_id = $request->get('manager_id');
             list($min, $max) = array_pad($request->get('dates', [
                 Carbon::now()->startOfYear()->format($format),
-                Carbon::now()->format($format)
-            ]), 2, Carbon::now()->format($format));
+                $calendar ? Carbon::now()->format($format) : Carbon::now()->endOfYear()->format($format)
+            ]), 2, $calendar ? Carbon::now()->format($format) : Carbon::now()->endOfYear()->format($format));
             $from = Carbon::createFromFormat($format, $min)->toDateString();
             $to = Carbon::createFromFormat($format, $max)->toDateString();
             if (!in_array($unit, ['hour', 'day', 'week', 'month', 'year'])) {
@@ -97,7 +97,7 @@ class DashboardController extends Controller
             $purchases = $purchases->select([
                 DB::raw("IFNULL(SUM(`proposals`.`creditAmount`),0) AS 'sum'"),
                 DB::raw("DATE_FORMAT(`proposals`.`created_at`, '$sqlFormat') AS 'unit'")
-            ])->where('status', $approved)->when($calendar, function ($query) use ($from, $to) {
+            ])->where('status', $approved)->when(true, function ($query) use ($from, $to) {
                 return $query
                     ->whereDate('created_at', '>=', $from)
                     ->whereDate('created_at', '<=', $to);
@@ -108,7 +108,7 @@ class DashboardController extends Controller
                 DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN 1 ELSE 0 END),0) AS 'completed'"),
                 DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$denied}' THEN 1 ELSE 0 END),0) AS 'denied'"),
                 DB::raw("IFNULL(SUM(CASE WHEN `proposals`.`status` = '{$approved}' THEN `proposals`.`creditAmount` ELSE 0 END),0) AS 'sum'")
-            ])->when($calendar, function ($query) use ($from, $to) {
+            ])->when(true, function ($query) use ($from, $to) {
                 return $query
                     ->whereDate('created_at', '>=', $from)
                     ->whereDate('created_at', '<=', $to);

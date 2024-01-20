@@ -184,7 +184,7 @@ function ordersEdit(ordersContainer, data) {
     let completed = parseInt(data.completed);
     let denied = parseInt(data.denied);
     let sum = number_format(data.sum, 2, ',', '.');
-    let percent = data.targetPercent ? data.targetPercent : ((completed / total) * 100);
+    let percent = data.hasOwnProperty('targetPercent') ? data.targetPercent : ((completed / total) * 100);
     percent = isNaN(percent) ? 0 : number_format(percent, 2);
     parent.find('#total').text(total);
     parent.find('#completed').text(completed);
