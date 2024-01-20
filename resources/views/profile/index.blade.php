@@ -289,7 +289,7 @@
                             @enderror
                         </div>
                         <div class="mt-3">
-                            <x-label class="font-bold text-lg " for="tel" :value="__('Phone Number')"/>
+                            <x-label class="font-bold text-lg " for="phone" :value="__('Phone Number')"/>
                             <x-input id="phone" class="block mt-1 w-full"
                                      type="tel" name="phone"
                                      :value="old('phone',auth()->user()->phone)"

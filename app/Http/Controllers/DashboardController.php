@@ -45,13 +45,12 @@ class DashboardController extends Controller
             $calendar = $request->boolean('calendar', false);
             $unit = $request->get('unit', 'hour');
             $manager_id = $request->get('manager_id');
-            list($min, $max) = array_pad($request->get('dates',
-                [Carbon::now()->subYear()->format($format), Carbon::now()->format($format)]),
-                2,
-                Carbon::now()->format($format));
+            list($min, $max) = array_pad($request->get('dates', [
+                Carbon::now()->startOfYear()->format($format),
+                Carbon::now()->format($format)
+            ]), 2, Carbon::now()->format($format));
             $from = Carbon::createFromFormat($format, $min)->toDateString();
             $to = Carbon::createFromFormat($format, $max)->toDateString();
-
             if (!in_array($unit, ['hour', 'day', 'week', 'month', 'year'])) {
                 throw new Exception('Wrong unit format');
             }
@@ -65,7 +64,7 @@ class DashboardController extends Controller
             $auth_user = $request->user();
             $approved = Status::APPROVED;
             $denied = Status::DENIED;
-            $year = now()->subYear()->toDateString();
+            $year = Carbon::now()->startOfYear()->toDateString();
             if ($auth_user->isAdmin()) {
                 $purchases = Proposal::when($manager_id, function (Builder $query, $manager_id) {
                     $query->where('user_id', $manager_id);
@@ -122,7 +121,7 @@ class DashboardController extends Controller
             }
 
             if (optional($user)->isManager()) {
-                $orders->targetPercent = $user->targetPercent();
+                $orders->targetPercent = $user->targetPercent($year);
             }
             return response()->json([
                 'purchases' => StatisticResource::collection($purchases->get()),

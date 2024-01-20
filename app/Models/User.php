@@ -139,15 +139,19 @@ class User extends Authenticatable implements HasLocalePreference
         return trim("{$this->name} {$this->surname}");
     }
 
+
     /**
-     * @param $sum
-     * @return int|float
+     * @param $date
+     * @return float
      */
-    public function targetPercent($sum = null): float|int
+    public function targetPercent($date = null): float
     {
-        $totalSum = is_null($sum) ? $this->proposals()
+        $totalSum = $this->proposals()
             ->where('proposals.status', Status::APPROVED)
-            ->sum('proposals.creditAmount') : $sum;
+            ->when($date, function ($query, $date) {
+                $query->where('proposals.created_at', '>=', $date);
+            })
+            ->sum('proposals.creditAmount');
         foreach ([$this->target] as $targetSum) {
             if ($totalSum <= $targetSum) {
                 break;

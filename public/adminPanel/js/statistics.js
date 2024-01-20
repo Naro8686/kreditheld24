@@ -14,8 +14,8 @@ let loader = $(`<div style="
                 left: 0;
                 "></div>`);
 
+const MIN_DATE = formatDate(new Date(new Date().getFullYear(), 0, 1));
 const MAX_DATE = formatDate(new Date());
-const MIN_DATE = formatDate(subtractYears(new Date(), 1));
 // canvas
 var purchasesChart = document.getElementById("purchasesChart");
 var ordersContainer = document.getElementById("orders");
@@ -296,6 +296,12 @@ function formatDate(date, separator = '-') {
 
 function subtractYears(date, years) {
     date.setFullYear(date.getFullYear() - years);
+
+    return date;
+}
+
+function addYears(date, years) {
+    date.setFullYear(date.getFullYear() + years);
 
     return date;
 }

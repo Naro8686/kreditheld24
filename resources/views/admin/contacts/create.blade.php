@@ -35,7 +35,7 @@
             @enderror
         </div>
         <div class="mt-3">
-            <x-label class="font-bold text-lg " for="tel" :value="__('Contact Telefonnummer')"/>
+            <x-label class="font-bold text-lg " for="phone" :value="__('Contact Telefonnummer')"/>
             <x-input id="phone" class="block mt-1 w-full"
                      type="tel" name="phone"
                      :value="old('phone')"
