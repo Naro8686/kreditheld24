@@ -18,8 +18,8 @@
     <!-- Custom fonts for this template-->
     <link href="{{asset('adminPanel/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
     <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="{{asset('adminPanel/css/sb-admin-2.min.css')}}" rel="stylesheet">
@@ -55,7 +55,7 @@
                 <span>{{__('Dashboard')}}</span></a>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-            @class(['nav-item','active' => request()->routeIs('proposal.*')])>
+                @class(['nav-item','active' => request()->routeIs('proposal.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('proposal.*')])
                href="#" data-toggle="collapse" aria-expanded="true"
                x-bind:data-target="'#' + collapse_id"
@@ -64,9 +64,9 @@
                 <span>{{__('My Proposals')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
-                @class(['collapse','show' => request()->routeIs('proposal.*')])>
+                    @class(['collapse','show' => request()->routeIs('proposal.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a @class(['collapse-item','active' => request()->routeIs('proposal.index')]) href="{{route('proposal.index')}}">{{__('All')}}</a>
+                    <a @class(['collapse-item','active' => request()->routeIs('proposal.index')]) href="{{route('proposal.index')}}">{{__('Alle Proposal')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.draft')]) href="{{route('proposal.draft')}}">{{__('Draft')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.archive')]) href="{{route('proposal.archive')}}">{{__('Archive')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('proposal.create')]) target="_blank"
@@ -85,7 +85,7 @@
                 <span>{{__('Formulas')}}</span></a>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-            @class(['nav-item','active' => request()->routeIs('email-templates.*')])>
+                @class(['nav-item','active' => request()->routeIs('email-templates.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('email-templates.*')])
                href="#" data-toggle="collapse" aria-expanded="true"
                x-bind:data-target="'#' + collapse_id"
@@ -94,7 +94,7 @@
                 <span>{{__('Templates Email')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
-                @class(['collapse','show' => request()->routeIs('email-templates.*')])>
+                    @class(['collapse','show' => request()->routeIs('email-templates.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->routeIs('email-templates.index')]) href="{{route('email-templates.index')}}">{{__('All')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('email-templates.create')]) href="{{route('email-templates.create')}}">{{__('Create Email')}}</a>
@@ -111,7 +111,7 @@
                 <span>{{__('Managers')}}</span></a>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-            @class(['nav-item','active' => request()->routeIs('admin.proposals.*')])>
+                @class(['nav-item','active' => request()->routeIs('admin.proposals.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('admin.proposals.*')])
                href="#" data-toggle="collapse" aria-expanded="true"
                x-bind:data-target="'#' + collapse_id"
@@ -120,7 +120,7 @@
                 <span>{{__('All proposal')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
-                @class(['collapse','show' => request()->routeIs('admin.proposals.*')])>
+                    @class(['collapse','show' => request()->routeIs('admin.proposals.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->is('admin/proposals')]) href="{{route('admin.proposals.index')}}">{{__('Proposal')}}</a>
                     <a @class(['collapse-item','active' => request()->is('admin/proposals/archive')]) href="{{route('admin.proposals.archive')}}">{{__('Archive')}}</a>
@@ -128,7 +128,7 @@
             </div>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-            @class(['nav-item','active' => request()->routeIs('admin.email.*')])>
+                @class(['nav-item','active' => request()->routeIs('admin.email.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('admin.email.*')])
                href="#" data-toggle="collapse" aria-expanded="true"
                x-bind:data-target="'#' + collapse_id"
@@ -137,7 +137,7 @@
                 <span>{{__('Send message')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
-                @class(['collapse','show' => request()->routeIs('admin.email.*')])>
+                    @class(['collapse','show' => request()->routeIs('admin.email.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->is('admin/email/manager*')]) href="{{route('admin.email.index',['type'=>'manager'])}}">{{__('Manager')}}</a>
                     <a @class(['collapse-item','active' => request()->is('admin/email/client*')]) href="{{route('admin.email.index',['type'=>'client'])}}">{{__('Client')}}</a>
@@ -145,7 +145,7 @@
             </div>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-            @class(['nav-item','active' => request()->routeIs('admin.contacts.*')])>
+                @class(['nav-item','active' => request()->routeIs('admin.contacts.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('admin.contacts.*')])
                href="#" data-toggle="collapse" aria-expanded="true"
                x-bind:data-target="'#' + collapse_id"
@@ -154,7 +154,7 @@
                 <span>{{__('Contacts')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
-                @class(['collapse','show' => request()->routeIs('admin.contacts.*')])>
+                    @class(['collapse','show' => request()->routeIs('admin.contacts.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->routeIs('admin.contacts.index')]) href="{{route('admin.contacts.index')}}">{{__('All')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('admin.contacts.create')]) href="{{route('admin.contacts.create')}}">{{__('Add')}}</a>
@@ -162,7 +162,7 @@
             </div>
         </li>
         <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-            @class(['nav-item','active' => request()->routeIs('admin.formulas.*')])>
+                @class(['nav-item','active' => request()->routeIs('admin.formulas.*')])>
             <a @class(['nav-link','collapsed' => !request()->routeIs('admin.formulas.*')])
                href="#" data-toggle="collapse" aria-expanded="true"
                x-bind:data-target="'#' + collapse_id"
@@ -171,7 +171,7 @@
                 <span>{{__('Formulas')}}</span>
             </a>
             <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id" data-parent="#accordionSidebar"
-                @class(['collapse','show' => request()->routeIs('admin.formulas.*')])>
+                    @class(['collapse','show' => request()->routeIs('admin.formulas.*')])>
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.index')]) href="{{route('admin.formulas.index')}}">{{__('All')}}</a>
                     <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.create')]) href="{{route('admin.formulas.create')}}">{{__('Add')}}</a>
@@ -196,8 +196,8 @@
         <ul class="navbar-nav" id="accordionSidebarFooter">
             @if($contact = \App\Models\Contact::orderByDesc('id')->first())
                 <li x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading') }"
-                    @class(['nav-item','contact','active' => true])>
-                    <a @class(['nav-link','collapsed' => false])
+                        @class(['nav-item','contact','active' => request()->routeIs('admin.formulas.*')])>
+                    <a @class(['nav-link','collapsed' => !request()->routeIs('admin.formulas.*')])
                        href="#" data-toggle="collapse" aria-expanded="true"
                        x-bind:data-target="'#' + collapse_id"
                        x-bind:aria-controls="collapse_id">
@@ -205,7 +205,7 @@
                     </a>
                     <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id"
                          data-parent="#accordionSidebarFooter"
-                        @class(['collapse','multi-collapse','contact-block','show' => false])>
+                            @class(['collapse','multi-collapse','contact-block','show' => false])>
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item"
                                href="javascript:void(0)">
@@ -227,7 +227,7 @@
                 </li>
             @endif
             <li x-show="show" x-data="{ collapse_id: $id('collapse'),heading_id:$id('heading'),show:false }"
-                @class(['nav-item','formulas','active' => true])>
+                    @class(['nav-item','formulas','active' => true])>
                 <a @class(['nav-link','collapsed' => false])
                    href="#" data-toggle="collapse" aria-expanded="true"
                    x-bind:data-target="'#' + collapse_id"
@@ -236,7 +236,7 @@
                 </a>
                 <div x-bind:id="collapse_id" x-bind:aria-labelledby="heading_id"
                      data-parent="#accordionSidebarFooter"
-                    @class(['collapse','multi-collapse','formulas-block','show' => false])>
+                        @class(['collapse','multi-collapse','formulas-block','show' => false])>
                     <div class="bg-white py-2 collapse-inner rounded">
                         @foreach(\App\Models\Formula::orderByDesc('id')->limit(5)->get() as $formula)
                             <a x-init="if(!show) show = true"
@@ -276,7 +276,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span
-                                class="mr-2 d-none d-lg-inline text-gray-600 small">{{optional(auth()->user())->name}}</span>
+                                    class="mr-2 d-none d-lg-inline text-gray-600 small">{{optional(auth()->user())->name}}</span>
                             <img class="img-profile rounded-circle" alt=""
                                  src="{{asset('adminPanel/img/undraw_profile.svg')}}">
                         </a>
@@ -347,7 +347,7 @@
                 </button>
             </div>
             <div
-                class="modal-body">{{__('Select "Logout" below if you are ready to end your current session.')}}</div>
+                    class="modal-body">{{__('Select "Logout" below if you are ready to end your current session.')}}</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">{{__('Cancel')}}</button>
                 <form method="POST" action="{{ route('logout') }}">
