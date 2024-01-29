@@ -42,6 +42,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'file-manager' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/media'),
+            'url' => env('APP_URL').'/storage/media',
+            'visibility' => 'public',
+        ],
+
         'tmp' => [
             'driver' => 'local',
             'root' => storage_path('app/tmp'),

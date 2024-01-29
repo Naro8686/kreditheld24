@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\FileManagerController;
+use App\Http\Controllers\Admin\FormulaController;
 use App\Http\Controllers\Admin\ManagerController;
 use App\Http\Controllers\Admin\ProposalController as AdminProposalController;
 use App\Http\Controllers\Admin\SendEmailController;
 use App\Http\Controllers\DashboardController;
 use App\Models\Role;
+use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['auth', 'role:' . Role::ADMIN])->prefix('admin')->name('admin.')->group(function () {
@@ -40,5 +43,6 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])->prefix('admin')->name('admin
             ->name('send');
     });
     Route::resource('contacts', ContactController::class);
-    Route::resource('formulas', \App\Http\Controllers\Admin\FormulaController::class);
+    Route::resource('formulas', FormulaController::class);
+    Route::get('/file-manager', [FileManagerController::class, 'index'])->name('file-manager.index');
 });

@@ -42,7 +42,7 @@
             <div class="sidebar-brand-icon">
                 <i class="fas fa-coins"></i>
             </div>
-            <div class="sidebar-brand-text mx-3">{{ __('Credit') }}</div>
+            <div class="sidebar-brand-text mx-3">{{ config('app.name', __('Credit')) }}</div>
         </a>
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
@@ -177,6 +177,12 @@
                     <a @class(['collapse-item','active' => request()->routeIs('admin.formulas.create')]) href="{{route('admin.formulas.create')}}">{{__('Add')}}</a>
                 </div>
             </div>
+        </li>
+        <li @class(['nav-item','active' => request()->routeIs('admin.file-manager.*')])>
+            <a class="nav-link" href="{{route('admin.file-manager.index')}}">
+                <i class="fas fa-fw fa-file-alt"></i>
+                <span>Файловый менеджер</span>
+            </a>
         </li>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
