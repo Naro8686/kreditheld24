@@ -3,7 +3,7 @@
 use App\Constants\Status;
 
 return [
-    Status::PENDING => 'Ausstehend',
+    Status::PENDING => 'Bearbeitung',
     Status::DENIED => 'Abgelehnt',
     Status::REVISION => 'Überarbeitung',
     Status::APPROVED => 'Genehmigt',

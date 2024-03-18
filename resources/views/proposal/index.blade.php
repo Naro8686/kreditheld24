@@ -1,59 +1,90 @@
 @extends('layouts.admin')
+
+
 @section('content')
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Proposals') }}
-    </h2>
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto">
-            <div id="statistics" class="flex flex-wrap -mx-2">
-                <div class="sm:w-1/3 w-full px-2 mb-2">
-                    <div
-                        class="p-3 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                        <h2 class="mb-1 font-bold tracking-tight text-gray-900 dark:text-white">
-                            {{__('TOTAL VOLUME (MONTH)')}}
-                        </h2>
-                        <p class="font-normal text-gray-700 dark:text-gray-400">{{\App\Models\Proposal::CURRENCY.$monthSum}}</p>
-                    </div>
-                </div>
-                <div class="sm:w-1/3 w-full px-2 mb-2">
-                    <div
-                        class="p-3 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                        <h2 class="mb-1 font-bold tracking-tight text-gray-900 dark:text-white">
-                            {{__('TOTAL VOLUME (YEAR)')}}</h2>
-                        <p class="font-normal text-gray-700 dark:text-gray-400">{{\App\Models\Proposal::CURRENCY.$totalSum}}</p>
-                    </div>
-                </div>
-                <div class="sm:w-1/3 w-full px-2">
-                    <div
-                        class="p-3 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                        <div class="mb-4 font-bold tracking-tight text-gray-900 dark:text-white">
-                            <div class="flex justify-between mb-1">
-                                <h2 class="font-bold tracking-tight text-gray-900 dark:text-white">{{__('Target')}}</h2>
-                                <span
-                                    class="text-sm font-medium text-blue-700 dark:text-white">{{$targetPercent}}%</span>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Meine Vorgänge - Alle</h1>
+    </div>
+    @if(auth()->user()->isManager() || auth()->user()->isAdmin())
+        <div id="orders" class="row">
+            <div class="col-xl-4 col-md-4 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    {{__('Amount of approved applications')}} {{__('In a year')}}
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_year">0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                             </div>
                         </div>
-                        <div class="font-normal text-gray-700 dark:text-gray-400">
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{$targetPercent}}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-4 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    {{__('Sum of all applications')}} {{__('In a year')}}
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_year">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-4 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    {{__('Target')}}
+                                </div>
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="rate">0%
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="progress progress-sm mr-2">
+                                            <div class="progress-bar bg-info" role="progressbar"
+                                                 style="width: 0" aria-valuenow="0" aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-percentage fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    @endif
+    <a class="btn btn-lg btn-success btn-block" href="{{ route('proposal.create') }}"
+       target="_blank">{{ __('Create') }}</a>
+    <div class="py-6">
+        @includeWhen(auth()->user()->isAdmin(), "admin.includes.proposal_table")
+        @includeWhen(auth()->user()->isManager(), "manager.includes.proposal_table")
     </div>
-    @include("manager.includes.proposal_table")
 @endsection
-
-@push('css')
-    <style>
-        #statistics > div > div {
-            min-height: 80px;
-        }
-
-        .h2, h2 {
-            font-size: inherit;
-        }
-    </style>
+@push('js')
+    <script src="{{asset('adminPanel/js/flatpickr.js')}}"></script>
+    <script src="{{asset('adminPanel/js/statistics.js')}}"></script>
 @endpush
+
+
+
+

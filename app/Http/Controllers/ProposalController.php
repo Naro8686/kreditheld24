@@ -172,7 +172,7 @@ class ProposalController extends Controller
                 return session([$key => $request->all()]);
             }
             $proposal = new Proposal(session($key, []));
-            $fileName = 'Selbstauskunft.pdf';
+            $fileName = "Selbstauskunft_{$proposal->lastName}.pdf";
             $html = view('proposal.pdf', compact('proposal'))->render();
             $dompdf = new Dompdf(['defaultFont' => 'DejaVu Serif']);
             $dompdf->loadHtml($html);
@@ -243,10 +243,10 @@ class ProposalController extends Controller
                     $html .= "|<span class='text-sm'>$category</span>";
                 }
                 $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
-                                    " . __('Show') . "
+                                    <i class='far fa-edit'></i>
                                 </a>";
                 $html .= "|<a href='$linkDuplicate'
-                                   class='text-sm text-primary'>" . __('Duplicate') . "
+                                   class='text-sm text-primary'><i class='fa fa-copy'></i>
                          </a>";
                 if (!$archived) {
 
@@ -254,20 +254,20 @@ class ProposalController extends Controller
                                         data-method='PUT'
                                         data-title='" . __('Send to archive') . "'
                                         data-target='#confirmModal'
-                                        data-url='$sendToArchive'>" . __('Archive the project') . "
+                                        data-url='$sendToArchive'><i class='fa fa-archive'></i>
                                 </a>";
                 }
 
                 if (!is_null($linkInvoice)) {
                     $html .= "|<a href='$linkInvoice' target='_blank'
                                    class='text-sm text-success'>
-                                   " . __('Invoice') . "</a>";
+                                   <i class='fas fa-fw fa-file-invoice'></i></a>";
                 }
 
                 if ($proposal->trashed()) {
                     $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
                                         data-target='#confirmModal'
-                                        data-url='$linkDelete'>" . __('Delete') . "
+                                        data-url='$linkDelete'><i class='fa fa-trash'></i>
                                 </a>";
                 }
 

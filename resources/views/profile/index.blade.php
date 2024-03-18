@@ -123,88 +123,68 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 col-md-12 mb-4">
-                <div class="row">
-                    <h6 class="col-md-12 mb-3">{{__('Amount of approved applications')}}</h6>
-                    <div class="col-xl-6 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            {{__('For all time')}}
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_all">0
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
+		
+			
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    {{__('Application volume current year')}}
                                 </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_year">0</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            {{__('In a year')}}
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_year">0
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 col-md-12 mb-4">
-                <div class="row">
-                    <h6 class="col-md-12 mb-3">{{__('Sum of all applications')}}</h6>
-                    <div class="col-xl-6 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            {{__('For all time')}}
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_all">0</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
+
+		
+			
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    {{__('Closing volume current year')}}
                                 </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_year">0</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            {{__('In a year')}}
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_year">0</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+			
+		<div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    {{__('Closing volume of the previous year')}}
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="sum_approved_all">0</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
+</div>
+
         <ul class="list-group mb-3">
+				<h6 class="col-md-12 mb-3">{{__('Commission settlement')}}</h6>
             @php
                 $files = [];
                 if (isset($invoices)) $files = $invoices->pluck('invoice_file')->map(function ($file) {

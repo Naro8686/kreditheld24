@@ -199,6 +199,7 @@ class Proposal extends Model
                 }
             }
         });
+		
         static::creating(function (Proposal $model) {
             if (!$model->trashed()) {
                 $model->pending_at = now();
@@ -257,9 +258,10 @@ class Proposal extends Model
                 }
                 $data = ['url' => route('admin.proposals.edit', [$model->id])];
                 $admin->sendEmail($text, $data);
-            }
+            }   
+
         });
-    }
+			}
 
     public function deadlineStatus(): string
     {

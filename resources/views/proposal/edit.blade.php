@@ -47,7 +47,7 @@
                 <h2 class="h4 text-gray-800 mt-4">{{__("View file")}}</h2>
                 <div class="iframe-container mt-1 border-2 border-gray-300 rounded">
                     <iframe class="responsive-iframe" name="file_view">
-                        <p>iframes are not supported by your browser.</p>
+                        <p>iframes werden von Ihrem Browser nicht unterstützt.</p>
                     </iframe>
                 </div>
             </div>

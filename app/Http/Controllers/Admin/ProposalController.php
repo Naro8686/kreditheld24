@@ -77,25 +77,23 @@ class ProposalController extends Controller
                         $html .= "|<span class='text-sm'>$category</span>";
                     }
                     $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
-                                    " . __('Show') . "
-                                </a>";
+					<i class='far fa-edit'></i>
+					</a>";
                     if (!is_null($linkInvoice)) {
                         $html .= "|<a href='$linkInvoice' target='_blank'
-                                   class='text-sm text-success'>
-                                   " . __('Invoice') . "</a>";
+                                   class='text-sm text-success'><i class='fas fa-fw fa-file-invoice'></i></a>";
                     }
                     if (!$archived) {
                         $html .= "|<a href='#' type='button' class='text-sm text-primary' data-toggle='modal'
                                         data-method='PUT'
                                         data-title='" . __('Send to archive') . "'
                                         data-target='#confirmModal'
-                                        data-url='$sendToArchive'>" . __('Archive the project') . "
+                                        data-url='$sendToArchive'><i class='fa fa-archive'></i>
                                 </a>";
                     }
                     $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
                                         data-target='#confirmModal'
-                                        data-url='$linkDelete'>" . __('Delete') . "
-                                </a>";
+                                        data-url='$linkDelete'><i class='fa fa-trash'></i></a>";
                     $html .= "</div>";
                     return "<span class='row-title d-flex'>$proposal->firstName $proposal->lastName</span>" . $html;
                 })
@@ -220,25 +218,23 @@ class ProposalController extends Controller
                         $html .= "|<span class='text-sm'>$category</span>";
                     }
                     $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
-                                    " . __('Show') . "
+                                    <i class='far fa-edit'></i>
                                 </a>";
                     if (!is_null($linkInvoice)) {
                         $html .= "|<a href='$linkInvoice' target='_blank'
-                                   class='text-sm text-success'>
-                                   " . __('Invoice') . "</a>";
+                                   class='text-sm text-success'><i class='fas fa-fw fa-file-invoice'></i></a>";
                     }
                     if (!$archived) {
                         $html .= "|<a href='#' type='button' class='text-sm text-primary' data-toggle='modal'
                                         data-method='PUT'
                                         data-title='" . __('Send to archive') . "'
                                         data-target='#confirmModal'
-                                        data-url='$sendToArchive'>" . __('Archive the project') . "
+                                        data-url='$sendToArchive'><i class='fa fa-archive'></i>
                                 </a>";
                     }
                     $html .= "|<a href='#' type='button' class='text-sm text-danger' data-toggle='modal'
                                         data-target='#confirmModal'
-                                        data-url='$linkDelete'>" . __('Delete') . "
-                                </a>";
+                                        data-url='$linkDelete'><i class='fa fa-trash'></i></a>";
                     $html .= "</div>";
                     return "<span class='row-title d-flex'>$proposal->firstName $proposal->lastName</span>" . $html;
                 })

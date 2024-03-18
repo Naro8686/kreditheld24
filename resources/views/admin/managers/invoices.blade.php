@@ -1,4 +1,5 @@
 <ul class="list-group">
+<h6 class="col-md-12 mb-3">{{__('Commission settlement')}}</h6>
     @php
         $files = [];
         if (isset($invoices)) $files = $invoices->pluck('invoice_file')->map(function ($file) {

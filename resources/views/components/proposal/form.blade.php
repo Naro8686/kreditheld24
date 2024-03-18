@@ -528,7 +528,7 @@
                 <div class="card-header">
                     <a data-toggle="collapse" data-parent="#accordionProposal" x-bind:href="'#'+collapse_id"
                        class="card-link collapsed capitalize" aria-expanded="false">
-                        {{__('Object Data')}}
+                        {{__('Exposé, object data capture')}}
                     </a>
                 </div>
                 <div x-bind:id="collapse_id" class="collapse">

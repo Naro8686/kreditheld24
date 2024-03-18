@@ -485,7 +485,7 @@
     <table>
         <thead>
         <tr>
-            <th colspan="2">{{ __('Object Data') }}</th>
+            <th colspan="2">{{ __('Exposé, object data capture') }}</th>
         </tr>
         </thead>
         <tbody>
