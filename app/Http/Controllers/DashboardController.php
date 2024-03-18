@@ -146,7 +146,7 @@ class DashboardController extends Controller
     {
         $path = $request->get('path');
         if (!is_null($path) && $data = $this->read($path)) {
-            $pathToFile = public_path("storage/{$data['meta']['path']}");
+            $pathToFile = $data['path'];
             $headers = $data['headers'];
             return response()->file($pathToFile, $headers);
         }
@@ -157,7 +157,7 @@ class DashboardController extends Controller
     {
         $path = $request->get('path');
         if (!is_null($path) && $data = $this->read($path)) {
-            $pathToFile = public_path("storage/{$data['meta']['path']}");
+            $pathToFile = $data['path'];
             $headers = $data['headers'];
             $name = str_replace(Proposal::UPLOAD_FILE_PATH . '/', '', $path);
             return response()->download($pathToFile, $name, $headers);
