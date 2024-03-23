@@ -123,8 +123,8 @@
                     </div>
                 </div>
             </div>
-		
-			
+
+
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
@@ -143,8 +143,7 @@
                 </div>
             </div>
 
-		
-			
+
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -163,8 +162,8 @@
                 </div>
             </div>
 
-			
-		<div class="col-xl-4 col-md-6 mb-4">
+
+            <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -180,11 +179,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
-</div>
 
         <ul class="list-group mb-3">
-				<h6 class="col-md-12 mb-3">{{__('Commission settlement')}}</h6>
+            <h6 class="col-md-12 mb-3">{{__('Commission settlement')}}</h6>
             @php
                 $files = [];
                 if (isset($invoices)) $files = $invoices->pluck('invoice_file')->map(function ($file) {
@@ -338,9 +337,21 @@
                             <p class="text-sm text-danger">{{$message}}</p>
                             @enderror
                         </div>
-                        <!-- <button type="submit"
-                                x-text="'{{__("Save")}}'"
-                                class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>-->
+                        <div class="mt-3">
+                            <x-label class="font-bold text-lg " for="target" :value="__('Target')"/>
+                            <x-input id="target" class="block mt-1 w-full"
+                                     type="number" name="target"
+                                     :value="old('target',auth()->user()->target)"
+                            />
+                            @error('target')
+                            <p class="text-sm text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        @if(auth()->user()->isAdmin())
+                            <button type="submit"
+                                    x-text="'{{__("Save")}}'"
+                                    class="mt-6 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full"/>
+                        @endif
                     </form>
                 </div>
             </div>

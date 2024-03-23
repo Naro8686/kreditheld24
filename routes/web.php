@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('formulas', [\App\Http\Controllers\FormulaController::class, 'index'])->name('formulas');
     Route::match(['GET', 'POST'], '/export-to-pdf', [\App\Http\Controllers\ProposalController::class, 'exportToPdf'])->name('exportToPdf');
     Route::resource('proposal-notices', \App\Http\Controllers\ProposalNoticeController::class);
+    Route::get('privacy-policy',\App\Http\Controllers\PrivacyPolicyController::class)->name('privacy-policy');
 });
 
 require __DIR__ . '/auth.php';

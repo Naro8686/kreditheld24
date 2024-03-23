@@ -40,6 +40,7 @@ class ProfileController extends Controller
         $user->birthday = $request->get('birthday', $user->birthday);
         $user->card_number = $request->get('card_number', $user->card_number);
         $user->tax_number = $request->get('tax_number', $user->tax_number);
+        $user->target = $request->get('target', $user->target);
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
