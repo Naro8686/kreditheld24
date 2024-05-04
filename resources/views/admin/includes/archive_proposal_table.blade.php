@@ -77,6 +77,7 @@
 
         .firstli {
             border-radius: 0.2rem;
+            margin-right: 5px;
         }
 
         .firstli .material-icons {
@@ -130,6 +131,17 @@
                                 <li><a href="#">PDF</a></li>
                                 <li><a href="#">Print</a></li>
                             </ul>
+                        </li>
+                        <li style="border-radius: 0.2rem;max-height: 41px">
+                            <a href="#" type="button" class="text-sm"
+                               data-toggle="modal"
+                               data-target="#confirmModal"
+                               data-method="POST"
+                               data-title="{{__('Duplicate')}}"
+                               data-url="{{route('admin.proposals.archive.duplicate.all')}}">
+                                <i class="fa fa-copy"></i>
+                                {{__('Duplicate')}}
+                            </a>
                         </li>
                     </ul>
                 </nav>
