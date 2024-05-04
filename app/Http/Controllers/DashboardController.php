@@ -45,7 +45,7 @@ class DashboardController extends Controller
             $calendar = $request->boolean('calendar', false);
             $unit = $request->get('unit', 'hour');
             $manager_id = $request->get('manager_id');
-            list($min, $max) = array_pad($request->get('dates', [
+            [$min, $max] = array_pad($request->get('dates', [
                 Carbon::now()->startOfYear()->format($format),
                 $calendar ? Carbon::now()->format($format) : Carbon::now()->endOfYear()->format($format)
             ]), 2, $calendar ? Carbon::now()->format($format) : Carbon::now()->endOfYear()->format($format));
@@ -66,6 +66,7 @@ class DashboardController extends Controller
             $denied = Status::DENIED;
             $year = Carbon::now()->startOfYear()->toDateString();
             if ($auth_user->isAdmin()) {
+                $manager_id = $manager_id ?? $auth_user->id;
                 $purchases = Proposal::when($manager_id, function (Builder $query, $manager_id) {
                     $query->where('user_id', $manager_id);
                 });
@@ -120,7 +121,7 @@ class DashboardController extends Controller
                 $user = $auth_user;
             }
 
-            if (optional($user)->isManager()) {
+            if (isset($user)) {
                 $orders->targetPercent = $user->targetPercent($year);
             }
             return response()->json([

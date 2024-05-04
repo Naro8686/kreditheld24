@@ -16,25 +16,25 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * App\Models\User
  *
- * @property int $id
- * @property string $name
- * @property string|null $card_number
- * @property string $email
- * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int                                                                                                            $id
+ * @property string                                                                                                         $name
+ * @property string|null                                                                                                    $card_number
+ * @property string                                                                                                         $email
+ * @property \Illuminate\Support\Carbon|null                                                                                $email_verified_at
+ * @property string                                                                                                         $password
+ * @property string|null                                                                                                    $remember_token
+ * @property \Illuminate\Support\Carbon|null                                                                                $created_at
+ * @property \Illuminate\Support\Carbon|null                                                                                $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions
- * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[] $proposals
- * @property-read int|null $proposals_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
- * @property-read int|null $roles_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
- * @property-read int|null $tokens_count
+ * @property-read int|null                                                                                                  $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[]                                         $permissions
+ * @property-read int|null                                                                                                  $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Proposal[]                                           $proposals
+ * @property-read int|null                                                                                                  $proposals_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[]                                               $roles
+ * @property-read int|null                                                                                                  $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[]                           $tokens
+ * @property-read int|null                                                                                                  $tokens_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -48,28 +48,28 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @property string|null $surname
- * @property string|null $phone
- * @property string|null $address
- * @property \Illuminate\Support\Carbon|null $birthday
+ * @property string|null                                                                                                    $surname
+ * @property string|null                                                                                                    $phone
+ * @property string|null                                                                                                    $address
+ * @property \Illuminate\Support\Carbon|null                                                                                $birthday
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereBirthday($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
- * @property string|null $postcode
- * @property string|null $house
- * @property string|null $street
- * @property string|null $city
+ * @property string|null                                                                                                    $postcode
+ * @property string|null                                                                                                    $house
+ * @property string|null                                                                                                    $street
+ * @property string|null                                                                                                    $city
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereHouse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePostcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereStreet($value)
- * @property-read string $full_name
- * @property string|null $tax_number
+ * @property-read string                                                                                                    $full_name
+ * @property string|null                                                                                                    $tax_number
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTaxNumber($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\EmailTemplate[] $emailTemplates
- * @property-read int|null $email_templates_count
- * @property int $target
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\EmailTemplate[]                                      $emailTemplates
+ * @property-read int|null                                                                                                  $email_templates_count
+ * @property int                                                                                                            $target
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTarget($value)
  * @mixin \Eloquent
  */
@@ -89,20 +89,22 @@ class User extends Authenticatable implements HasLocalePreference
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden
+        = [
+            'password',
+            'remember_token',
+        ];
 
     /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'birthday' => 'date',
-    ];
+    protected $casts
+        = [
+            'email_verified_at' => 'datetime',
+            'birthday'          => 'date',
+        ];
 
     public function proposals()
     {
@@ -114,7 +116,7 @@ class User extends Authenticatable implements HasLocalePreference
      */
     public static function admin(): ?User
     {
-        return User::whereHas('roles', function ($query) {
+        return User::whereHas('roles', function($query) {
             $query->whereIn('roles.slug', [Role::ADMIN]);
         })->first();
     }
@@ -142,13 +144,14 @@ class User extends Authenticatable implements HasLocalePreference
 
     /**
      * @param $date
+     *
      * @return float
      */
     public function targetPercent($date = null): float
     {
         $totalSum = $this->proposals()
             ->where('proposals.status', Status::APPROVED)
-            ->when($date, function ($query, $date) {
+            ->when($date, function($query, $date) {
                 $query->where('proposals.created_at', '>=', $date);
             })
             ->sum('proposals.creditAmount');
@@ -157,21 +160,25 @@ class User extends Authenticatable implements HasLocalePreference
                 break;
             }
         }
-        return round($totalSum / $targetSum * 100, 2);
+
+        return round($targetSum <= 0 ? 0 : $totalSum / $targetSum * 100, 2);
     }
 
     /**
-     * @param string $message
-     * @param array $data
+     * @param  string  $message
+     * @param  array   $data
+     *
      * @return void
      */
     public function sendEmail(string $message, array $data = []): void
     {
         $data['fullName'] = $this->full_name;
-        Mail::to($this->email)->later(now()->addSecond(), new SendEmail($message, $data));
+        Mail::to($this->email)
+            ->later(now()->addSecond(), new SendEmail($message, $data));
     }
 
-    public function emailTemplates(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function emailTemplates(
+    ): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(EmailTemplate::class);
     }
