@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">{{__('Create')}}</h1>
+    <h1 class="h3 mb-4 text-gray-800">{{__('Add new manager')}}</h1>
     <div class="py-6">
         <div class="max-w-7xl mx-auto">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -34,7 +34,7 @@
                             <small class="form-text text-danger">{{$message}}</small>
                             @enderror
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="target">{{__('Target')}}</label>
                             <input type="number" class="form-control" name="target"
                                    id="target" placeholder="{{__('Target')}}" required
@@ -42,7 +42,7 @@
                             @error('target')
                             <small class="form-text text-danger">{{$message}}</small>
                             @enderror
-                        </div>
+                        </div> -->
                         <input type="submit" class="btn btn-primary">
                     </form>
                 </div>

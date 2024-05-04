@@ -189,12 +189,12 @@
                 </div>
             </div>
         </li>
-        <li @class(['nav-item','active' => request()->routeIs('admin.file-manager.*')])>
+        <!-- <li @class(['nav-item','active' => request()->routeIs('admin.file-manager.*')])>
             <a class="nav-link" href="{{route('admin.file-manager.index')}}">
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Файловый менеджер</span>
             </a>
-        </li>
+        </li> --->
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
         @endrole

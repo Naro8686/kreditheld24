@@ -1,7 +1,7 @@
 <div id="cookie-banner" class="alert alert-dark text-center mb-0" role="alert">
-    🍪 This website uses cookies to ensure you get the best experience on our website.
-    <a href="{{route('privacy-policy')}}" target="blank">Learn more</a>
+    🍪 Für unseren Service speichern wir Cookies und andere Informationen auf Ihren Geräten und rufen diese ab. </br>Manche helfen uns, das Nutzungserlebnis unserer Services zu verbessern. Hierfür bitten wir um Ihre Einwilligung.
+    </br>Weitere Hinweise: <a href="{{route('privacy-policy')}}" target="blank">Datenschutz</a> <a href="https://denis-gomer.de/Impressum.pdf" target="blank">Impressum</a> 
     <button type="button" class="btn btn-primary btn-sm ms-3" onclick="hideCookieBanner()">
-        I Got It
+       Akzeptieren
     </button>
 </div>
