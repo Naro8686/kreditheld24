@@ -368,6 +368,7 @@ class ProposalController extends Controller
     public function archiveDuplicateAll()
     {
         try {
+            $user = auth()->user();
             $proposals = Proposal::archived()->cursor();
             foreach ($proposals as $proposal) {
                 $newProposal = $proposal->replicate();
@@ -384,6 +385,7 @@ class ProposalController extends Controller
                 $newProposal->approved_at = null;
                 $newProposal->revision_at = null;
                 $newProposal->denied_at = null;
+                $newProposal->user_id = $user->id;
                 $newProposal->save();
             }
             $msg = __('Duplicate created');
