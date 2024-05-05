@@ -246,6 +246,8 @@ class ProposalController extends Controller
                         $sendToArchive = route('proposal.sendToArchive',
                             [$proposal->id]);
                         $archived = !is_null($proposal->archived_at);
+                        $linkDuplicate = route('admin.proposals.duplicate',
+                            [$proposal->id]);
                         if ($proposal->status === Status::APPROVED
                             && !is_null($proposal->invoice_file)
                         ) {
@@ -263,6 +265,9 @@ class ProposalController extends Controller
                         $html .= "|<a href='$linkEdit' type='button' target='_blank' class='text-sm text-primary edit-link'>
                                     <i class='far fa-edit'></i>
                                 </a>";
+                        $html .= "|<a href='$linkDuplicate'
+                                   class='text-sm text-primary'><i class='fa fa-copy'></i>
+                         </a>";
                         if (!is_null($linkInvoice)) {
                             $html .= "|<a href='$linkInvoice' target='_blank'
                                    class='text-sm text-success'><i class='fas fa-fw fa-file-invoice'></i></a>";
@@ -365,10 +370,36 @@ class ProposalController extends Controller
         return response('Error', 500);
     }
 
+    public function duplicate($id)
+    {
+        /** @var Proposal $proposal */
+        $proposal = Proposal::withTrashed()->findOrfail($id);
+        $newProposal = $proposal->replicate();
+        $newProposal->copyFiles();
+        $newProposal->user_id = auth()->id();
+        $newProposal->bonus = null;
+        $newProposal->commission = null;
+        $newProposal->number = null;
+        $newProposal->status = Status::PENDING;
+
+        $newProposal->deleted_at = now();
+        $newProposal->archived_at = null;
+
+        $newProposal->created_at = now();
+        $newProposal->updated_at = now();
+        $newProposal->pending_at = null;
+        $newProposal->approved_at = null;
+        $newProposal->revision_at = null;
+        $newProposal->denied_at = null;
+        $newProposal->save();
+        return redirect()->route('proposal.draft')
+            ->with('success', __('Duplicate created'));
+    }
+
     public function archiveDuplicateAll()
     {
         try {
-            $user = auth()->user();
+            $userId = auth()->id();
             $proposals = Proposal::archived()->cursor();
             foreach ($proposals as $proposal) {
                 $newProposal = $proposal->replicate();
@@ -385,7 +416,7 @@ class ProposalController extends Controller
                 $newProposal->approved_at = null;
                 $newProposal->revision_at = null;
                 $newProposal->denied_at = null;
-                $newProposal->user_id = $user->id;
+                $newProposal->user_id = $userId;
                 $newProposal->save();
             }
             $msg = __('Duplicate created');

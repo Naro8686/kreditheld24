@@ -20,6 +20,7 @@ Route::middleware(['auth', 'role:' . Role::ADMIN])->prefix('admin')->name('admin
     Route::controller(AdminProposalController::class)->name('proposals.')->group(function () {
         Route::get('/proposals', 'index')->name('index');
         Route::get('/proposals/archive', 'archive')->name('archive');
+        Route::get('/proposals/duplicate/{id}', 'duplicate')->name('duplicate');
         Route::post('/proposals/archive/duplicate/all', 'archiveDuplicateAll')->name('archive.duplicate.all');
         Route::get('/proposals/{id}', 'edit')->name('edit');
         Route::put('/proposals/{id}', 'update')->name('update');
